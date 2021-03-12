@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+# import re
 
 
 def get_book_id():
@@ -47,11 +48,25 @@ def get_review(book_id_list):
             # review_data = json.loads(req.text)
             # print(review_data)
 
-        content = req.content
-        soup = BeautifulSoup(content, 'html.parser')
+        req_content = req.content
+        soup = BeautifulSoup(req_content, 'html.parser')
 
         for hl in soup.select('div.hundred_list'):
+            # hl : 리뷰 한 개
             # print(hl)
+
+            hlw = hl.select_one('div.HL_write')
+            # 유저 닉네임
+            # nickname = hlw.find('div', {'class': 'left'}).find(
+            #     'a', {'class': 'Ere_PR10'}).text
+            nickname = hlw.select_one('div.left > a.Ere_PR10').text
+            print(nickname)
+
+            # 스포일러가 안들어간 리뷰 내용 and 공백제거
+            # content = hlw.find('div', {'style': 'display:'}).text.strip()
+            content = hlw.select_one('div[style=display\:]').text.strip()
+            print(content)
+
             # 평점 1 ~ 5
             score = 0
             for star in hl.select('div.HL_star > img'):
