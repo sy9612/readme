@@ -6,9 +6,9 @@ class User(AbstractUser):
     objects = UserManager(
     )  # blank=True: 폼(입력양식)에서 빈채로 저장되는 것을 허용, DB에는 ''로 저장 # CharField 및 TextField는 blank=True만 허용, null=True 허용 X
     nickname = models.CharField(blank=True, max_length=50)
-    introduction = models.TextField(blank=True, max_length=200)
     gender = models.CharField(max_length=5)
     mbti_id = models.IntegerField()
+    birth = models.DateTimeField()
 
 
 class Dibs(models.Model):
