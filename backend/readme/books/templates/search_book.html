@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Book List</title>
+</head>
+
+<body>
+        <h1>Book Search</h1>
+        <br>
+        
+        <form class="form-inline my-2 my-lg-0" method="post"> {% csrf_token %}
+            <!-- form을 테이블 형식으로 표시, 여기서 form은 views에서 넘겨준 PostSearchForm 객체임-->
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="contents"
+                value="{{contents}}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+    {% if not books %}
+    
+    <h1>검색 결과가 없습니다</h1>
+    
+    {% else %}
+    
+        {% for c in books.all %}
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <p>{{ c.book_name }}</p>
+                    <p>{{ c.book_author }}</p>
+                    <p>{{ c.book_cateory }}</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    
+    {% endif %}
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Book List</title>
+</head>
+
+<body>
+    <div class="col-md-12">
+        <div class="container">
+            <div id="example1" class="list-group col">
+            {% for list in book_list %}
+                <div class="list-group-item">
+                    <input type="checkbox" name={{list.book_name}} value={{list.book_name}}>{{list.book_name}}     
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
