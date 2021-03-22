@@ -3,10 +3,10 @@
     <div class="menu">
       <div class="page-name">MENU</div>
       <div class="menu-list">
-        <div>독서 현황</div>
-        <div>독서 현황</div>
-        <div>독서 현황</div>
-        <div>독서 현황</div>
+        <div @click="toSearch">Search</div>
+        <div @click="toReport">Book Report</div>
+        <div>Recommendations</div>
+        <div>My Page</div>
       </div> 
     </div>
     <div class="main">
@@ -30,7 +30,10 @@ export default {
   methods: {
     clickMenu: function () {
       
-    }
+    },
+    toSearch: function () {
+      
+    },
   },
   watch: function () {
 
