@@ -11,6 +11,11 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 from .serializers import *
 from .models import *
+from books.models import Book
+
+#user update에 사용
+from .forms import CustomUserChangeForm
+from django.db.models import Q
 
 
 #누구나 접근 가능하다는 의미
@@ -67,3 +72,35 @@ class Login(generics.GenericAPIView):
             "token":
             user['token']
         })
+
+
+# def update(request):
+#     if request.method == 'POST':
+#         user_change_from = CustomUserChangeForm(request.POST)
+#         if user_change_form.is_valid():
+#             user_change_form.save()
+#             return redirect('accounts:people', request.user.username)
+
+#     else:
+#         user_change_form = CustomUserChangeForm(instance=request.user)
+
+#     return render(request, '../templates/update.html',
+#                   {'user_change_form': user_change_form})
+
+
+#user별 찜 리스트
+def dibsList(request):
+    #여기에 user_id가 로그인한 사람이 나와야함!
+    #찜 목록에 있는 book_id를 가져와서 dibs에 넣어줌
+    bookIdxs = Dibs.objects.filter(Q(is_selected=1)
+                                   & Q(user_id=1)).values('book_id')
+    contents = request.POST.get('contents', "")
+
+    dibs = []
+    for idx in bookIdxs:
+        book = list(Book.objects.filter(Q(book_id=idx['book_id'])).values())
+        print(book)
+        dibs += book
+    return render(request, 'dibs_list.html', {
+        'dibs': dibs,
+    })
