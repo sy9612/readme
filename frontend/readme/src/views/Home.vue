@@ -8,7 +8,7 @@
       <div>My Page</div>
     </div> 
   </div>
-  <div class="main">
+  <div class="basic">
     <div class="main-title">
       <span class="project-name">README <span class="page-name">PageName</span> </span>
       <button @click="clickMenu">MENU</button> 
@@ -19,10 +19,7 @@
         <span>login</span>
     </div>
   </div>
-
-
-
-  <Main />
+  <Main :mainIsOpen='mainIsOpen' />
 </template>
 
 <script>
@@ -30,6 +27,11 @@ import Main from '@/views/Main'
 
 export default {
   name: 'Home',
+  data: function () {
+    return {
+      mainIsOpen: false,
+    }
+  },
   components: {
     Main,
   },
@@ -58,7 +60,7 @@ export default {
   /* z-index: 1; */
   background: #d7b9a1;
 }
-.main {
+.basic {
   position: absolute;
   box-sizing: border-box;
   height: 100%;
