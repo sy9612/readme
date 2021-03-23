@@ -10,11 +10,12 @@ class List_books(generic.TemplateView):
     def get(self, request, *args, **kwargs):
         template_name = 'book_list.html'
         book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
+        print(book_list)
         return render(request, template_name, {"book_list": book_list})
         #딕셔너리? 형식으로 전달한다고 함
 
 
-#검색
+# 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
 def search(request):
     books = Book.objects.all().order_by('-book_id')
     contents = request.POST.get('contents', "")
@@ -35,3 +36,12 @@ def search(request):
 
     else:
         return render(request, 'search_book.html')
+
+
+#도서 상세 정보
+def detail(request, book_id):
+    book = Book.objects.get(book_id=book_id)
+    context = {
+        'book': book,
+    }
+    return render(request, '../templates/detail.html', context)
