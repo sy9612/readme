@@ -70,6 +70,24 @@ def algo_test(algos, data):
     return pd.DataFrame(results).set_index('Algorithm').sort_values('test_rmse')
 
 
+def sim_test(sims, data):
+    results = []
+
+    for sim in sims:
+        sim_options = {'name': sim}
+        algo = KNNBasic(sim_options=sim_options)
+        result = cross_validate(algo, data, measures=[
+                                'RMSE'], cv=2, verbose=False)
+
+        # 결과저장
+        verbose = pd.DataFrame.from_dict(result).mean(axis=0)
+        verbose = verbose.append(
+            pd.Series([sim], index=['KNNBasic'+' + Similarity']))
+        results.append(verbose)
+
+    return pd.DataFrame(results).set_index(['KNNBasic'+' + Similarity']).sort_values('test_rmse')
+
+
 def main():
     # ratings = pd.read_csv("리뷰데이터크롤링.csv", encoding="cp949")
     # ratings = pd.read_csv("리뷰데이터크롤링(모두보기).csv", encoding="cp949")
@@ -113,8 +131,13 @@ def main():
 
 def test(data):
     # 여러 개의 알고리즘 테스트
-    algos = [KNNBasic(), KNNWithMeans(), KNNBaseline(), SVD(), NMF()]
-    test_result = algo_test(algos, data)
+    # algos = [KNNBasic(), KNNWithMeans(), KNNBaseline(), SVD(), NMF()]
+    # test_result = algo_test(algos, data)
+    # print(test_result)
+
+    # 여러 가지 유사도를 구하는 방법 테스트
+    sims = ['msd', 'cosine', 'pearson', 'pearson_baseline']
+    test_result = sim_test(sims, data)
     print(test_result)
 
 
@@ -150,5 +173,5 @@ def recomm(data, ratings, user_id):
 if __name__ == "__main__":
     data, ratings = main()
     # user_id = '지니'
-    recomm(data, ratings, '미리내')
-    # test(data)
+    # recomm(data, ratings, '미리내')
+    test(data)
