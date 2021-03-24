@@ -1,11 +1,11 @@
 <template>
   <div id="main">
-    <div class="main-message">
+    <div class="main-message" v-if="signupIsOpen===false">
       <div>도서 추천 서비스-README</div>
       <div>여러분의 독서고민</div>
       <div>우리가 해결해드려요</div>
     </div>
-    <Signup />
+    <Signup v-if="signupIsOpen===true" :signupIsOpen='signupIsOpen' />
   </div>
   
 </template>
@@ -25,10 +25,10 @@ export default {
   },
   props: {
     mainIsOpen: Boolean,
+    signupIsOpen: Boolean,
   },
   watch: {
     mainIsOpen: function () {
-      console.log('받았다')
       const page = document.getElementById('main')
       if (this.mainIsOpen === true) {
           page.style.display = 'flex'
@@ -37,8 +37,10 @@ export default {
         page.style.transitionDuration = '10s'
         page.style.transitionTimingFunction = 'ease-out'
       }
-      
     },
+    signupIsOpen: function () {
+
+    }
   }
 }
 </script>

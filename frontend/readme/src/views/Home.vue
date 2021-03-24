@@ -14,12 +14,12 @@
       <button @click="clickMenu">MENU</button> 
     </div>
     <div class="account">
-        <span class="logout">logout</span>
-        <span>signup</span>
+        <span class="logout-btn">logout</span>
+        <span class="signup-btn" @click="clickSignup">signup</span>
         <span>login</span>
     </div>
   </div>
-  <Main :mainIsOpen='mainIsOpen' />
+  <Main :mainIsOpen='mainIsOpen' :signupIsOpen='signupIsOpen' />
 </template>
 
 <script>
@@ -30,6 +30,7 @@ export default {
   data: function () {
     return {
       mainIsOpen: true,
+      signupIsOpen: false,
     }
   },
   components: {
@@ -37,12 +38,13 @@ export default {
   },
   methods: {
     clickMenu: function () {
-      console.log('!')
       this.mainIsOpen = !this.mainIsOpen
-      console.log(this.mainIsOpen)
     },
     toSearch: function () {
       
+    },
+    clickSignup: function () {
+      this.signupIsOpen = !this.signupIsOpen
     },
   },
   watch: function () {
@@ -112,11 +114,12 @@ export default {
   transform-origin: top right;
   margin-right: 12%;
   font-size: 130%;
+  cursor: pointer;
 }
-.login {
+.login-btn {
   margin-top: 10%;
 }
-.logout {
+.logout-btn {
   display: none;
 }
 .menu-list {
