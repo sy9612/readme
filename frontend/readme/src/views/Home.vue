@@ -29,7 +29,7 @@ export default {
   name: 'Home',
   data: function () {
     return {
-      mainIsOpen: false,
+      mainIsOpen: true,
     }
   },
   components: {
@@ -37,7 +37,9 @@ export default {
   },
   methods: {
     clickMenu: function () {
-      
+      console.log('!')
+      this.mainIsOpen = !this.mainIsOpen
+      console.log(this.mainIsOpen)
     },
     toSearch: function () {
       

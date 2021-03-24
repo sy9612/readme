@@ -5,12 +5,41 @@
       <div>여러분의 독서고민</div>
       <div>우리가 해결해드려요</div>
     </div>
+    <Signup />
   </div>
+  
 </template>
 
 <script>
-export default {
+import Signup from '@/components/Signup'
 
+export default {
+  name: 'Main',
+  data: function () {
+    return {
+
+    }
+  },
+  components: {
+    Signup,
+  },
+  props: {
+    mainIsOpen: Boolean,
+  },
+  watch: {
+    mainIsOpen: function () {
+      console.log('받았다')
+      const page = document.getElementById('main')
+      if (this.mainIsOpen === true) {
+          page.style.display = 'flex'
+      } else {
+        page.style.display = 'none'
+        page.style.transitionDuration = '10s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+      
+    },
+  }
 }
 </script>
 
