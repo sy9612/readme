@@ -26,7 +26,6 @@ class Registration(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         if not serializer.is_valid(raise_exception=True):
             return Response({'message': 'Request Body Error'},
                             status=status.HTTP_409_CONFLICT)

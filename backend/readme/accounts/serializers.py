@@ -23,16 +23,16 @@ User = get_user_model()  # 기본 유저 모델 가져오기
 #회원가입
 class CustomRegisterSerializer(RegisterSerializer):
     nickname = serializers.CharField(required=False, max_length=50)
-    #gender = serializers.CharField(required=True, max_length=5)
-    #mbti_id = serializers.IntegerField(required=False)
+    gender = serializers.CharField(required=True, max_length=5)
+    mbti_id = serializers.IntegerField(required=False)
     birth = serializers.DateField(required=True)
 
     def get_cleaned_data(self):
         #username, password, email이 default라는 뜻(?)
         data_dict = super().get_cleaned_data()
         data_dict['nickname'] = self.validated_data.get('nickname', '')
-        #data_dict['gender'] = self.validated_data.get('gender', '')
-        #data_dict['mbti_id'] = self.validated_data.get('mbti_id', '')
+        data_dict['gender'] = self.validated_data.get('gender', '')
+        data_dict['mbti_id'] = self.validated_data.get('mbti_id', '')
         data_dict['birth'] = self.validated_data.get('birth', '')
         return data_dict
 
@@ -70,4 +70,4 @@ class UserLoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'nickname', 'birth')
+        fields = ('id', 'username', 'nickname', 'birth', 'gender', 'mbti_id')
