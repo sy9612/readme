@@ -1,17 +1,25 @@
 <template>
   <div id="main">
-    <div class="main-message" v-if="signupIsOpen===false">
+
+    <div class="scroll">
+      <div>up</div>
+      <div @click="nextMainPage">down</div>
+    </div>
+    <div class="main-message" v-if="signupIsOpen===false && loginIsOpen===false">
       <div>도서 추천 서비스-README</div>
       <div>여러분의 독서고민</div>
       <div>우리가 해결해드려요</div>
     </div>
-    <Signup v-if="signupIsOpen===true" :signupIsOpen='signupIsOpen' />
+    <Signup v-if="signupIsOpen===true && loginIsOpen===false" :signupIsOpen='signupIsOpen' />
+    <Login v-if="loginIsOpen===true && signupIsOpen===false" />
   </div>
   
 </template>
 
 <script>
 import Signup from '@/components/Signup'
+import Login from '@/components/Login'
+
 
 export default {
   name: 'Main',
@@ -22,10 +30,18 @@ export default {
   },
   components: {
     Signup,
+    Login,
   },
   props: {
     mainIsOpen: Boolean,
     signupIsOpen: Boolean,
+    loginIsOpen: Boolean,
+  },
+  methods: {
+    nextMainPage: function () {
+      console.log(2)
+      this.$router.push({name:'DataStatus'})
+    }
   },
   watch: {
     mainIsOpen: function () {
@@ -40,7 +56,8 @@ export default {
     },
     signupIsOpen: function () {
 
-    }
+    },
+
   }
 }
 </script>
@@ -49,7 +66,8 @@ export default {
 #main {
   position: relative;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background: url(../assets/main.jpg) no-repeat center center;
@@ -58,6 +76,10 @@ export default {
   width: 100vw;
   color: white;
   font-weight: bold;
+}
+.scroll {
+  position: absolute;
+  top: 80%;
 }
 .main-message {
   position: absolute;

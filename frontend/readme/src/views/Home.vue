@@ -16,10 +16,10 @@
     <div class="account">
         <span class="logout-btn">logout</span>
         <span class="signup-btn" @click="clickSignup">signup</span>
-        <span>login</span>
+        <span @click="clickLogin">login</span>
     </div>
   </div>
-  <Main :mainIsOpen='mainIsOpen' :signupIsOpen='signupIsOpen' />
+  <Main :mainIsOpen='mainIsOpen' :signupIsOpen='signupIsOpen' :loginIsOpen='loginIsOpen' />
 </template>
 
 <script>
@@ -31,6 +31,7 @@ export default {
     return {
       mainIsOpen: true,
       signupIsOpen: false,
+      loginIsOpen: false,
     }
   },
   components: {
@@ -45,7 +46,12 @@ export default {
     },
     clickSignup: function () {
       this.signupIsOpen = !this.signupIsOpen
+      this.loginIsOpen = false
     },
+    clickLogin: function () {
+      this.loginIsOpen = !this.loginIsOpen
+      this.signupIsOpen = false
+    }
   },
   watch: function () {
 
