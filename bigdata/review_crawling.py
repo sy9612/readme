@@ -27,13 +27,11 @@ def get_book_id(cid):
     return book_id_list
 
 
-def get_book_id_from_all(cid):
+def get_book_id_from_all(cid, book_num=100):
     # 2. 모두 보기 리뷰 많은 순으로 N개
-    book_num = 500
+    # book_num = 500
     url = f'https://www.aladin.co.kr/shop/wbrowse.aspx?BrowseTarget=List&ViewRowsCount={book_num}&\
-            ViewType=Detail&PublishMonth=0&SortOrder=4&page=1&Stockstatus=1&PublishDay=84&CID={cid}\
-            &CustReviewRankStart=&CustReviewRankEnd=&CustReviewCountStart=&CustReviewCountEnd=\
-            &PriceFilterMin=&PriceFilterMax=&SearchOption='
+            ViewType=Detail&PublishMonth=0&SortOrder=4&page=1&Stockstatus=1&PublishDay=84&CID={cid}'
 
     req = requests.get(url)
 
@@ -125,9 +123,9 @@ def get_url(book_id):
 
 if __name__ == "__main__":
     # cid : 카테고리 id
-    cid_list = ["1", "112011", "55889", "656", "798",
-                "74", "987", "517", "1237", "170", "336"]
-    # cid_list = ["1"]
+    # cid_list = ["1", "112011", "55889", "656", "798",
+    #             "74", "987", "517", "1237", "170", "336"]
+    cid_list = ["1", "112011", "55889", "656", "798"]
     for cid in cid_list:
         # book_id_list = get_book_id(cid)
         book_id_list = get_book_id_from_all(cid)
@@ -137,6 +135,7 @@ if __name__ == "__main__":
     data.columns = ['book_id', 'user_id', 'nickname',
                     'score', 'sympathy', 'regtime', 'content']
     # data.to_csv('리뷰데이터크롤링.csv', sep='\t')
-    data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t')
+    # data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t', encoding='utf-8-sig')
+    data.to_pickle('./data/리뷰데이터크롤링(모두보기).pkl')
     # string = "https://blog.aladin.co.kr/767031116".split('/')
     # print(string)
