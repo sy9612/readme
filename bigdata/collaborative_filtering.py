@@ -8,8 +8,13 @@ term_w = shutil.get_terminal_size()[0] - 1
 separater = "-" * term_w
 
 
-def preprocessing(ratings, min_user_ratings=5):
+def preprocessing(ratings, min_user_ratings=5, min_book_ratings=15):
     # 유저가 남긴 최소 리뷰의 수 : default 5개
+    # 책에 있는 최소 리뷰의 수 : default 15개
+    filter_books = ratings['book_id'].value_counts() >= min_book_ratings
+    filter_books = filter_books[filter_books].index.tolist()
+    ratings = ratings[ratings['book_id'].isin(filter_books)]
+
     filter_users = ratings['nickname'].value_counts() >= min_user_ratings
     filter_users = filter_users[filter_users].index.tolist()
     ratings_new = ratings[ratings['nickname'].isin(filter_users)]
@@ -70,30 +75,12 @@ def algo_test(algos, data):
     return pd.DataFrame(results).set_index('Algorithm').sort_values('test_rmse')
 
 
-def sim_test(sims, data):
-    results = []
-
-    for sim in sims:
-        sim_options = {'name': sim}
-        algo = KNNBasic(sim_options=sim_options)
-        result = cross_validate(algo, data, measures=[
-                                'RMSE'], cv=2, verbose=False)
-
-        # 결과저장
-        verbose = pd.DataFrame.from_dict(result).mean(axis=0)
-        verbose = verbose.append(
-            pd.Series([sim], index=['KNNBasic'+' + Similarity']))
-        results.append(verbose)
-
-    return pd.DataFrame(results).set_index(['KNNBasic'+' + Similarity']).sort_values('test_rmse')
-
-
 def main():
     # ratings = pd.read_csv("리뷰데이터크롤링.csv", encoding="cp949")
     # ratings = pd.read_csv("리뷰데이터크롤링(모두보기).csv", encoding="cp949")
     ratings = pd.read_pickle('./data/리뷰데이터크롤링(모두보기).pkl')
     ratings.columns = ['book_id', 'user_id', 'nickname',
-                       'score', 'sympathy', 'regtime', 'content']
+                       'score']
     ratings.drop(index=0, inplace=True)
 
     print('[기존 ratings]')
@@ -101,7 +88,7 @@ def main():
     print(ratings[: 15])
     print(f"\n{separater}\n")
 
-    ratings_new = preprocessing(ratings, 10)
+    ratings_new = preprocessing(ratings, 3)
 
     print('[전처리된 ratings]')
     print(f"{separater}\n")
@@ -115,6 +102,12 @@ def main():
 
     # print('score min value : {}'.format(ratings['score'].min()))
     # print('score max value : {}'.format(ratings['score'].max()))
+    users = ratings['nickname'].unique()
+    print("기존 유저의 수 : {user_cnt}\n".format(user_cnt=len(users)))
+    books = ratings['book_id'].unique()  # 일단 unique한 값으로 book_id를 뽑음
+    print("기존 책의 개수 : {book_size}\n".format(book_size=len(books)))
+
+    print()
     users = ratings_new['nickname'].unique()
     print("유저의 수 : {user_cnt}\n".format(user_cnt=len(users)))
     books = ratings_new['book_id'].unique()  # 일단 unique한 값으로 book_id를 뽑음
@@ -131,13 +124,8 @@ def main():
 
 def test(data):
     # 여러 개의 알고리즘 테스트
-    # algos = [KNNBasic(), KNNWithMeans(), KNNBaseline(), SVD(), NMF()]
-    # test_result = algo_test(algos, data)
-    # print(test_result)
-
-    # 여러 가지 유사도를 구하는 방법 테스트
-    sims = ['msd', 'cosine', 'pearson', 'pearson_baseline']
-    test_result = sim_test(sims, data)
+    algos = [KNNBasic(), KNNWithMeans(), KNNBaseline(), SVD(), NMF()]
+    test_result = algo_test(algos, data)
     print(test_result)
 
 
@@ -173,5 +161,5 @@ def recomm(data, ratings, user_id):
 if __name__ == "__main__":
     data, ratings = main()
     # user_id = '지니'
-    # recomm(data, ratings, '미리내')
-    test(data)
+    recomm(data, ratings, '미리내')
+    # test(data)
