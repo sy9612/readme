@@ -45,34 +45,33 @@ class Registration(generics.GenericAPIView):
         )
 
 
-@permission_classes([AllowAny])
-class Login(generics.GenericAPIView):
-    serializer_class = UserLoginSerializer
+# @permission_classes([AllowAny])
+# class Login(generics.GenericAPIView):
+#     serializer_class = UserLoginSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
 
-        if not serializer.is_valid(raise_exception=True):
-            return Response({'message': 'Request Body Error'},
-                            status=status.HTTP_409_CONFLICT)
+#         if not serializer.is_valid(raise_exception=True):
+#             return Response({'message': 'Request Body Error'},
+#                             status=status.HTTP_409_CONFLICT)
 
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data
 
-        if user['username'] == 'None':
-            return Response({'message': 'Fail'},
-                            status=status.HTTP_401_UNAUTHORIZED)
+#         if user['username'] == 'None':
+#             return Response({'message': 'Fail'},
+#                             status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response({
-            "user":
-            UserSerializer(
-                #get_serializer_context : serializer에 포함되어야 할 정보의 context들을 딕셔너리 형태로 리턴
-                user,
-                context=self.get_serializer_context()).data,
-            "token":
-            user['token']
-        })
-
+#         return Response({
+#             "user":
+#             UserSerializer(
+#                 #get_serializer_context : serializer에 포함되어야 할 정보의 context들을 딕셔너리 형태로 리턴
+#                 user,
+#                 context=self.get_serializer_context()).data,
+#             "token":
+#             user['token']
+#         })
 
 # def update(request):
 #     if request.method == 'POST':
