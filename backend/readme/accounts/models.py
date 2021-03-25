@@ -8,14 +8,15 @@ class User(AbstractUser):
     nickname = models.CharField(blank=True, max_length=50)
     gender = models.CharField(max_length=5)
     mbti_id = models.IntegerField()
-    birth = models.DateTimeField()
+    birth = models.DateTimeField(auto_now_add=True)
 
 
 class Dibs(models.Model):
     dibs_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()
-    book_id = models.IntegerField()
-    dibs_date = models.DateTimeField(auto_now_add=True)
+    user_id = models.IntegerField(blank=True, null=True)
+    book_id = models.IntegerField(blank=True, null=True)
+    dibs_date = models.DateTimeField(blank=True, null=True)
+    is_selected = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
