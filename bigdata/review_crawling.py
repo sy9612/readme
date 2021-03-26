@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
     for cid in cid_list:
         # book_id_list = get_book_id(cid)
-        book_id_list = get_book_id_from_all(str(cid))
+        book_id_list = get_book_id_from_all(str(cid), 250)
         get_review(book_id_list)
     # get_review(['4092522'])
     data = pd.DataFrame(review_list)
@@ -144,5 +144,3 @@ if __name__ == "__main__":
     # data.to_csv('리뷰데이터크롤링.csv', sep='\t')
     # data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t', encoding='utf-8-sig')
     data.to_pickle('./data/리뷰데이터크롤링(모두보기).pkl')
-    # string = "https://blog.aladin.co.kr/767031116".split('/')
-    # print(string)

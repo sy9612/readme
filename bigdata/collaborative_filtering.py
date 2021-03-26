@@ -57,6 +57,24 @@ def recommend(algo, user_id, unread_books, top_n=10):
     return top_book_predictions
 
 
+def sim_test(sims, data):
+    results = []
+
+    for sim in sims:
+        sim_options = {'name': sim}
+        algo = KNNBasic(sim_options=sim_options)
+        result = cross_validate(algo, data, measures=[
+                                'RMSE'], cv=2, verbose=False)
+
+        # 결과저장
+        verbose = pd.DataFrame.from_dict(result).mean(axis=0)
+        verbose = verbose.append(
+            pd.Series([sim], index=['KNNBasic'+' + Similarity']))
+        results.append(verbose)
+
+    return pd.DataFrame(results).set_index(['KNNBasic'+' + Similarity']).sort_values('test_rmse')
+
+
 def algo_test(algos, data):
     results = []
 
@@ -88,7 +106,7 @@ def main():
     print(ratings[: 15])
     print(f"\n{separater}\n")
 
-    ratings_new = preprocessing(ratings, 3)
+    ratings_new = preprocessing(ratings, 3, 10)
 
     print('[전처리된 ratings]')
     print(f"{separater}\n")
@@ -117,7 +135,7 @@ def main():
 
     reader = Reader(rating_scale=(1.0, 5.0))
     data = Dataset.load_from_df(
-        ratings[['nickname', 'book_id', 'score']], reader)
+        ratings_new[['nickname', 'book_id', 'score']], reader)
 
     return data, ratings_new
 
@@ -151,6 +169,7 @@ def recomm(data, ratings, user_id):
     books = ratings['book_id'].unique()  # 일단 unique한 값으로 book_id를 뽑음
     unread_books = get_unread_book_list(ratings, books, user_id)
     top_n_pred = recommend(algo, user_id, unread_books)
+    print('{user_id}에 대한 예측평점 순위'.format(user_id=user_id))
     for i, top_book in enumerate(top_n_pred):
         print('{rank}위 : {book_id}(예측평점 : {book_est})'.format(
             rank=i + 1, book_id=top_book[0], book_est=top_book[1]))
@@ -161,5 +180,5 @@ def recomm(data, ratings, user_id):
 if __name__ == "__main__":
     data, ratings = main()
     # user_id = '지니'
-    recomm(data, ratings, '미리내')
+    recomm(data, ratings, '띠로리')
     # test(data)
