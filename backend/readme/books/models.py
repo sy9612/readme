@@ -3,19 +3,39 @@ from django.db import models
 
 class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
-    book_name = models.CharField(max_length=60)
+    book_isbn = models.CharField(max_length=45)
+    book_title = models.CharField(max_length=60)
     book_author = models.CharField(max_length=45)
     book_publisher = models.CharField(max_length=60)
-    book_desc = models.TextField(blank=True, null=True)
-    category_id = models.IntegerField()
-    book_category = models.CharField(max_length=45)
-    book_images = models.IntegerField(blank=True, null=True)
+    book_description = models.TextField(blank=True, null=True)
+    #book_maincategory = models.IntegerField()
+    #book_subcategory = models.IntegerField(blank=True, null=True)
+    #book_pubdate = models.DateTimeField(blank=True, null=True)
     book_pages = models.IntegerField(blank=True, null=True)
+    book_price = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'books_book'
 
 
-class Category(models.Model):
-    category_id = models.AutoField(primary_key=True)
-    category_name = models.CharField(max_length=60)
+class BooksMaincategory(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'books_maincategory'
+
+
+class BooksSubcategory(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    main = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'books_subcategory'
 
 
 class Report(models.Model):
