@@ -27,13 +27,10 @@ def get_book_id(cid):
     return book_id_list
 
 
-def get_book_id_from_all(cid):
-    # 2. 모두 보기 리뷰 많은 순으로 N개
-    book_num = 500
+def get_book_id_from_all(cid, book_num=100):
+    # 2. 모두 보기 구매 많은 순으로 N개
     url = f'https://www.aladin.co.kr/shop/wbrowse.aspx?BrowseTarget=List&ViewRowsCount={book_num}&\
-            ViewType=Detail&PublishMonth=0&SortOrder=4&page=1&Stockstatus=1&PublishDay=84&CID={cid}\
-            &CustReviewRankStart=&CustReviewRankEnd=&CustReviewCountStart=&CustReviewCountEnd=\
-            &PriceFilterMin=&PriceFilterMax=&SearchOption='
+            ViewType=Detail&PublishMonth=0&SortOrder=2&page=1&Stockstatus=1&PublishDay=84&CID={cid}'
 
     req = requests.get(url)
 
@@ -90,15 +87,15 @@ def get_review(book_id_list):
                 continue
             uid = user.attrs['href'].split('/')[3]
             nickname = user.text
-            info = hlw.select('div.left > span.Ere_PR10')
-            reg_time = info[0].text
+            # info = hlw.select('div.left > span.Ere_PR10')
+            # reg_time = info[0].text
             # 공감 (15) 에서 숫자만 뽑아오기
-            sympathy = re.findall("\d+", info[1].text)[0]
+            # sympathy = re.findall("\d+", info[1].text)[0]
 
             # 스포일러가 안들어간 리뷰 내용 and 개행문자 및 공백제거
             # content = hlw.find('div', {'style': 'display:'}).text.strip()
-            content = hlw.select_one(
-                'div[style=display\:]').text.replace("\t", " ").replace("\r", " ").replace("\n", " ").strip()
+            # content = hlw.select_one(
+            #     'div[style=display\:]').text.replace("\t", " ").replace("\r", " ").replace("\n", " ").strip()
 
             # 평점 1 ~ 5
             score = 0
@@ -107,9 +104,9 @@ def get_review(book_id_list):
                 if star.attrs['src'][-5] == 'n':
                     score += 1
 
-            if book_id and uid and nickname and score and content:
+            if book_id and uid and nickname and score:
                 review_list.append(
-                    [book_id, uid, nickname, score, sympathy, reg_time, content])
+                    [book_id, uid, nickname, score])
 
 
 def get_url(book_id):
@@ -125,18 +122,25 @@ def get_url(book_id):
 
 if __name__ == "__main__":
     # cid : 카테고리 id
-    cid_list = ["1", "112011", "55889", "656", "798",
-                "74", "987", "517", "1237", "170", "336"]
-    # cid_list = ["1"]
+    # cid_list = ["1", "112011", "55889", "656", "798",
+    #             "74", "987", "517", "1237", "170", "336"]
+    fiction_cid_list = [50926, 50928, 50929, 50930, 50931, 50932, 50933, 50935]
+    cid_list = [51371, 51373, 174700, 51374, 51375, 51376, 51377, 51380, 51842, 51389, 51391, 51392, 51394, 70214, 70212, 70211, 2951, 70236, 107822, 70224, 70233, 70228, 70220, 70223, 2943, 3057, 2172, 2028, 261, 172, 177, 3049, 51002, 51005, 51007, 51010, 51013, 51015, 51017, 51272, 51275, 51022, 51024, 51027, 51030, 51033, 51035, 51038, 51039, 51043, 51045, 65237, 51378, 51381, 51384, 51387, 51390, 51393, 51395, 51399, 51403, 51412, 51415, 51417, 50992,
+                50995, 50997, 50999, 51001, 51004, 51008, 51011, 51026, 51037, 51041, 51046, 50874, 50875, 50876, 50877, 50878, 50880, 50881, 50882, 50883, 50884, 50885, 50886, 50887, 50888, 50889, 50890, 88, 27795, 2032, 5618, 89, 90, 2211, 5566, 4167, 17897, 84, 52620, 1963, 5718, 134, 87, 9671, 50758, 1150, 2012, 2574, 7268, 1143, 4410, 1141, 32399, 1139, 1142, 32663, 28969, 1149, 51564, 51565, 51566, 51567, 51568, 51569, 51570, 50950, 50965, 50966, 50967, 50968, 50969, 50970, 50971, 50972, 50973, 50974, 50975, 50976]
+
+    for cid in fiction_cid_list:
+        # 장르소설은 250개씩 가져옴
+        book_id_list = get_book_id_from_all(str(cid), 250)
+        get_review(book_id_list)
+
     for cid in cid_list:
         # book_id_list = get_book_id(cid)
-        book_id_list = get_book_id_from_all(cid)
+        book_id_list = get_book_id_from_all(str(cid), 250)
         get_review(book_id_list)
     # get_review(['4092522'])
     data = pd.DataFrame(review_list)
     data.columns = ['book_id', 'user_id', 'nickname',
-                    'score', 'sympathy', 'regtime', 'content']
+                    'score']
     # data.to_csv('리뷰데이터크롤링.csv', sep='\t')
-    data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t')
-    # string = "https://blog.aladin.co.kr/767031116".split('/')
-    # print(string)
+    # data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t', encoding='utf-8-sig')
+    data.to_pickle('./data/리뷰데이터크롤링(모두보기).pkl')

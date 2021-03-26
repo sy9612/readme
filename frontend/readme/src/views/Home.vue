@@ -1,92 +1,85 @@
 <template>
-  <div id="home">
-    <div class="menu">
-      <div class="page-name">MENU</div>
-      <div class="menu-list">
-        <div>독서 현황</div>
-        <div>독서 현황</div>
-        <div>독서 현황</div>
-        <div>독서 현황</div>
-      </div> 
+  <div id="Home">
+    <div class="scroll">
+      <div>up</div>
+      <div @click="nextMainPage">down</div>
     </div>
-    <div class="main">
-      <div class="main-title">
-        <span>README</span>
-        <button @click="clickMenu">MENU</button> 
-      </div>
+    <div class="home-message">
+      <div>도서 추천 서비스 - README</div>
+      <div>여러분의 독서고민</div>
+      <div>우리가 해결해드려요</div>
     </div>
-    <Main />
   </div>
 </template>
 
 <script>
-import Main from '@/views/Main'
-
 export default {
-  name: 'Home',
-  components: {
-    Main,
-  },
-  methods: {
-    clickMenu: function () {
-      
+  name: 'Main',
+  data: function () {
+    return {
+
     }
   },
-  watch: function () {
-
+  components: {
+  },
+  props: {
+    menuIsOpen: Boolean,
+  },
+  methods: {
+  },
+  watch: {
+    menuIsOpen: function () {
+      const page = document.getElementById('Home')
+      if (this.menuIsOpen === false) {
+          page.style.display = 'flex'
+      } else {
+        page.style.display = 'none'
+        // page.style.transitionDuration = '10s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+    },
   }
 }
 </script>
 
 <style>
-#home {
+#Home {
   position: absolute;
-  height: 100%;
-  width: 100%;
-  /* z-index: 0; */
-}
-.menu {
-  position: absolute;
-  box-sizing: border-box;
-  padding: 0 10%;
-  padding-top: 5%;
-  height: 100%;
-  width: 100%;
-  z-index: 2;
-  background: #d7b9a1;
-}
-.main {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
-.main-title {
-  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
-  justify-content: space-between;
-  overflow: hidden;
-  /* left: 10%; */
-  padding: 0 10%;
-  top: 10%;
-  height: 6%;
-  width: 80%;
-  font-size: 2.5rem;
-  z-index: 3;
-}
-.page-name {
-  position: relative;
-  width: 70%;
-  left: 30%;
-}
-.menu-list {
-  position: relative;
-  left: 20%;
-  top: 10%;
-  width: 80%;
-  font-size: 2.5rem;
+  align-items: center;
+  flex-direction: column;
+  /* width: 100%;
+  height: 100%; */
+  background: url(../assets/main.jpg) no-repeat center center;
+  background-size: 100vw 100vh;
+  height: 100vh;
+  width: 100vw;
+  color: white;
   font-weight: bold;
 }
-.menu-list > div {
-  margin-bottom: 2%;
+.scroll {
+  position: absolute;
+  top: 80%;
+}
+.home-message {
+  position: absolute;
+  top: 34%;
+  height: 40%;
+  width: 30%;
+  font-size: 150%;
+}
+.home-message div {
+  margin-bottom: 3%;
+}
+.home-message div:nth-child(1) {
+  font-size: 50%;
+}
+.home-message div:nth-child(n+2) {
+  font-size: 200%;
+}
+.home-message div:nth-child(3) {
+  color: #2c3e50;
 }
 </style>
