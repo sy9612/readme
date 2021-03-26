@@ -8,9 +8,9 @@ class Book(models.Model):
     book_author = models.CharField(max_length=45)
     book_publisher = models.CharField(max_length=60)
     book_description = models.TextField(blank=True, null=True)
-    book_maincategory = models.IntegerField()
-    book_subcategory = models.IntegerField(blank=True, null=True)
-    book_pubdate = models.DateTimeField(blank=True, null=True)
+    #book_maincategory = models.IntegerField()
+    #book_subcategory = models.IntegerField(blank=True, null=True)
+    #book_pubdate = models.DateTimeField(blank=True, null=True)
     book_pages = models.IntegerField(blank=True, null=True)
     book_price = models.IntegerField(blank=True, null=True)
 

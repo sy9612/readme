@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -67,6 +68,8 @@ REST_FRAMEWORK = { #REST_FRAMEWORK의 디폴트 권한 클래스를 JSONWebToken
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
 }
 JWT_AUTH = {
@@ -107,9 +110,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080", "http://localhost:8081"
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:8080", "http://localhost:8081"]
 
 ROOT_URLCONF = 'readme.urls'
 

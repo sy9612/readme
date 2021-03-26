@@ -8,15 +8,18 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
+from .serializers import BookSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 
-class List_books(generic.TemplateView):
-    def get(self, request, *args, **kwargs):
-        template_name = 'book_list.html'
-        book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
-        print(book_list)
-        return render(request, template_name, {"book_list": book_list})
-        #딕셔너리? 형식으로 전달한다고 함
+@api_view(('GET', ))
+def booklist(request):
+    book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
+    serializer = BookSerializer(book_list, many=True)
+    print(book_list)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    #딕셔너리? 형식으로 전달한다고 함
 
 
 # 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
@@ -27,8 +30,8 @@ def search(request):
     if contents:
         books = books.filter(
             Q(book_title__icontains=contents)
-            | Q(book_author__icontains=contents)
-            | Q(book_subcategory__icontains=contents)).distinct()
+            | Q(book_author__icontains=contents)).distinct()
+        # | Q(book_subcategory__icontains=contents)).distinct()
         #Q객체 : filter()메소드의 조건을 다양하게 줄 수 있음
         #icontains 연산자 : 대소문자를 구분하지 않고 단어가 포함되어있는지 검사
         #distinct() : 중복된 객체 제외
