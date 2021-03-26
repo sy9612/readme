@@ -83,6 +83,7 @@ export default {
         axios.post(`${SERVER_URL}/accounts/signup`, this.params)
           .then(res => {
             console.log(res)
+            this.$router.push({name: 'Login'})
           })
       }
     }

@@ -21,12 +21,24 @@ export default {
     }
   },
   created: function () {
-    axios.post(`${SERVER_URL}/accounts/login`, this.credentials)
+    const config = this.setToken()
+    axios.get(`${SERVER_URL}/books/list`,config)
       .then(res => {
-        
+        console.log(res)
       })
+  },
+  methods:{
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      }
+      return config
+    },
   }
-}
+}   
 </script>
 
 <style>
@@ -42,7 +54,7 @@ export default {
   padding-top: 10%;
 }
 .mypage-list {
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 .mypage-list span {
   margin-right: 5%;
