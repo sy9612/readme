@@ -11,13 +11,13 @@ from django.http import HttpResponse, JsonResponse
 from .serializers import BookSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
+from accounts.models import Dibs
 
 
 @api_view(('GET', ))
-def booklist(request):
+def booklist(request):  #얘 request 필요해 . . .?
     book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
     serializer = BookSerializer(book_list, many=True)
-    print(book_list)
     return Response(serializer.data, status=status.HTTP_200_OK)
     #딕셔너리? 형식으로 전달한다고 함
 
@@ -46,25 +46,37 @@ def search(request):
 
 
 #도서 상세 정보
+@api_view(('GET', ))
 def detail(request, book_id):
     book = Book.objects.get(book_id=book_id)
-    context = {
-        'book': book,
-    }
+    serializer = BookSerializer(book)
+    # context = {
+    #     'book': book,
+    # }
     #리뷰 작성했는지 확인하는 sql 필요
     #여기서 리뷰를 작성한 사람이면 "리뷰작성함" 메시지를 보내야하고
-    isWriten = Review.objects.filter(Q(book_id=1) & Q(user_id=1))
-    if isWriten:
-        print("작성한 리뷰 내용 전송")  #화면에 띄워주기 편하려고!
+    isWritten = Review.objects.filter(Q(book_id=book_id) & Q(user_id=1))
+    myreview = []
+    if isWritten:
+        myreview = list(isWritten.values())[0]  #화면에 띄워주기 편하려고!
     #리뷰를 작성하지 않은 사람이면 "리뷰작성안함" 메시지를 보내서 리뷰작성 버튼을 만들어야지
     else:
-        print("리뷰를 작성하지 않았다는 메시지 전송")
+        myreview = []
 
-    #리뷰 작성 여부를 같이 보내야하지 않을까?
-    #
-    return render(request, '../templates/detail.html', context)
+    #찜했는지 여부도 같이 보내야함!
+    dibSelected = list(
+        Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=1)).values())
+    dibSelectYes = False
+    if dibSelected[0]['is_selected']:  #찜했으면 True 보내주기!
+        dibSelectYes = True
 
-    #return Response(book)
+    return Response(
+        {
+            "book": serializer.data,  #책세부내용
+            "myreview": myreview,  #리뷰달았는지 yes(리뷰내용) no(빈리스트)
+            "mydibs": dibSelectYes,  #찜했는지 yes(True) no(False)
+        },
+        status=status.HTTP_200_OK)
 
 
 #리뷰 작성
