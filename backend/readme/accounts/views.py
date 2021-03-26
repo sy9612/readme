@@ -13,10 +13,12 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from .serializers import *
 from .models import *
 from books.models import Book
+from rest_framework.decorators import api_view
 
 #user update에 사용
 from .forms import CustomUserChangeForm
 from django.db.models import Q
+from books.serializers import BookSerializer
 
 
 #누구나 접근 가능하다는 의미
@@ -88,32 +90,39 @@ class Registration(generics.GenericAPIView):
 
 
 #user별 찜 리스트
+@api_view(('GET', ))
 def dibsList(request):
     #여기에 user_id가 로그인한 사람이 나와야함!
     #찜 목록에 있는 book_id를 가져와서 dibs에 넣어줌
     bookIdxs = Dibs.objects.filter(Q(is_selected=1)
                                    & Q(user_id=1)).values('book_id')
-    contents = request.POST.get('contents', "")
 
     dibs = []
+    print("들어옴?")
+    #bookIdxs에 있는 book의 내용 전달
+    # serializer = BookSerializer(book_list, many=True)
+    # return Response(serializer.data, status=status.HTTP_200_OK)
     for idx in bookIdxs:
         book = list(Book.objects.filter(Q(book_id=idx['book_id'])).values())
-        print(book)
         dibs += book
-    #clickDibs()  #테스트용
-    return render(request, 'dibs_list.html', {
-        'dibs': dibs,
-    })
+
+    return Response(
+        {'dibs': dibs},
+        status=status.HTTP_200_OK,
+    )
 
 
 #파라미터에 user_id와 book_id를 넣어줘야할까?
-def clickDibs():
+
+
+@api_view(('GET', ))
+def clickDibs(request, book_id):
     #일단 book_id와 user_id가 같은 dibs 목록에 is_selected가 1 인지 확인
     #1이면 0으로 바꿔주고
     #0이면 1로 바꿔주고
     #없으면 1로 데이터 생성
     #int n = select count(dibs_id) from Dibs where user_id=1 and book_id=1
-    isSelected = Dibs.objects.filter(Q(book_id=1) & Q(user_id=3))
+    isSelected = Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=1))
 
     List = []
     if isSelected:
@@ -127,12 +136,24 @@ def clickDibs():
             instance = Dibs.objects.get(dibs_id=List[0]['dibs_id'])
             instance.is_selected = 0
             instance.save()
+            return Response(
+                {
+                    "dibSelect": False,
+                },
+                status=status.HTTP_200_OK,
+            )
         else:
             #update 0->1
             print("0이야!")
             instance = Dibs.objects.get(dibs_id=List[0]['dibs_id'])
             instance.is_selected = 1
             instance.save()
+            return Response(
+                {
+                    "dibSelect": True,
+                },
+                status=status.HTTP_200_OK,
+            )
     else:
         #else
         #insert into
@@ -142,3 +163,9 @@ def clickDibs():
                                       book_id=1,
                                       dibs_date=timezone.now(),
                                       is_selected=1)
+        return Response(
+            {
+                "dibSelect": True,
+            },
+            status=status.HTTP_200_OK,
+        )
