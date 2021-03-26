@@ -1,142 +1,85 @@
 <template>
-
-  <div class="menu">
-    <div class="menu-list">
-      <div @click="toSearch">Search</div>
-      <div @click="toReport">Book Report</div>
-      <div>Recommendations</div>
-      <div>My Page</div>
-    </div> 
-  </div>
-  <div class="basic">
-    <div class="main-title">
-      <span class="project-name">README <span class="page-name">PageName</span> </span>
-      <button @click="clickMenu">MENU</button> 
+  <div id="Home">
+    <div class="scroll">
+      <div>up</div>
+      <div @click="nextMainPage">down</div>
     </div>
-    <div class="account">
-        <span class="logout-btn">logout</span>
-        <span class="signup-btn" @click="clickSignup">signup</span>
-        <span @click="clickLogin">login</span>
+    <div class="home-message">
+      <div>도서 추천 서비스 - README</div>
+      <div>여러분의 독서고민</div>
+      <div>우리가 해결해드려요</div>
     </div>
   </div>
-  <Main :mainIsOpen='mainIsOpen' :signupIsOpen='signupIsOpen' :loginIsOpen='loginIsOpen' />
 </template>
 
 <script>
-import Main from '@/views/Main'
-
 export default {
-  name: 'Home',
+  name: 'Main',
   data: function () {
     return {
-      mainIsOpen: true,
-      signupIsOpen: false,
-      loginIsOpen: false,
+
     }
   },
   components: {
-    Main,
+  },
+  props: {
+    menuIsOpen: Boolean,
   },
   methods: {
-    clickMenu: function () {
-      this.mainIsOpen = !this.mainIsOpen
-    },
-    toSearch: function () {
-      
-    },
-    clickSignup: function () {
-      this.signupIsOpen = !this.signupIsOpen
-      this.loginIsOpen = false
-    },
-    clickLogin: function () {
-      this.loginIsOpen = !this.loginIsOpen
-      this.signupIsOpen = false
-    }
   },
-  watch: function () {
-
+  watch: {
+    menuIsOpen: function () {
+      const page = document.getElementById('Home')
+      if (this.menuIsOpen === false) {
+          page.style.display = 'flex'
+      } else {
+        page.style.display = 'none'
+        // page.style.transitionDuration = '10s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+    },
   }
 }
 </script>
 
 <style>
-.menu {
+#Home {
   position: absolute;
-  box-sizing: border-box;
-  padding: 0 10%;
-  padding-top: 5%;
-  height: 100%;
-  width: 100%;
-  /* z-index: 1; */
-  background: #d7b9a1;
-}
-.basic {
-  position: absolute;
-  box-sizing: border-box;
-  height: 100%;
-  width: 100%;
-  padding: 6% 10%;
-}
-.main-title {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  overflow: hidden;
-  /* left: 10%; */
-  /* padding: 0 10%; */
-  /* margin-top: 6.5%; */
-  height: 8%;
-  /* width: 80%; */
-  font-size: 2.5rem;
-  z-index: 3;
-  color: white;
-}
-.project-name {
-  width: 60%;
-}
-.page-name {
-  position: absolute;
-  margin-left: 8%;
-  font-size: 50%;
-  height: 100%;
+  left: 0;
   top: 0;
-}
-.account {
-  position: relative;
-  /* display: flex; */
-  height: 150px;
-  width: 150px;
-  padding-left: 0;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  /* flex-direction: column; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* width: 100%;
+  height: 100%; */
+  background: url(../assets/main.jpg) no-repeat center center;
+  background-size: 100vw 100vh;
+  height: 100vh;
+  width: 100vw;
   color: white;
-  z-index: 3;
-}
-.account > span {
-  position: relative;
-  right: 0;
-  transform: rotate(90deg);
-  transform-origin: top right;
-  margin-right: 12%;
-  font-size: 130%;
-  cursor: pointer;
-}
-.login-btn {
-  margin-top: 10%;
-}
-.logout-btn {
-  display: none;
-}
-.menu-list {
-  position: relative;
-  left: 20%;
-  top: 10%;
-  width: 80%;
-  font-size: 2.5rem;
   font-weight: bold;
 }
-.menu-list > div {
-  margin-bottom: 2%;
+.scroll {
+  position: absolute;
+  top: 80%;
+}
+.home-message {
+  position: absolute;
+  top: 34%;
+  height: 40%;
+  width: 30%;
+  font-size: 150%;
+}
+.home-message div {
+  margin-bottom: 3%;
+}
+.home-message div:nth-child(1) {
+  font-size: 50%;
+}
+.home-message div:nth-child(n+2) {
+  font-size: 200%;
+}
+.home-message div:nth-child(3) {
+  color: #2c3e50;
 }
 </style>
