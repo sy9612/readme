@@ -2,7 +2,7 @@
   <div id="App">
     <div class="navbar">
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">PageName</span> </span>
-      <button @click="clickMenu">MENU</button> 
+      <button @click="clickMenu">Menu</button> 
     </div>
 
     <div class="account">
@@ -14,15 +14,16 @@
     <div class="menu-list">
       <div @click="toSearch">Search</div>
       <div @click="toReport">Book Report</div>
-      <div>Recommendations</div>
-      <div>My Page</div>
+      <div @click="toRec">Recommendations</div>
+      <div @click="toMyPage">My Page</div>
     </div> 
   </div>
 
   <router-view :menuIsOpen="menuIsOpen" @login="logined" />
 </template>
 
-<script>
+<script >
+
 // import Main from '@/views/Main'
 
 export default {
@@ -57,6 +58,9 @@ export default {
     },
     toHome: function () {
       this.$router.push({name: 'Home'})
+    },
+    toMyPage: function () {
+      this.$router.push({name: 'MyPage'})
     },
     logined: function () {
       this.login  = true
@@ -129,6 +133,11 @@ export default {
   font-size: 130%;
   cursor: pointer;
 }
+.account span:hover {
+  /* font-size: 120%; */
+  font-weight: bold;
+  transition: 0.5s;
+}
 .login-btn {
   margin-top: 10%;
 }
@@ -142,8 +151,13 @@ export default {
   width: 50%;
   font-size: 2.5rem;
   font-weight: bold;
+  cursor: pointer;
 }
 .menu-list > div {
   margin-bottom: 2%;
+}
+.menu-list div:hover {
+  font-size: 120%;
+  transition: 0.5s;
 }
 </style>
