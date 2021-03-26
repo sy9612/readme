@@ -47,3 +47,6 @@ TF-IDF활용하여 content-based추천시스템 학습하기
 
 -0325-
 	1. 로컬세팅
+
+-0326-
+	1. 컨텐츠 기반 추천시스템 보안:  https://data-science-hi.tistory.com/72 
