@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookSerializer
+from .serializers import BookSerializer, ReviewSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -19,7 +19,6 @@ def booklist(request):  #얘 request 필요해 . . .?
     book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
     serializer = BookSerializer(book_list, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-    #딕셔너리? 형식으로 전달한다고 함
 
 
 # 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
@@ -80,19 +79,53 @@ def detail(request, book_id):
 
 
 #리뷰 작성
+@api_view(["POST"])
 def createReview(request):
-    new_review = Review.objects.create(user_id=1,
-                                       book_id=1,
-                                       review_rating=3,
-                                       review_content="리뷰내용내용내용",
-                                       revie_date=timezone.now())
+    # print("request")
+    # print(request.data)
+    new_review = ReviewSerializer(data=request.data)
+    if not new_review.is_valid(raise_exception=True):
+        return Response({'message': 'Request Body Error'},
+                        status=status.HTTP_409_CONFLICT)
+
+    new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
+    new_review.save()
+
+    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
+
+
+# if (request.method == 'POST'):
+#     form = PostForm(request.POST)
+#     if form.is_valid():
+#         print("request" + request)
+#         new_review = Review.objects.create(user_id=user_id,
+#                                            book_id=book_id,
+#                                            review_rating=review_rating,
+#                                            review_content=review_content,
+#                                            review_date=timezone.now())
+#         return Response(status=status.HTTP_200_OK)
+# return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 #리뷰 수정
-def updateReview(request):
-    #request로 들어오는 review_id
-    instance = Review.objects.get(review_id=1)
-    instance.review_rating = 4
-    instance.review_content = "바뀐 리뷰 내용내용"
+@api_view(["POST"])
+def updateReview(request, review_id):
+    #review_id에 해당하는 내용을 찾아서 instance에 삽입 후
+    instance = Review.objects.get(review_id=review_id)
+
+    #vue.js에서 넘어온 데이터를 new_review에 넣고
+    new_review = ReviewSerializer(data=request.data)
+
+    #유효성 검사를 하고
+    if not new_review.is_valid(raise_exception=True):
+        return Response({'message': 'Request Body Error'},
+                        status=status.HTTP_409_CONFLICT)
+
+    new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
+
+    #리뷰 평점, 리뷰 내용, 리뷰 수정날짜를 바꿔줌!! : 이 때 user_id랑 book_id는 바꿀 필요가 없으므로 쓰지 않는걸로...
+    instance.review_rating = new_review.data['review_rating']
+    instance.review_content = new_review.data['review_content']
     instance.review_date = timezone.now()
     instance.save()
+    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?

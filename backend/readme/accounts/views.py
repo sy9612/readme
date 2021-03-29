@@ -33,7 +33,7 @@ class Registration(generics.GenericAPIView):
                             status=status.HTTP_409_CONFLICT)
 
         serializer.is_valid(raise_exception=True)
-        user = serializer.save(request)  #request 필요...없으면 오류..
+        user = serializer.save(request)  #애는 request 필요...없으면 오류..
 
         return Response(
             {
