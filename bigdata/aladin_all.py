@@ -5,13 +5,11 @@ import pymysql
 import urllib.request
 import pandas as pd
 import csv
-from tempfile import TemporaryFile
 
 def get_book_id(cid_list):
     # 임시 저장소에 뭐 있는지 확인
     temp_storage.seek(0)
     data = temp_storage.read()
-
     if data is '':
         s_page = 1
         s_cid = 0
@@ -24,12 +22,13 @@ def get_book_id(cid_list):
             s_page = int(pg_cd[0]) + 1
             s_cid = int(pg_cd[1])
 
-            #카테고리 분류 cid
+     #카테고리 분류 cid
+    print(len(cid_list))
     for i in range(s_cid, len(cid_list)):
-        print(i)
         cid = cid_list[i]
         print("########## CID : " + str(cid) + " #########")
-        for page in range(s_page,11):#1페이지부터 5페이지까지
+        print("#page: " + str(s_page))
+        for page in range(s_page, 11):#1페이지부터 5페이지까지
             url = "https://www.aladin.co.kr/shop/wbrowse.aspx?&ViewRowsCount=25&CID=" + str(cid) + "&page=" + str(page)
             print("########## " + str(page) + "페이지 #########")
             req = requests.get(url)
@@ -40,11 +39,13 @@ def get_book_id(cid_list):
             for href in soup.select('a.bo3'):
                 bid_list.append(href.attrs['href'].split("=")[1])
             get_book_info(bid_list=bid_list, cid=cid)
+
+            #데이터베이스에 커밋
             conn.commit()
+            #csv 파이로 저장
             for list in csv_lists:
                 wr.writerow(list)
             csv_lists.clear()
-
             # 크롤링하던 페이지와 카테고리 임시 저장
             temp_storage.seek(0)
             temp_storage.write(str(page))
@@ -58,7 +59,7 @@ def get_book_info(bid_list, cid):
     idx = 0
     for bid in bid_list:
         idx += 1
-        # bid = str(399757)
+        # bid = str(206424381)
         link = "https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=" + bid
         print(link)
 
@@ -140,15 +141,15 @@ def get_book_info(bid_list, cid):
         books_info = soup.select(".Ere_prod_mconts_box > .Ere_prod_mconts_LS")
         books = soup.select(".Ere_prod_mconts_box > .Ere_prod_mconts_R")
         idx2 = 0
+        book_description = ""
         for book_info in books_info:
             if book_info.get_text() == '책소개':
                 # print(book_info.get_text())
                 # print(books[idx].get_text())
                 book_description = books[idx2].get_text()
                 book_description = book_description.replace("\r\n", "")
-            idx2 += 1
-        else:
-            book_description = ""
+                book_description = book_description.replace(" 󰡔", "")
+                # book_description = book_description.replace("\n", "")
 
         # print(idx)
         # print("페이지: " + str(book_pages) + "쪽 /isbn: " + book_isbn)
@@ -181,14 +182,14 @@ def get_book_info(bid_list, cid):
 csv_lists = []
 if __name__ == "__main__":
     temp_storage = open("temp.txt", "r+")
-    f = open("book_data.csv", "a", encoding='euc-kr', newline='')
+    f = open("book_data6.csv", "a", encoding='utf-8-sig', newline='')
 
     wr = csv.writer(f)
     # wr.writerow(["book_isbn", "book_title", "book_description"])
     conn = pymysql.connect(host='j4a205.p.ssafy.io', user='ssafy', db='readme', password='ssafy', charset='utf8')
     cursor = conn.cursor()
-    mid = 1
-    cid_list = [50926, 50928, 50929, 50930, 50931, 50932, 50933, 50935]
+    mid = 6
+    cid_list = [65237, 51378, 51381, 51384, 51387, 51390, 51393, 51395, 51399, 51403, 51412, 51415, 51417]
     # print(cid_list)
     get_book_id(cid_list=cid_list)
     #
