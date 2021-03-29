@@ -8,4 +8,5 @@ urlpatterns = [
     path('login', obtain_jwt_token),
     #path('update/', views.update, name='update'),
     path('dibsList', views.dibsList, name="dibsList"),
+    path('clickDibs/<int:book_id>', views.clickDibs, name="clickDibs"),
 ]
