@@ -52,6 +52,7 @@ export default {
   height: 100%; */
   background: url(../assets/main.jpg) no-repeat center center;
   background-size: 100vw 100vh;
+  /* opacity: 0.9; */
   height: 100vh;
   width: 100vw;
   color: white;

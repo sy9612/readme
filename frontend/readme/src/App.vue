@@ -66,6 +66,10 @@ export default {
       this.login  = true
     }
   },
+  created: function () {
+    // const account = document.getElementsByClassName('account')
+    // account.style.animation = 'fadein'
+  },
   watch: function () {
 
   }
@@ -73,6 +77,27 @@ export default {
 </script>
 
 <style>
+@keyframes pageout {
+  from {
+      opacity: 1;
+      visibility: visible;
+      /* transform: rotate(-10deg);      */
+  } 
+  to {
+      transform: translateY(100%);
+  }
+}
+@keyframes fadein {
+  from {
+      opacity: 0;
+      visibility: hidden;
+  }
+  to {
+      opacity: 1;
+      visibility: visible;
+  }
+}
+
 #app {
   /* position: absolute; */
   box-sizing: border-box;
@@ -123,6 +148,7 @@ export default {
   /* flex-direction: column; */
   color: white;
   z-index: 3;
+  animation: 'fadein' 5s;
 }
 .account > span {
   position: relative;

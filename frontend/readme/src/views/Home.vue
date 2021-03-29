@@ -2,7 +2,7 @@
   <div id="Home">
     <div class="scroll">
       <div>up</div>
-      <div @click="nextMainPage">down</div>
+      <div @click="toDataStatus">down</div>
     </div>
     <div class="home-message">
       <div>도서 추천 서비스 - README</div>
@@ -26,6 +26,12 @@ export default {
     menuIsOpen: Boolean,
   },
   methods: {
+    toDataStatus: function () {
+      const page = document.getElementById('Home')
+      page.style.transform = 'translateY(-100%)'
+      page.style.transition = '1s'
+      // this.$router.push({name: 'DataStatus'})
+    }
   },
   watch: {
     menuIsOpen: function () {
