@@ -19,7 +19,7 @@
     </div> 
   </div>
 
-  <!-- <router-view :menuIsOpen="menuIsOpen" @login="logined" /> -->
+  <router-view :menuIsOpen="menuIsOpen" @login="logined" />
 </template>
 
 <script >

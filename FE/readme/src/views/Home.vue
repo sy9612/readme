@@ -16,22 +16,28 @@
 export default {
   name: 'Main',
   data: function () {
-    return {};
+    return {
+
+    }
   },
-  components: {},
+  components: {
+
+  },
   props: {
-    menuIsOpen: Boolean,
+    menuIsOpen: Boolean
   },
-  methods: {},
+  methods: {
+
+  },
   watch: {
     menuIsOpen: function () {
-      const page = document.getElementById('Home');
+      const page = document.getElementById('Home')
       if (this.menuIsOpen === false) {
-        page.style.display = 'flex';
+        page.style.display = 'flex'
       } else {
-        page.style.display = 'none';
+        page.style.display = 'none'
         // page.style.transitionDuration = '10s'
-        page.style.transitionTimingFunction = 'ease-out';
+        page.style.transitionTimingFunction = 'ease-out'
       }
     },
   },
