@@ -5,6 +5,11 @@
       <span>읽는 중</span>
       <span>다 읽은 책</span>
       <span>책 쌓기</span>
+      <button @click="clickBtn">누르면 1번 책 세부</button>
+      <button @click="clickDib">누르면 책 찜</button>
+      <div v-if="clickedDib">찜했다!</div>
+      <div v-else>찜 안했다!</div>
+      <button @click="clickMyList">내찜리스트</button>
     </div>
   </div>
 </template>
@@ -17,7 +22,7 @@ export default {
   name: 'MyPage',
   data: function () {
     return {
-
+      clickedDib:false,
     }
   },
   created: function () {
@@ -37,6 +42,37 @@ export default {
       }
       return config
     },
+
+    clickBtn: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/books/700`,config)
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
+    },
+    clickMyList: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/accounts/dibsList`,config)
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
+    },
+    clickDib: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/accounts/clickDibs/700`,config)
+      .then(({data}) => {
+        this.clickedDib=data.dibSelect
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
+    }
   }
 }   
 </script>
