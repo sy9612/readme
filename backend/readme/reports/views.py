@@ -15,7 +15,8 @@ from books.models import Report
 def report_list(request):
     # .get()은 single object = not iterable
     # .filter() 는 QuerySet = iterable
-    report_list = Report.objects.filter(user_id = 10)
+    user_id = request.data['user_id']
+    report_list = Report.objects.filter(user_id = user_id)
     # many = True : queryset이 여러 개의 아이템을 포함하고 있다.(리스트) 를 장고(DRF)에 알려줌
     serializer = ReportSerializer(report_list, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
@@ -32,13 +33,14 @@ def create_report(request):
 
 @api_view(('GET', 'PUT', 'DELETE'))
 def report_detail(request, book_id):
+    user_id = request.data['user_id']
     try:
-        report = Report.objects.get(Q(user_id = 10) & Q(book_id = book_id))
+        report = Report.objects.get(Q(user_id = user_id) & Q(book_id = book_id))
     except Report.DoesNotExist:
-        return Response({'error' : {
+        return Response({
             'code' : 404,
             'message' : "Report not found!"
-        }}, status = status.HTTP_404_NOT_FOUND)
+        }, status = status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
         serializer = ReportSerializer(report)
         return Response(serializer.data, status = status.HTTP_200_OK)
