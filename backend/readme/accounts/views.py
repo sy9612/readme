@@ -90,12 +90,12 @@ class Registration(generics.GenericAPIView):
 
 
 #user별 찜 리스트
-@api_view(('GET', ))
+@api_view(('POST', ))
 def dibsList(request):
-    #여기에 user_id가 로그인한 사람이 나와야함!
-    #찜 목록에 있는 book_id를 가져와서 dibs에 넣어줌
+    user_id = request.data['user_id']
+
     bookIdxs = Dibs.objects.filter(Q(is_selected=1)
-                                   & Q(user_id=1)).values('book_id')
+                                   & Q(user_id=user_id)).values('book_id')
 
     dibs = []
     print("들어옴?")
@@ -115,14 +115,15 @@ def dibsList(request):
 #파라미터에 user_id와 book_id를 넣어줘야할까?
 
 
-@api_view(('GET', ))
+@api_view(('POST', ))
 def clickDibs(request, book_id):
     #일단 book_id와 user_id가 같은 dibs 목록에 is_selected가 1 인지 확인
     #1이면 0으로 바꿔주고
     #0이면 1로 바꿔주고
     #없으면 1로 데이터 생성
     #int n = select count(dibs_id) from Dibs where user_id=1 and book_id=1
-    isSelected = Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=1))
+    user_id = request.data['user_id']
+    isSelected = Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=user_id))
 
     List = []
     if isSelected:
@@ -159,8 +160,8 @@ def clickDibs(request, book_id):
         #insert into
         print("존재하지 않아!")
         ######일단 시간이 지금 UTC?로 되어있긴 한데...
-        new_dib = Dibs.objects.create(user_id=1,
-                                      book_id=1,
+        new_dib = Dibs.objects.create(user_id=user_id,
+                                      book_id=book_id,
                                       dibs_date=timezone.now(),
                                       is_selected=1)
         return Response(

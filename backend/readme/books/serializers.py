@@ -3,6 +3,7 @@ from .models import Book
 from .models import Review
 
 
+#책 전체 정보를 가져올 때
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
@@ -13,6 +14,7 @@ class BookSerializer(serializers.ModelSerializer):
         # ]
 
 
+#리뷰 데이터 가져올 때
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

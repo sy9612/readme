@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Book  #models에 테이블 관련 class 가져오기?
+from .models import Book, BooksCategory, BooksMaincategory, BooksSubcategory  #models에 테이블 관련 class 가져오기?
 from .models import Review
 from django import forms
 from django.views import generic  #django에 있는 기본 view로 테스트
@@ -22,6 +22,7 @@ def booklist(request):  #얘 request 필요해 . . .?
 
 
 # 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
+#미완성!
 def search(request):
     books = Book.objects.all().order_by('-book_id')
     contents = request.POST.get('contents', "")
@@ -45,8 +46,9 @@ def search(request):
 
 
 #도서 상세 정보
-@api_view(('GET', ))
+@api_view(('POST', ))
 def detail(request, book_id):
+    user_id = request.data['user_id']
     book = Book.objects.get(book_id=book_id)
     serializer = BookSerializer(book)
     # context = {
@@ -54,7 +56,7 @@ def detail(request, book_id):
     # }
     #리뷰 작성했는지 확인하는 sql 필요
     #여기서 리뷰를 작성한 사람이면 "리뷰작성함" 메시지를 보내야하고
-    isWritten = Review.objects.filter(Q(book_id=book_id) & Q(user_id=1))
+    isWritten = Review.objects.filter(Q(book_id=book_id) & Q(user_id=user_id))
     myreview = []
     if isWritten:
         myreview = list(isWritten.values())[0]  #화면에 띄워주기 편하려고!
@@ -64,14 +66,32 @@ def detail(request, book_id):
 
     #찜했는지 여부도 같이 보내야함!
     dibSelected = list(
-        Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=1)).values())
+        Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=user_id)).values())
     dibSelectYes = False
     if dibSelected[0]['is_selected']:  #찜했으면 True 보내주기!
         dibSelectYes = True
 
+    #여기에 category도 보내줘야댐!!!!
+    #1. book_isbn을 찾기
+    book_isbn = serializer.data['book_isbn']
+
+    #2. book.book_isbn = book_category.book_id 인 main_category랑 sub_category 찾기
+    categoryData = BooksCategory.objects.get(book_id=book_isbn)
+
+    main_category_id = categoryData.main_category
+    sub_category_id = categoryData.sub_category
+
+    #3. main_category 테이블에서 main_category이름과, sub_category 테이블에서 sub_category이름을 찾아서 넘기기
+    main_category_name = BooksMaincategory.objects.get(
+        id=main_category_id).name
+
+    sub_category_name = BooksSubcategory.objects.get(id=sub_category_id).name
+
     return Response(
         {
             "book": serializer.data,  #책세부내용
+            "maincategory": main_category_name,  #카테고리 - 메인
+            "subcategory": sub_category_name,  #카테고리 - 서브
             "myreview": myreview,  #리뷰달았는지 yes(리뷰내용) no(빈리스트)
             "mydibs": dibSelectYes,  #찜했는지 yes(True) no(False)
         },
