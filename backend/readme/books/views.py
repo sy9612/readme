@@ -149,3 +149,11 @@ def updateReview(request, review_id):
     instance.review_date = timezone.now()
     instance.save()
     return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
+
+
+#리뷰 삭제
+@api_view(["DELETE"])
+def deleteReview(request, review_id):
+    post_instance = Review.objects.get(review_id=review_id)
+    post_instance.delete()
+    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
