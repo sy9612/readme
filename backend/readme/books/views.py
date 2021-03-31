@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookSerializer, ReviewSerializer
+from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -98,6 +98,51 @@ def detail(request, book_id):
         status=status.HTTP_200_OK)
 
 
+#메인 카테고리들 전송
+@api_view(["POST"])
+def maincategory(request):
+    #main_category table에 있는 모든 정보 전송
+    categories = BooksMaincategory.objects.all()
+    serializer = MainCategorySerializer(categories, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#메인 카테고리에 따른 서브 카테고리 목록 전송
+@api_view(["POST"])
+def subcategory(request, main_id):
+    #sub_category에서 main = 받아온 main_id 인 sub_category의 id와 name 전달
+    categories = BooksSubcategory.objects.filter(Q(main=main_id))
+    serializer = SubCategorySerializer(categories, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#서브 카테고리 별 도서 목록 전송 -> 메인카테고리/서브카테고리도 같이 보내기
+#서브 카테고리를 선택하지 않을 수도 있음 : sub_id를 1로 설정해두자(front에서)
+@api_view(["POST"])
+def categorybooks(request):
+    main_id = request.data['main_id']
+    sub_id = request.data['sub_id']
+    #main_id가 0인지 아닌지
+    if main_id == 0:
+        ####도서 전체 목록!!!! + 그 도서의 카테고리...이름까지 같이 넘어와야 할 듯
+        print("")
+
+    else:
+        #sub_id가 1인지 아닌지
+        if sub_id == 1:
+            #메인카테고리에 따른 도서 목록 가져오기
+            #1. books_category에서 해당 main_category가 같은 book_id를 추출해서
+            #2. books_book에서 book_isbn과 같은 도서 목록을 추출
+            #3. 이 때, sub_category의 이름도 같이 보내기
+            print("")
+
+        else:
+            #서브카테고리에 따른 도서 목록 가져오기
+            print("")
+
+    return Response(status=status.HTTP_200_OK)
+
+
 #리뷰 작성
 @api_view(["POST"])
 def createReview(request):
@@ -112,19 +157,6 @@ def createReview(request):
     new_review.save()
 
     return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
-
-
-# if (request.method == 'POST'):
-#     form = PostForm(request.POST)
-#     if form.is_valid():
-#         print("request" + request)
-#         new_review = Review.objects.create(user_id=user_id,
-#                                            book_id=book_id,
-#                                            review_rating=review_rating,
-#                                            review_content=review_content,
-#                                            review_date=timezone.now())
-#         return Response(status=status.HTTP_200_OK)
-# return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 #리뷰 수정
