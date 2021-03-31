@@ -17,9 +17,10 @@
       <div>Recommendations</div>
       <div @click="toMyPage">My Page</div>
     </div> 
+     <router-view :menuIsOpen="menuIsOpen" @login="logined" />
   </div>
 
-  <!-- <router-view :menuIsOpen="menuIsOpen" @login="logined" /> -->
+ 
 </template>
 
 <script >
@@ -27,7 +28,7 @@
 // import Main from '@/views/Main'
 
 export default {
-  name: "App",
+  name: 'App',
   data: function () {
     return {
       menuIsOpen: true,
@@ -66,6 +67,10 @@ export default {
       this.login  = true
     }
   },
+  created: function () {
+    // const account = document.getElementsByClassName('account')
+    // account.style.animation = 'fadein'
+  },
   // watch: function () {
 
   // }
@@ -73,8 +78,31 @@ export default {
 </script>
 
 <style>
-#app {
-  /* position: absolute; */
+@keyframes pageout {
+  from {
+      opacity: 1;
+      visibility: visible;
+      /* transform: rotate(-10deg);      */
+  } 
+  to {
+      transform: translateY(100%);
+  }
+}
+@keyframes fadein {
+  from {
+      opacity: 0;
+      visibility: hidden;
+  }
+  to {
+      opacity: 1;
+      visibility: visible;
+  }
+}
+
+#App {
+  position: absolute;
+  left: 0;
+  top: 0;
   box-sizing: border-box;
   padding: 0 5%;
   padding-top: 3%;
@@ -123,6 +151,7 @@ export default {
   /* flex-direction: column; */
   color: white;
   z-index: 3;
+  animation: 'fadein' 5s;
 }
 .account > span {
   position: relative;

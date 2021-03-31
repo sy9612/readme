@@ -15,68 +15,66 @@
 </template>
 
 <script>
-const SERVER_URL = "http://127.0.0.1:8000";
-import axios from "axios";
+const SERVER_URL = "http://127.0.0.1:8000"
+import axios from 'axios'
 
 export default {
-  name: "MyPage",
+  name: 'MyPage',
   data: function () {
     return {
-      clickedDib: false,
-    };
+      clickedDib:false,
+    }
   },
   created: function () {
-    const config = this.setToken();
-    axios.get(`${SERVER_URL}/books/list`, config).then((res) => {
-      console.log(res);
-    });
+    const config = this.setToken()
+    axios.get(`${SERVER_URL}/books/list`,config)
+      .then(res => {
+        console.log(res)
+      })
   },
-  methods: {
+  methods:{
     setToken: function () {
-      const token = localStorage.getItem("jwt");
+      const token = localStorage.getItem('jwt')
       const config = {
         headers: {
-          Authorization: `JWT ${token}`,
-        },
-      };
-      return config;
+          Authorization: `JWT ${token}`
+        }
+      }
+      return config
     },
 
-    clickBtn: function () {
-      const config = this.setToken();
-      axios
-        .get(`${SERVER_URL}/books/700`, config)
-        .then(({ data }) => {
-          console.log(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    clickBtn: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/books/700`,config)
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
     },
-    clickMyList: function () {
-      const config = this.setToken();
-      axios
-        .get(`${SERVER_URL}/accounts/dibsList`, config)
-        .then(({ data }) => {
-          console.log(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    clickMyList: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/accounts/dibsList`,config)
+      .then(({data}) => {
+        console.log(data)
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
     },
-    clickDib: function () {
-      const config = this.setToken();
-      axios
-        .get(`${SERVER_URL}/accounts/clickDibs/700`, config)
-        .then(({ data }) => {
-          this.clickedDib = data.dibSelect;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
-};
+    clickDib: function(){
+      const config = this.setToken()
+      axios.get(`${SERVER_URL}/accounts/clickDibs/700`,config)
+      .then(({data}) => {
+        this.clickedDib=data.dibSelect
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
+    }
+  }
+}   
 </script>
 
 <style>

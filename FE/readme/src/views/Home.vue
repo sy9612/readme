@@ -2,7 +2,7 @@
   <div id="Home">
     <div class="scroll">
       <div>up</div>
-      <div @click="nextMainPage">down</div>
+      <div @click="toDataStatus">down</div>
     </div>
     <div class="home-message">
       <div>도서 추천 서비스 - README</div>
@@ -16,26 +16,36 @@
 export default {
   name: 'Main',
   data: function () {
-    return {};
+    return {
+
+    }
   },
-  components: {},
+  components: {
+  },
   props: {
     menuIsOpen: Boolean,
   },
-  methods: {},
+  methods: {
+    toDataStatus: function () {
+      const page = document.getElementById('Home')
+      page.style.transform = 'translateY(-100%)'
+      page.style.transition = '1s'
+      // this.$router.push({name: 'DataStatus'})
+    }
+  },
   watch: {
     menuIsOpen: function () {
-      const page = document.getElementById('Home');
+      const page = document.getElementById('Home')
       if (this.menuIsOpen === false) {
-        page.style.display = 'flex';
+          page.style.display = 'flex'
       } else {
-        page.style.display = 'none';
+        page.style.display = 'none'
         // page.style.transitionDuration = '10s'
-        page.style.transitionTimingFunction = 'ease-out';
+        page.style.transitionTimingFunction = 'ease-out'
       }
     },
-  },
-};
+  }
+}
 </script>
 
 <style>
@@ -72,7 +82,7 @@ export default {
 .home-message div:nth-child(1) {
   font-size: 50%;
 }
-.home-message div:nth-child(n + 2) {
+.home-message div:nth-child(n+2) {
   font-size: 200%;
 }
 .home-message div:nth-child(3) {
