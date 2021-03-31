@@ -2,7 +2,7 @@
   <div id="App">
     <div class="navbar">
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">PageName</span> </span>
-      <button @click="clickMenu">Menu</button> 
+      <div v-if="menuIsOpen===true" @click="clickMenu"><i class="fas fa-bars"></i></div> 
     </div>
 
     <div class="account">
@@ -17,7 +17,7 @@
       <div>Recommendations</div>
       <div @click="toMyPage">My Page</div>
     </div> 
-     <router-view :menuIsOpen="menuIsOpen" @login="logined" />
+     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" />
   </div>
 
  
@@ -33,6 +33,7 @@ export default {
     return {
       menuIsOpen: true,
       login: false,
+      onMenu: false,
     }
   },
   components: {
@@ -65,7 +66,10 @@ export default {
     },
     logined: function () {
       this.login  = true
-    }
+    },
+    hoverMenu: function () {
+      this.onMenu = !this.onMenu
+    },
   },
   created: function () {
     // const account = document.getElementsByClassName('account')
@@ -78,6 +82,11 @@ export default {
 </script>
 
 <style>
+@font-face {
+    font-family: font1;
+    src: url(./fonts/font1.ttf) format('truetype');
+}
+
 @keyframes pageout {
   from {
       opacity: 1;
@@ -110,7 +119,7 @@ export default {
   width: 100vw;
   /* z-index: 1; */
   background: #d7b9a1;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: font1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
@@ -166,6 +175,10 @@ export default {
   /* font-size: 120%; */
   font-weight: bold;
   transition: 0.5s;
+}
+.app-menu {
+  position: relative;
+  z-index: 0;
 }
 .login-btn {
   margin-top: 10%;

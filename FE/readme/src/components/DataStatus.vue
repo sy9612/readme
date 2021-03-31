@@ -22,7 +22,7 @@ export default {
 }
 
 #Data-status {
-  animation: 'pageshowing' 2s;
+  /* animation: 'pageshowing' 2s; */
   position: absolute;
   left: 0;
   top: 0;
@@ -37,5 +37,6 @@ export default {
   width: 100vw;
   color: white;
   font-weight: bold;
+  z-index: 1;
 }
 </style>
