@@ -8,7 +8,8 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer, CategoryQuerySerializer
+from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer,\
+                        CategoryQuerySerializer, BookSearchQuerySerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -24,28 +25,45 @@ def booklist(request):  #얘 request 필요해 . . .?
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
-#미완성!
+# 책 검색 API
+@swagger_auto_schema(method='get', query_serializer=BookSearchQuerySerializer)
+@api_view(('GET', ))
 def search(request):
-    books = Book.objects.all().order_by('-book_id')
-    contents = request.POST.get('contents', "")
+    keyword = request.GET.get('keyword', '')
+    search_type = request.GET.get('search_type', 'all')
+    print(search_type)
+    # contents = request.POST.get('contents', "")
+    book_list = Book.objects.order_by('-book_id')
+    # 페이징 처리
+    paginator = ListPageNumberPagination()
 
-    if contents:
-        books = books.filter(
-            Q(book_title__icontains=contents)
-            | Q(book_author__icontains=contents)).distinct()
+    if keyword:
         # | Q(book_subcategory__icontains=contents)).distinct()
         #Q객체 : filter()메소드의 조건을 다양하게 줄 수 있음
         #icontains 연산자 : 대소문자를 구분하지 않고 단어가 포함되어있는지 검사
         #distinct() : 중복된 객체 제외
+        if search_type == 'all':
+            search_book_list = book_list.filter(Q(book_title__icontains=keyword)
+                                                 | Q(book_author__icontains=keyword)
+                                                 | Q(book_description__icontains=keyword))
+        elif search_type == 'title':
+            search_book_list = book_list.filter(book_title__icontains=keyword)
+        elif search_type == 'author':
+            search_book_list = book_list.filter(book_author__icontains=keyword)
+        else:
+            search_book_list = book_list.filter(book_description__icontains=keyword)
+        
+        book_list = search_book_list
 
-        return render(request, 'search_book.html', {
-            'books': books,
-            'contents': contents
-        })
+    count = book_list.count()
 
-    else:
-        return render(request, 'search_book.html')
+    book_list = paginator.paginate_queryset(book_list, request)
+    serializer = BookSerializer(book_list, many=True)
+
+    return Response({
+        "books": serializer.data,
+        "total_count": count,
+    }, status = status.HTTP_200_OK)
 
 
 #도서 상세 정보
