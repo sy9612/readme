@@ -8,10 +8,13 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer
+from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer, CategoryQuerySerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
+from .pagination import ListPageNumberPagination
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 
 @api_view(('GET', ))
@@ -115,32 +118,58 @@ def subcategory(request, main_id):
     serializer = SubCategorySerializer(categories, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# category_search를 위한 query parameter
+# main_id_param = openapi.Parameter('main_id', openapi.IN_QUERY, description="주 카테고리의 id", type=openapi.TYPE_INTEGER)
+# sub_id_param = openapi.Parameter('sub_id', openapi.IN_QUERY, description="서브 카테고리의 id", type=openapi.TYPE_INTEGER)
 
 #서브 카테고리 별 도서 목록 전송 -> 메인카테고리/서브카테고리도 같이 보내기
 #서브 카테고리를 선택하지 않을 수도 있음 : sub_id를 1로 설정해두자(front에서)
-@api_view(["POST"])
-def categorybooks(request):
-    main_id = request.data['main_id']
-    sub_id = request.data['sub_id']
-    #main_id가 0인지 아닌지
-    if main_id == 0:
-        ####도서 전체 목록!!!! + 그 도서의 카테고리...이름까지 같이 넘어와야 할 듯
-        print("")
+@swagger_auto_schema(method='get', query_serializer=CategoryQuerySerializer)
+# @swagger_auto_schema(method='get', manual_parameters=[main_id_param, sub_id_param])
+@api_view(("GET", ))
+def category_search(request):
+    main_id = request.GET.get('main_id', '')
+    sub_id = request.GET.get('sub_id', '')
+    main_category_name = ''
+    sub_category_name = ''
+    if main_id:
+        main_category_name = BooksMaincategory.objects.get(id=main_id).name
+    if sub_id:
+        sub_category_name = BooksSubcategory.objects.get(id=sub_id).name
+    
+    ####도서 전체 목록!!!! + 그 도서의 카테고리...이름까지 같이 넘어와야 할 듯
+    book_category_list = BooksCategory.objects.all()  #BooksCategory 테이블의 모든 정보 가져오기
 
-    else:
-        #sub_id가 1인지 아닌지
-        if sub_id == 1:
-            #메인카테고리에 따른 도서 목록 가져오기
-            #1. books_category에서 해당 main_category가 같은 book_id를 추출해서
-            #2. books_book에서 book_isbn과 같은 도서 목록을 추출
-            #3. 이 때, sub_category의 이름도 같이 보내기
-            print("")
+    #main_id가 0인지 아닌지 : 사용자가 main_category를 선택했는지 안했는지
+    if main_id and main_id != 0:
+        #메인카테고리에 따른 도서 목록 가져오기
+        #1. books_category에서 해당 main_category가 같은 book_id를 추출해서
+        #2. books_book에서 book_isbn과 같은 도서 목록을 추출
+        #3. 이 때, sub_category의 이름도 같이 보내기
+        book_category_list = book_category_list.filter(main_category = main_id)
 
-        else:
-            #서브카테고리에 따른 도서 목록 가져오기
-            print("")
+        #sub_id가 1인지 아닌지 : 사용자가 sub_category를 선택했는지 안했는지
+        if sub_id and sub_id != 1:
+            book_category_list = book_category_list.filter(sub_category = sub_id)
 
-    return Response(status=status.HTTP_200_OK)
+    # book_category_list 에서 book_id의 필드값만 뽑아와 리스트로 반환
+    # print(list(book_category_list.values_list('book_id', flat=True)))
+    book_list = Book.objects.filter(book_isbn__in = list(book_category_list.values_list('book_id', flat=True)))
+    count = book_list.count()
+    # print(book_list)
+
+    # 페이징 처리를 위해 만들어놓은 ListPageNumberPagination 클래스를 이용
+    paginator = ListPageNumberPagination()
+    book_list = paginator.paginate_queryset(book_list, request)
+
+    serializer = BookSerializer(book_list, many=True)
+
+    return Response({
+            "books": serializer.data,
+            "maincategory": main_category_name,  #카테고리 - 메인
+            "subcategory": sub_category_name,  #카테고리 - 서브
+            "total_count": count,
+        }, status=status.HTTP_200_OK)
 
 
 #리뷰 작성

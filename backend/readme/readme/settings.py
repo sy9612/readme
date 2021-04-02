@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'corsheaders',
+    'drf_yasg',
 ]
 
 SITE_ID = 1
@@ -62,7 +63,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 }
 
-# REST_FRAMEWORK = { #REST_FRAMEWORK의 디폴트 권한 클래스를 JSONWebTokenAuthentication으로 설정
+REST_FRAMEWORK = { #REST_FRAMEWORK의 디폴트 권한 클래스를 JSONWebTokenAuthentication으로 설정
 #     'DEFAULT_PERMISSION_CLASSES': (
 #         'rest_framework.permissions.IsAuthenticated',
 #         #'rest_framework.permissions.IsAdminUser',
@@ -72,7 +73,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 #         #'rest_framework.authentication.TokenAuthentication',
 #         #'rest_framework.authentication.SessionAuthentication',
 #     ),
-# }
+}
 JWT_AUTH = {
     # 'JWT_ENCODE_HANDLER': 'rest_framework_jwt.utils.jwt_encode_handler',
     # 'JWT_DECODE_HANDLER': 'rest_framework_jwt.utils.jwt_decode_handler',
