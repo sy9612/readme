@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status, mixins
 from rest_framework import generics  #generios class-based view 사용
@@ -87,6 +87,27 @@ class Registration(generics.GenericAPIView):
 
 #     return render(request, '../templates/update.html',
 #                   {'user_change_form': user_change_form})
+
+@api_view(('GET', 'POST', 'DELETE'))
+def account_update_delete(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        print(request.data)
+        user_change_form = CustomUserChangeForm(request.data, instance = user)
+        if user_change_form.is_valid():
+            user_change_form.save()
+            return Response(user_change_form.data, status = status.HTTP_202_ACCEPTED)
+        return Response(user_change_form.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        user.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
+
 
 
 #user별 찜 리스트
