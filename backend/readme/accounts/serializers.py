@@ -71,3 +71,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'nickname', 'birth', 'gender', 'mbti_id')
+
+# 사용자 정보 수정 Request Body Serializer
+class UserChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('nickname', 'gender', 'mbti_id')

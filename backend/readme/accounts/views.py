@@ -20,6 +20,9 @@ from .forms import CustomUserChangeForm
 from django.db.models import Q
 from books.serializers import BookSerializer
 
+# drf_yasg
+from drf_yasg.utils import swagger_auto_schema
+
 
 #누구나 접근 가능하다는 의미
 @permission_classes([AllowAny])
@@ -88,15 +91,16 @@ class Registration(generics.GenericAPIView):
 #     return render(request, '../templates/update.html',
 #                   {'user_change_form': user_change_form})
 
-@api_view(('GET', 'POST', 'DELETE'))
+@swagger_auto_schema(method='put', request_body=UserChangeSerializer)
+@api_view(('GET', 'PUT', 'DELETE'))
 def account_update_delete(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
         serializer = UserSerializer(user)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
-    elif request.method == 'POST':
-        print(request.data)
+    elif request.method == 'PUT':
+        # print(request.data)
         user_change_form = CustomUserChangeForm(request.data, instance = user)
         if user_change_form.is_valid():
             user_change_form.save()
