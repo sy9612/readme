@@ -44,7 +44,7 @@ export default {
   left: 0;
   top: 0;
   box-sizing: border-box;
-  padding-top: 11%;
+  padding-top: 14%;
   display: flex;
   align-items: center;
   flex-direction: column;

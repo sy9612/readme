@@ -1,37 +1,51 @@
 <template>
   <div id="Home">
+    <!-- <i class="homemenu fas fa-bars"></i> -->
+    <div id="homepage">
+      <div class="home-message">
+        <div>도서 추천 서비스 - README</div>
+        <div>여러분의 독서고민</div>
+        <div>우리가 해결해드려요</div>
+      </div>
+    </div>
     <div class="scroll">
-      <div>up</div>
-      <div @click="toDataStatus">down</div>
+      <div @click="toUp" v-if="pageNo!==0"><i class="fas fa-2x fa-chevron-circle-up"></i></div>
+      <div @click="toDown" v-if="pageNo!==1"><i class="fas fa-2x fa-chevron-circle-down"></i></div>
     </div>
-    <div class="home-message">
-      <div>도서 추천 서비스 - README</div>
-      <div>여러분의 독서고민</div>
-      <div>우리가 해결해드려요</div>
-    </div>
+    <DataStatus />
   </div>
+
 </template>
 
 <script>
+import DataStatus from '@/components/DataStatus'
+
 export default {
-  name: 'Main',
+  name: 'Home',
   data: function () {
     return {
-
+      pageNo: 0,
     }
   },
   components: {
+    DataStatus,
   },
   props: {
     menuIsOpen: Boolean,
   },
   methods: {
-    toDataStatus: function () {
-      const page = document.getElementById('Home')
+    toUp: function () {
+      this.pageNo -= 1
+      const page = document.getElementById('homepage')
+      page.style.transform = 'translateY(0)'
+      page.style.transition = '1s'
+    },
+    toDown: function () {
+      this.pageNo += 1
+      const page = document.getElementById('homepage')
       page.style.transform = 'translateY(-100%)'
       page.style.transition = '1s'
-      // this.$router.push({name: 'DataStatus'})
-    }
+    },
   },
   watch: {
     menuIsOpen: function () {
@@ -53,21 +67,41 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+#homepage {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: flex;
   align-items: center;
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
   background: url(../assets/main.jpg) no-repeat center center;
-  background-size: 100vw 100vh;
-  height: 100vh;
-  width: 100vw;
+  background-size: 100% 100%;
+  height: 100%;
+  width: 100%;
   color: white;
   font-weight: bold;
+  z-index: 2;
+}
+.homemenu {
+  position: absolute;
+  right: 3%;
+  top: 8%;
+  height: 10%;
+  width: 10%;
+  z-index: 3;
 }
 .scroll {
   position: absolute;
-  top: 80%;
+  display: flex;
+  top: 90%;
+  left: 32%;
+  z-index: 3;
 }
 .home-message {
   position: absolute;
