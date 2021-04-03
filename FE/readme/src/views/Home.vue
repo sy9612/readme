@@ -1,6 +1,6 @@
 <template>
   <div id="Home">
-    <i class="homemenu fas fa-bars"></i>
+    <!-- <i class="homemenu fas fa-bars"></i> -->
     <div id="homepage">
       <div class="home-message">
         <div>도서 추천 서비스 - README</div>

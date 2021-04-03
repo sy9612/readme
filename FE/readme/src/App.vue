@@ -2,7 +2,7 @@
   <div id="App">
     <div class="navbar">
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">PageName</span> </span>
-      <div v-if="menuIsOpen===true" @click="clickMenu"><i class="fas fa-bars"></i></div> 
+      <div @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
     </div>
 
     <div class="account">
@@ -44,7 +44,7 @@ export default {
       this.menuIsOpen = !this.menuIsOpen
     },
     toSearch: function () {
-      
+      this.$router.push({name: 'Search'})
     },
     clickSignup: function () {
       this.$router.push({name: 'Signup'})
@@ -125,6 +125,10 @@ export default {
   /* text-align: center; */
   color: #2c3e50;
 }
+.menu-icon:hover {
+  font-size: 110%;
+  transition: 0.5s;
+} 
 .navbar {
   position: relative;
   display: flex;

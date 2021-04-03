@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Signup from "../components/Signup.vue";
 import Login from "../components/Login.vue";
 import MyPage from "../components/MyPage.vue";
+import Search from "../components/Search.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/MyPage',
     name: 'MyPage',
     component: MyPage
+  },
+  {
+    path: '/Search',
+    name: 'Search',
+    component: Search
   },
 ];
 
