@@ -3,7 +3,7 @@ from django.db import models
 
 class MBTIBook(models.Model):
     mbti_book_id = models.AutoField(primary_key=True)
-    book_id = models.IntegerField()
+    book_id = models.CharField(max_length=45)
     mbti_id = models.IntegerField()
 
 
