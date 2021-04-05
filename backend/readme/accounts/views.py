@@ -137,14 +137,14 @@ def dibs_list(request, user_id):
 
 
 @api_view(('POST', ))
-def clickDibs(request, book_id):
+def clickDibs(request, book_isbn):
     #일단 book_id와 user_id가 같은 dibs 목록에 is_selected가 1 인지 확인
     #1이면 0으로 바꿔주고
     #0이면 1로 바꿔주고
     #없으면 1로 데이터 생성
     #int n = select count(dibs_id) from Dibs where user_id=1 and book_id=1
     user_id = request.data['user_id']
-    isSelected = Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=user_id))
+    isSelected = Dibs.objects.filter(Q(book_isbn=book_isbn) & Q(user_id=user_id))
 
     List = []
     if isSelected:
@@ -182,7 +182,7 @@ def clickDibs(request, book_id):
         print("존재하지 않아!")
         ######일단 시간이 지금 UTC?로 되어있긴 한데...
         new_dib = Dibs.objects.create(user_id=user_id,
-                                      book_id=book_id,
+                                      book_isbn=book_isbn,
                                       dibs_date=timezone.now(),
                                       is_selected=1)
         return Response(
