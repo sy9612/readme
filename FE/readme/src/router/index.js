@@ -6,6 +6,7 @@ import Login from "../components/Login.vue";
 import MyPage from "../components/MyPage.vue";
 import Search from "../components/Search.vue";
 
+Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 
 const routes = [
@@ -33,6 +34,21 @@ const routes = [
     path: '/Search',
     name: 'Search',
     component: Search
+  },
+  {
+    path: '/Recommendations',
+    name: 'Recommendations',
+    component: Recommendations
+  },
+  {
+    path: '/WishList',
+    name: 'WishList',
+    component: WishList
+  },
+  {
+    path: '/ReadList',
+    name: 'ReadList',
+    component: ReadList
   },
 ];
 
