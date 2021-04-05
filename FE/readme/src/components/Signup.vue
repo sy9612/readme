@@ -109,7 +109,7 @@ export default {
     left: 0;
     top: 0;
     box-sizing: border-box;
-    padding-top: 11%;
+    padding-top: 13%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -129,14 +129,18 @@ export default {
   }
   .signup-input {
     display: flex;
-    justify-items: center;
+    justify-content: space-between;
+    /* align-items: ; */
     height: 65%;
-    width: 40%;
+    width: 30%;
+  }
+  input::placeholder {
+    font-size: 70%;
   }
   .left-input {
     position: relative;
     height: 100%;
-    width: 50%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     margin-right: 3%;
@@ -152,7 +156,7 @@ export default {
   .right-input {
     position: relative;
     height: 100%;
-    width: 50%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     /* margin-right: 3%; */

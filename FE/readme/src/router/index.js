@@ -4,11 +4,7 @@ import Home from "../views/Home.vue";
 import Signup from "../components/Signup.vue";
 import Login from "../components/Login.vue";
 import MyPage from "../components/MyPage.vue";
-import DataStatus from '../components/DataStatus.vue';
-import Recommendations from '../components/Recommendations.vue';
-import WishList from '../components/WishList.vue';
-import ReadList from '../components/ReadList.vue';
-import BootstrapVue from 'bootstrap-vue'
+import Search from "../components/Search.vue";
 
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
@@ -35,9 +31,9 @@ const routes = [
     component: MyPage
   },
   {
-    path: '/DataStatus',
-    name: 'DataStatus',
-    component: DataStatus
+    path: '/Search',
+    name: 'Search',
+    component: Search
   },
   {
     path: '/Recommendations',

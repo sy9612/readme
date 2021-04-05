@@ -8,10 +8,14 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
-from .serializers import BookSerializer, ReviewSerializer
+from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer,\
+                        CategoryQuerySerializer, BookSearchQuerySerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
+from .pagination import ListPageNumberPagination
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 
 @api_view(('GET', ))
@@ -21,28 +25,45 @@ def booklist(request):  #얘 request 필요해 . . .?
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# 모든 책을 가져오고나서 .. .. 검색인데 ㅇㅁㅇ
-#미완성!
+# 책 검색 API
+@swagger_auto_schema(method='get', query_serializer=BookSearchQuerySerializer)
+@api_view(('GET', ))
 def search(request):
-    books = Book.objects.all().order_by('-book_id')
-    contents = request.POST.get('contents', "")
+    keyword = request.GET.get('keyword', '')
+    search_type = request.GET.get('search_type', 'all')
+    print(search_type)
+    # contents = request.POST.get('contents', "")
+    book_list = Book.objects.order_by('-book_id')
+    # 페이징 처리
+    paginator = ListPageNumberPagination()
 
-    if contents:
-        books = books.filter(
-            Q(book_title__icontains=contents)
-            | Q(book_author__icontains=contents)).distinct()
+    if keyword:
         # | Q(book_subcategory__icontains=contents)).distinct()
         #Q객체 : filter()메소드의 조건을 다양하게 줄 수 있음
         #icontains 연산자 : 대소문자를 구분하지 않고 단어가 포함되어있는지 검사
         #distinct() : 중복된 객체 제외
+        if search_type == 'all':
+            search_book_list = book_list.filter(Q(book_title__icontains=keyword)
+                                                 | Q(book_author__icontains=keyword)
+                                                 | Q(book_description__icontains=keyword))
+        elif search_type == 'title':
+            search_book_list = book_list.filter(book_title__icontains=keyword)
+        elif search_type == 'author':
+            search_book_list = book_list.filter(book_author__icontains=keyword)
+        else:
+            search_book_list = book_list.filter(book_description__icontains=keyword)
+        
+        book_list = search_book_list
 
-        return render(request, 'search_book.html', {
-            'books': books,
-            'contents': contents
-        })
+    count = book_list.count()
 
-    else:
-        return render(request, 'search_book.html')
+    book_list = paginator.paginate_queryset(book_list, request)
+    serializer = BookSerializer(book_list, many=True)
+
+    return Response({
+        "books": serializer.data,
+        "total_count": count,
+    }, status = status.HTTP_200_OK)
 
 
 #도서 상세 정보
@@ -98,6 +119,77 @@ def detail(request, book_id):
         status=status.HTTP_200_OK)
 
 
+#메인 카테고리들 전송
+@api_view(["POST"])
+def maincategory(request):
+    #main_category table에 있는 모든 정보 전송
+    categories = BooksMaincategory.objects.all()
+    serializer = MainCategorySerializer(categories, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#메인 카테고리에 따른 서브 카테고리 목록 전송
+@api_view(["POST"])
+def subcategory(request, main_id):
+    #sub_category에서 main = 받아온 main_id 인 sub_category의 id와 name 전달
+    categories = BooksSubcategory.objects.filter(Q(main=main_id))
+    serializer = SubCategorySerializer(categories, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+# category_search를 위한 query parameter
+# main_id_param = openapi.Parameter('main_id', openapi.IN_QUERY, description="주 카테고리의 id", type=openapi.TYPE_INTEGER)
+# sub_id_param = openapi.Parameter('sub_id', openapi.IN_QUERY, description="서브 카테고리의 id", type=openapi.TYPE_INTEGER)
+
+#서브 카테고리 별 도서 목록 전송 -> 메인카테고리/서브카테고리도 같이 보내기
+#서브 카테고리를 선택하지 않을 수도 있음 : sub_id를 1로 설정해두자(front에서)
+@swagger_auto_schema(method='get', query_serializer=CategoryQuerySerializer)
+# @swagger_auto_schema(method='get', manual_parameters=[main_id_param, sub_id_param])
+@api_view(("GET", ))
+def category_search(request):
+    main_id = request.GET.get('main_id', '')
+    sub_id = request.GET.get('sub_id', '')
+    main_category_name = ''
+    sub_category_name = ''
+    if main_id:
+        main_category_name = BooksMaincategory.objects.get(id=main_id).name
+    if sub_id:
+        sub_category_name = BooksSubcategory.objects.get(id=sub_id).name
+    
+    ####도서 전체 목록!!!! + 그 도서의 카테고리...이름까지 같이 넘어와야 할 듯
+    book_category_list = BooksCategory.objects.all()  #BooksCategory 테이블의 모든 정보 가져오기
+
+    #main_id가 0인지 아닌지 : 사용자가 main_category를 선택했는지 안했는지
+    if main_id and main_id != 0:
+        #메인카테고리에 따른 도서 목록 가져오기
+        #1. books_category에서 해당 main_category가 같은 book_id를 추출해서
+        #2. books_book에서 book_isbn과 같은 도서 목록을 추출
+        #3. 이 때, sub_category의 이름도 같이 보내기
+        book_category_list = book_category_list.filter(main_category = main_id)
+
+        #sub_id가 1인지 아닌지 : 사용자가 sub_category를 선택했는지 안했는지
+        if sub_id and sub_id != 1:
+            book_category_list = book_category_list.filter(sub_category = sub_id)
+
+    # book_category_list 에서 book_id의 필드값만 뽑아와 리스트로 반환
+    # print(list(book_category_list.values_list('book_id', flat=True)))
+    book_list = Book.objects.filter(book_isbn__in = list(book_category_list.values_list('book_id', flat=True)))
+    count = book_list.count()
+    # print(book_list)
+
+    # 페이징 처리를 위해 만들어놓은 ListPageNumberPagination 클래스를 이용
+    paginator = ListPageNumberPagination()
+    book_list = paginator.paginate_queryset(book_list, request)
+
+    serializer = BookSerializer(book_list, many=True)
+
+    return Response({
+            "books": serializer.data,
+            "maincategory": main_category_name,  #카테고리 - 메인
+            "subcategory": sub_category_name,  #카테고리 - 서브
+            "total_count": count,
+        }, status=status.HTTP_200_OK)
+
+
 #리뷰 작성
 @api_view(["POST"])
 def createReview(request):
@@ -112,19 +204,6 @@ def createReview(request):
     new_review.save()
 
     return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
-
-
-# if (request.method == 'POST'):
-#     form = PostForm(request.POST)
-#     if form.is_valid():
-#         print("request" + request)
-#         new_review = Review.objects.create(user_id=user_id,
-#                                            book_id=book_id,
-#                                            review_rating=review_rating,
-#                                            review_content=review_content,
-#                                            review_date=timezone.now())
-#         return Response(status=status.HTTP_200_OK)
-# return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 #리뷰 수정

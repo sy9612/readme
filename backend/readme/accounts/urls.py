@@ -6,7 +6,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path('signup', views.Registration.as_view()),
     path('login', obtain_jwt_token),
-    #path('update/', views.update, name='update'),
+    path('<int:user_id>', views.account_update_delete, name='account_update_delete'),
     path('dibsList', views.dibsList, name="dibsList"),
     path('clickDibs/<int:book_id>', views.clickDibs, name="clickDibs"),
 ]
