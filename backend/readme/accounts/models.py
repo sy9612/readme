@@ -14,10 +14,10 @@ class User(AbstractUser):
 class Dibs(models.Model):
     dibs_id = models.AutoField(primary_key=True)
     user_id = models.IntegerField(blank=True, null=True)
-    book_id = models.IntegerField(blank=True, null=True)
+    book_isbn = models.CharField(max_length=45,blank=True, null=True)
     dibs_date = models.DateTimeField(blank=True, null=True)
     is_selected = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'accounts_dibs'
