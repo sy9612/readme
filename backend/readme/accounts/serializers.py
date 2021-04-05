@@ -9,6 +9,7 @@ from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from django.db.models import Avg
 from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
@@ -88,7 +89,7 @@ class DibsBookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['book_id', 'book_isbn', 'book_title', 'book_author']
+        fields = ['book_id', 'book_isbn', 'book_title', 'book_author', 'score_avg']
 
     def get_score_avg(self, obj):
         return Review.objects.filter(book_id=obj.book_id).aggregate(Avg('review_rating'))
