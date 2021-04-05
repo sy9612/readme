@@ -68,16 +68,16 @@ def search(request):
 
 #도서 상세 정보
 @api_view(('POST', ))
-def detail(request, book_id):
+def detail(request, book_isbn):
     user_id = request.data['user_id']
-    book = Book.objects.get(book_id=book_id)
+    book = Book.objects.get(book_isbn=book_isbn)
     serializer = BookSerializer(book)
     # context = {
     #     'book': book,
     # }
     #리뷰 작성했는지 확인하는 sql 필요
     #여기서 리뷰를 작성한 사람이면 "리뷰작성함" 메시지를 보내야하고
-    isWritten = Review.objects.filter(Q(book_id=book_id) & Q(user_id=user_id))
+    isWritten = Review.objects.filter(Q(book_isbn=book_isbn) & Q(user_id=user_id))
     myreview = []
     if isWritten:
         myreview = list(isWritten.values())[0]  #화면에 띄워주기 편하려고!
@@ -87,7 +87,7 @@ def detail(request, book_id):
 
     #찜했는지 여부도 같이 보내야함!
     dibSelected = list(
-        Dibs.objects.filter(Q(book_id=book_id) & Q(user_id=user_id)).values())
+        Dibs.objects.filter(Q(book_isbn=book_isbn) & Q(user_id=user_id)).values())
     dibSelectYes = False
     if dibSelected[0]['is_selected']:  #찜했으면 True 보내주기!
         dibSelectYes = True
@@ -97,7 +97,7 @@ def detail(request, book_id):
     book_isbn = serializer.data['book_isbn']
 
     #2. book.book_isbn = book_category.book_id 인 main_category랑 sub_category 찾기
-    categoryData = BooksCategory.objects.get(book_id=book_isbn)
+    categoryData = BooksCategory.objects.get(book_isbn=book_isbn)
 
     main_category_id = categoryData.main_category
     sub_category_id = categoryData.sub_category
@@ -172,7 +172,7 @@ def category_search(request):
 
     # book_category_list 에서 book_id의 필드값만 뽑아와 리스트로 반환
     # print(list(book_category_list.values_list('book_id', flat=True)))
-    book_list = Book.objects.filter(book_isbn__in = list(book_category_list.values_list('book_id', flat=True)))
+    book_list = Book.objects.filter(book_isbn__in = list(book_category_list.values_list('book_isbn', flat=True)))
     count = book_list.count()
     # print(book_list)
 

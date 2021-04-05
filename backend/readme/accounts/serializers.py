@@ -85,11 +85,11 @@ class UserChangeSerializer(serializers.ModelSerializer):
         fields = ('nickname', 'gender', 'mbti_id')
 
 class DibsBookSerializer(serializers.ModelSerializer):
-    score_avg = serializers.SerializerMethodField()
+    rating_avg = serializers.SerializerMethodField()
 
     class Meta:
         model = Book
-        fields = ['book_id', 'book_isbn', 'book_title', 'book_author', 'score_avg']
+        fields = ['book_id', 'book_isbn', 'book_title', 'book_author', 'rating_avg']
 
-    def get_score_avg(self, obj):
-        return Review.objects.filter(book_id=obj.book_id).aggregate(Avg('review_rating'))
+    def get_rating_avg(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Avg('review_rating'))

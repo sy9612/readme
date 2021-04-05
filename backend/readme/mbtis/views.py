@@ -15,7 +15,7 @@ def mbti_book_list(request, mbti_id):
     mbti_desc = MBTI.objects.get(mbti_id=mbti_id).mbti_desc
 
     mbti_book_list = MBTIBook.objects.filter(mbti_id=mbti_id)
-    mbti_book_list = Book.objects.filter(book_isbn__in = list(mbti_book_list.values_list('book_id', flat=True)))
+    mbti_book_list = Book.objects.filter(book_isbn__in = list(mbti_book_list.values_list('book_isbn', flat=True)))
     serializer = MbtiBookSerializer(mbti_book_list, many=True)
 
     return Response({

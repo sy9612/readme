@@ -29,9 +29,9 @@ def report(request, user_id):
     return Response(serializer.data, status = status.HTTP_200_OK)
 
 @api_view(('GET', 'PUT', 'DELETE'))
-def report_detail(request, user_id, book_id):
+def report_detail(request, user_id, book_isbn):
     try:
-        report = Report.objects.get(Q(user_id = user_id) & Q(book_id = book_id))
+        report = Report.objects.get(Q(user_id = user_id) & Q(book_isbn = book_isbn))
     except Report.DoesNotExist:
         return Response({
             'code' : 404,
