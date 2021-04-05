@@ -18,7 +18,6 @@ from rest_framework.decorators import api_view
 #user update에 사용
 from .forms import CustomUserChangeForm
 from django.db.models import Q
-from books.serializers import BookSerializer
 
 # drf_yasg
 from drf_yasg.utils import swagger_auto_schema
@@ -117,25 +116,24 @@ def account_update_delete(request, user_id):
 #user별 찜 리스트
 @api_view(('GET', ))
 def dibs_list(request, user_id):
-    bookIdxs = Dibs.objects.filter(Q(is_selected=1)
-                                   & Q(user_id=user_id)).values('book_id')
+    """
+        user별 찜 리스트
 
-    dibs = []
-    print("들어옴?")
-    #bookIdxs에 있는 book의 내용 전달
-    # serializer = BookSerializer(book_list, many=True)
-    # return Response(serializer.data, status=status.HTTP_200_OK)
-    for idx in bookIdxs:
-        book = list(Book.objects.filter(Q(book_id=idx['book_id'])).values())
-        dibs += book
+        ---
+        # Response
+            - book_id     : 책 id
+            - book_isbn   : isbn
+            - book_title  : 제목
+            - book_author : 저자
 
-    return Response(
-        {'dibs': dibs},
-        status=status.HTTP_200_OK,
-    )
+            - score_avg   : 평균별점
+    """
+    dib_list = Dibs.objects.filter(Q(is_selected=1) & Q(user_id=user_id))
 
+    book_list = Book.objects.filter(book_isbn__in=list(dib_list.values_list('book_isbn', flat=True)))
+    serializer = DibsBookSerializer(book_list, many=True)
 
-#파라미터에 user_id와 book_id를 넣어줘야할까?
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(('POST', ))
