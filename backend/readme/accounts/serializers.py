@@ -13,6 +13,11 @@ from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
 
+import os
+import sys
+sys.path.append( os.path.dirname(os.path.abspath(os.path.dirname(__file__))) )
+from books.models import Book, Review
+
 #JWT 사용을 위한 설정
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -77,3 +82,13 @@ class UserChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('nickname', 'gender', 'mbti_id')
+
+class DibsBookSerializer(serializers.ModelSerializer):
+    score_avg = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Book
+        fields = ['book_id', 'book_isbn', 'book_title', 'book_author']
+
+    def get_score_avg(self, obj):
+        return Review.objects.filter(book_id=obj.book_id).aggregate(Avg('review_rating'))
