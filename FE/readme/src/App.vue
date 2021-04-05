@@ -14,7 +14,7 @@
     <div class="menu-list">
       <div @click="toSearch">Search</div>
       <div>Book Report</div>
-      <div>Recommendations</div>
+      <div @click="toRecommendations">Recommendations</div>
       <div @click="toMyPage">My Page</div>
     </div> 
      <router-view :menuIsOpen="menuIsOpen" @login="logined" />
@@ -62,6 +62,9 @@ export default {
     },
     toMyPage: function () {
       this.$router.push({name: 'MyPage'})
+    },
+    toRecommendations: function () {
+      this.$router.push({name: 'Recommendations'})
     },
     logined: function () {
       this.login  = true
