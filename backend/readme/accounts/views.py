@@ -115,10 +115,8 @@ def account_update_delete(request, user_id):
 
 
 #user별 찜 리스트
-@api_view(('POST', ))
-def dibsList(request):
-    user_id = request.data['user_id']
-
+@api_view(('GET', ))
+def dibs_list(request, user_id):
     bookIdxs = Dibs.objects.filter(Q(is_selected=1)
                                    & Q(user_id=user_id)).values('book_id')
 
