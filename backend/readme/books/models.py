@@ -15,7 +15,7 @@ class Book(models.Model):
     book_price = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'books_book'
 
 
@@ -26,7 +26,7 @@ class BooksCategory(models.Model):
     sub_category = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'books_category'
 
 
@@ -35,7 +35,7 @@ class BooksMaincategory(models.Model):
     name = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'books_maincategory'
 
 
@@ -44,7 +44,7 @@ class BooksSubcategory(models.Model):
     main = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'books_subcategory'
 
 
