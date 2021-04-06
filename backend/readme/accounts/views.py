@@ -117,7 +117,8 @@ def dibs_list(request, user_id):
             - book_title  : 제목
             - book_author : 저자
 
-            - score_avg   : 평균별점
+            - rating_avg   : 평균별점
+            - rating_count : 리뷰개수
     """
     dib_list = Dibs.objects.filter(Q(is_selected=1) & Q(user_id=user_id))
 
