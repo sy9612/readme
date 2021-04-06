@@ -7,6 +7,7 @@ urlpatterns = [
     path('signup', views.Registration.as_view()),
     path('login', obtain_jwt_token),
     path('<int:user_id>', views.account_update_delete, name='account_update_delete'),
+    path('<int:user_id>/readList', views.review_report_list, name='review_report_list'),
     path('<int:user_id>/dibsList', views.dibs_list, name="dibs_list"),
     path('clickDibs/<int:book_isbn>', views.clickDibs, name="clickDibs"),
 ]

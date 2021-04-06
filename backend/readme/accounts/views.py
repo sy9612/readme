@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, mixins
 from rest_framework import generics  #generios class-based view 사용
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.utils import timezone
 
 #JWT 사용을 위해 필요
@@ -13,7 +13,6 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from .serializers import *
 from .models import *
 from books.models import Book, Report, Review
-from rest_framework.decorators import api_view
 
 #user update에 사용
 from .forms import CustomUserChangeForm
@@ -123,20 +122,40 @@ def dibs_list(request, user_id):
     dib_list = Dibs.objects.filter(Q(is_selected=1) & Q(user_id=user_id))
 
     book_list = Book.objects.filter(book_isbn__in=list(dib_list.values_list('book_isbn', flat=True)))
-    serializer = DibsBookSerializer(book_list, many=True)
+    serializer = UserBookSerializer(book_list, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# user별 읽은 책 리스트
 @api_view(('GET', ))
-def user_review_report_list(request, user_id):
+def review_report_list(request, user_id):
     '''
         user별 읽은 책 리스트
 
         ---
+        ## (report_list + review_list) 에서 중복제거한 리스트 
+        # Response
+            - book_id     : 책 id
+            - book_isbn   : isbn
+            - book_title  : 제목
+            - book_author : 저자
+
+            - rating_avg   : 평균별점
+            - rating_count : 리뷰개수
     '''
-    # report_list = 
+    read_list = []
+    report_list = Report.objects.filter(user_id = user_id)
+    review_list = Review.objects.filter(user_id = user_id)
+
+    read_list.extend(list(report_list.values_list('book_isbn', flat=True)))
+    read_list.extend(list(review_list.values_list('book_isbn', flat=True)))
+    read_set = set(read_list)   # isbn 중복제거
+    read_list = list(read_set)
+    read_book_list = Book.objects.filter(book_isbn__in = read_list)
+    serializer = UserBookSerializer(read_book_list, many=True)
+
+    return Response(serializer.data, status = status.HTTP_200_OK)
+
 
 @api_view(('POST', ))
 def clickDibs(request, book_isbn):
