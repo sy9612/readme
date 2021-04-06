@@ -9,7 +9,7 @@ from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
@@ -81,7 +81,8 @@ class UserChangeSerializer(serializers.ModelSerializer):
         model = User
         fields = ('nickname', 'gender', 'mbti_id')
 
-class DibsBookSerializer(serializers.ModelSerializer):
+# 사용자가 찜하거나 읽은 책 Serializer
+class UserBookSerializer(serializers.ModelSerializer):
     rating_avg = serializers.SerializerMethodField()
     rating_count = serializers.SerializerMethodField()
 
