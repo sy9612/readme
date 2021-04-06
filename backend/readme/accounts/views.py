@@ -12,7 +12,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 from .serializers import *
 from .models import *
-from books.models import Book
+from books.models import Book, Report, Review
 from rest_framework.decorators import api_view
 
 #user update에 사용
@@ -77,19 +77,6 @@ class Registration(generics.GenericAPIView):
 #             user['token']
 #         })
 
-# def update(request):
-#     if request.method == 'POST':
-#         user_change_from = CustomUserChangeForm(request.POST)
-#         if user_change_form.is_valid():
-#             user_change_form.save()
-#             return redirect('accounts:people', request.user.username)
-
-#     else:
-#         user_change_form = CustomUserChangeForm(instance=request.user)
-
-#     return render(request, '../templates/update.html',
-#                   {'user_change_form': user_change_form})
-
 @swagger_auto_schema(method='put', request_body=UserChangeSerializer)
 @api_view(('GET', 'PUT', 'DELETE'))
 def account_update_delete(request, user_id):
@@ -117,8 +104,6 @@ def account_update_delete(request, user_id):
         return Response(status = status.HTTP_204_NO_CONTENT)
 
 
-
-
 #user별 찜 리스트
 @api_view(('GET', ))
 def dibs_list(request, user_id):
@@ -141,6 +126,16 @@ def dibs_list(request, user_id):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# user별 읽은 책 리스트
+@api_view(('GET', ))
+def user_review_report_list(request, user_id):
+    '''
+        user별 읽은 책 리스트
+
+        ---
+    '''
+    # report_list = 
 
 @api_view(('POST', ))
 def clickDibs(request, book_isbn):

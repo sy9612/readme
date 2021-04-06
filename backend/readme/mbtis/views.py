@@ -3,10 +3,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import MBTI, MBTIBook
 from .serializers import MbtiBookSerializer
-# 상위 폴더 import
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from books.models import Book
 
 
