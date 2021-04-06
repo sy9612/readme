@@ -1,5 +1,5 @@
 <template>
-  <div id = "WishList">
+  <div id="WishList">
     <div id="v-carousel" type="x/template">
       <div class="card-carousel-wrapper">
         <div
@@ -7,6 +7,7 @@
           @click="moveCarousel(-1)"
           :disabled="atHeadOfList"
         ></div>
+
         <div class="card-carousel">
           <div class="card-carousel--overflow-container">
             <div
@@ -15,49 +16,65 @@
                 transform: 'translateX' + '(' + currentOffset + 'px' + ')',
               }"
             >
-              <div class="card-carousel--card" v-for="item in items" v-bind:key="item.name">
-                <img :src= "item.src" />
+              <div
+                class="card-carousel--card"
+                v-for="item in items"
+                v-bind:key="item.book_title"
+              >
+                <img :src="item.src" />
                 <div class="card-carousel--card--footer">
-                  <p>{{ item.name }}</p>
+                  <p>{{ item.book_title }}</p>
                   <p
                     class="tag"
-                    v-for="(tag, index) in item.tag" v-bind:key="index"
+                    v-for="(book_author, index) in item.book_author"
+                    v-bind:key="index"
                     :class="index &gt; 0 ? 'secondary' : ''"
                   >
-                    {{ tag }}
+                    {{ book_author }}
+                  </p>
+                  <p style="color: #f5d107">
+                    ★ {{ item.rating_avg }} ({{ item.rating_cnt }}명)
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div
           class="card-carousel--nav__right"
           @click="moveCarousel(1)"
           :disabled="atEndOfList"
         ></div>
+
+        <!-- <ol class="carousel-indicators">
+          <li
+            data-target="#v-carousel"
+            data-slide-to="0"
+            class="active"
+          ></li>
+          <li data-target="#v-carousel" data-slide-to="1"></li>
+          <li data-target="#v-carousel" data-slide-to="2"></li>
+        </ol> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const SERVER_URL = 'http://127.0.0.1:8000';
+import axios from 'axios';
+
 export default {
   name: 'WishList',
   data() {
     return {
+      // path: "http://j4a205.p.ssafy.io:8050/",
+      user_id: 2,
       currentOffset: 0,
-      windowSize: 4,
+      windowSize: 5,
       paginationFactor: 220,
-      items: [
-        { src: require("../assets/" + "2034.jpg"), name: 'Kin Khao', tag: ['Thai'] },
-        { src: require("../assets/2038.jpg"),name: 'Jū-Ni', tag: ['Sushi', 'Japanese', '$$$$'] },
-        { src: require("../assets/3284.jpg"),name: 'Delfina', tag: ['Pizza', 'Casual'] },
-        { src: require("../assets/4436.jpg"),name: 'San Tung', tag: ['Chinese', '$$'] },
-        { src: require("../assets/5060.jpg"),name: 'Anchor Oyster Bar', tag: ['Seafood', 'Cioppino'] },
-        { src: require("../assets/5248.jpg"),name: 'Locanda', tag: ['Italian'] },
-        { src: require("../assets/7679.jpg"),name: 'Garden Creamery', tag: ['Ice cream'] },
-      ],
+      items: [],
     };
   },
   computed: {
@@ -71,6 +88,9 @@ export default {
       return this.currentOffset === 0;
     },
   },
+  created() {
+    this.fnGetList();
+  },
   methods: {
     moveCarousel(direction) {
       // Find a more elegant way to express the :style. consider using props to make it truly generic
@@ -79,6 +99,29 @@ export default {
       } else if (direction === -1 && !this.atHeadOfList) {
         this.currentOffset += this.paginationFactor;
       }
+    },
+    fnGetList() {
+      axios
+        .get(`${SERVER_URL}/accounts/` + this.user_id + `/dibsList`)
+        .then((res) => {
+          for (let i = 0; i < res.data.length; i++) {
+            var item = {};
+            var src = '../assets/' + res.data[i].book_isbn + '.jpg';
+            item.src = src;
+            item.book_title = res.data[i].book_title;
+            item.book_author = res.data[i].book_author;
+            item.rating_avg = res.data[i].rating_avg.review_rating__avg;
+            if (item.rating_avg == null) item.rating_avg = 0;
+            item.rating_cnt = res.data[i].rating_count.review_rating__count;
+            this.items.push(item);
+          }
+        });
+      console.log("hello");
+
+      console.log(this.items.length);
+      console.log(this.windowSize);
+      if (this.items.length < this.windowSize) console.log('짧');
+      else console.log('안짧');
     },
   },
 };
@@ -99,7 +142,7 @@ export default {
 body {
   background: #f8f8f8;
   color: #2c3e50;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .card-carousel-wrapper {
@@ -118,7 +161,8 @@ body {
 .card-carousel--overflow-container {
   overflow: hidden;
 }
-.card-carousel--nav__left, .card-carousel--nav__right {
+.card-carousel--nav__left,
+.card-carousel--nav__right {
   display: inline-block;
   width: 15px;
   height: 15px;
@@ -130,7 +174,8 @@ body {
   margin: 0 20px;
   transition: transform 150ms linear;
 }
-.card-carousel--nav__left[disabled], .card-carousel--nav__right[disabled] {
+.card-carousel--nav__left[disabled],
+.card-carousel--nav__right[disabled] {
   opacity: 0.2;
   border-color: black;
 }
@@ -155,7 +200,8 @@ body {
 .card-carousel-cards .card-carousel--card {
   margin: 0 10px;
   cursor: pointer;
-  box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06), 0 2px 2px 0 rgba(40, 44, 53, 0.08);
+  box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06),
+    0 2px 2px 0 rgba(40, 44, 53, 0.08);
   background-color: #fff;
   border-radius: 4px;
   z-index: 3;
@@ -175,7 +221,6 @@ body {
   user-select: none;
   width: 200px;
   height: 200px;
-
 }
 .card-carousel-cards .card-carousel--card img:hover {
   opacity: 0.5;
@@ -204,7 +249,7 @@ body {
   color: #666a73;
 }
 .card-carousel-cards .card-carousel--card--footer p.tag:before {
-  content: "";
+  content: '';
   float: left;
   position: absolute;
   top: 0;
@@ -223,7 +268,7 @@ body {
   display: none !important;
 }
 .card-carousel-cards .card-carousel--card--footer p.tag:after {
-  content: "";
+  content: '';
   position: absolute;
   top: 8px;
   left: -3px;
