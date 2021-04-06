@@ -37,7 +37,8 @@ def recommend_list(request, user_id):
         # 리뷰 작성을 한 번도 안한 경우 베스트셀러
         recommend_list = BestSeller.objects.all()
 
-    recommend_book_list = Book.objects.filter(book_isbn__in = list(recommend_list.values_list('book_isbn', flat=True)))
+    book_list = Book.objects.order_by('-book_id')
+    recommend_book_list = book_list.filter(book_isbn__in = list(recommend_list.values_list('book_isbn', flat=True)))
     recommend_book_list = paginator.paginate_queryset(recommend_book_list, request)
     serializer = RecommendBookSerializer(recommend_book_list, many=True)
     # else:
