@@ -55,6 +55,19 @@ def get_review(book_id_list):
         url = get_url(book_id)
         referer = 'https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=' + book_id
 
+        # book_isbn 가져오기
+        try:
+            req = requests.get(referer)
+        except:
+            time.sleep(2)
+            req = requests.get(referer)
+        soup = BeautifulSoup(req.content, 'html.parser')
+        # book_isbn = str(soup.select('div.conts_info_list1 > ul > li')[3].text).split(':')[1].strip()
+        book_isbn = soup.find('meta', property = "books:isbn")
+        if book_isbn is None:
+            continue
+        book_isbn = book_isbn["content"]
+        
         custom_header = {
             'referer': referer,
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'
@@ -73,7 +86,6 @@ def get_review(book_id_list):
 
         req_content = req.content
         soup = BeautifulSoup(req_content, 'html.parser')
-
         global review_list
         for hl in soup.select('div.hundred_list'):
             # hl : 리뷰 한 개
@@ -86,7 +98,7 @@ def get_review(book_id_list):
             if user == None:
                 continue
             uid = user.attrs['href'].split('/')[3]
-            nickname = user.text
+            nickname = user.text.strip()
             # info = hlw.select('div.left > span.Ere_PR10')
             # reg_time = info[0].text
             # 공감 (15) 에서 숫자만 뽑아오기
@@ -106,7 +118,7 @@ def get_review(book_id_list):
 
             if book_id and uid and nickname and score:
                 review_list.append(
-                    [book_id, uid, nickname, score])
+                    [book_id, book_isbn, uid, nickname, score])
 
 
 def get_url(book_id):
@@ -137,10 +149,12 @@ if __name__ == "__main__":
         # book_id_list = get_book_id(cid)
         book_id_list = get_book_id_from_all(str(cid), 250)
         get_review(book_id_list)
-    # get_review(['4092522'])
+    # get_review(['264270055'])
     data = pd.DataFrame(review_list)
-    data.columns = ['book_id', 'user_id', 'nickname',
+    data.columns = ['book_id', 'book_isbn', 'user_id', 'nickname',
                     'score']
+    print(data)
     # data.to_csv('리뷰데이터크롤링.csv', sep='\t')
     # data.to_csv('리뷰데이터크롤링(모두보기).csv', sep='\t', encoding='utf-8-sig')
     data.to_pickle('./data/리뷰데이터크롤링(모두보기).pkl')
+    # data.to_pickle('./data/리뷰데이터크롤링(모두보기)_sample.pkl')
