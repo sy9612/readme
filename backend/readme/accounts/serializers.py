@@ -14,9 +14,6 @@ from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
 
-import os
-import sys
-sys.path.append( os.path.dirname(os.path.abspath(os.path.dirname(__file__))) )
 from books.models import Book, Review
 
 #JWT 사용을 위한 설정

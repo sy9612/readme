@@ -3,10 +3,6 @@ from rest_framework.decorators import api_view
 from .serializers import ReportSerializer
 from rest_framework.response import Response
 from django.db.models import Q
-# 상위 폴더 import
-import os
-import sys
-sys.path.append( os.path.dirname(os.path.abspath(os.path.dirname(__file__))) )
 from books.models import Report
 
 @api_view(('GET', 'POST'))

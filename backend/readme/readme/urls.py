@@ -28,6 +28,7 @@ urlpatterns = [
     path('books/', include('books.urls')),
     path('reports/', include('reports.urls')),
     path('mbtis/', include('mbtis.urls')),
+    path('recommends/', include('recommends.urls')),
     # 로그인 - 주어진 view로 테스트
     # path('rest-auth/login', LoginView.as_view(), name='rest_login'),
     # path('rest-auth/logout', LogoutView.as_view(), name='rest_logout'),
