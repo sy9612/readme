@@ -93,6 +93,12 @@ class Registration(generics.GenericAPIView):
 @swagger_auto_schema(method='put', request_body=UserChangeSerializer)
 @api_view(('GET', 'PUT', 'DELETE'))
 def account_update_delete(request, user_id):
+    '''
+        유저 관련 RUD
+        
+        ---
+    '''
+
     user = get_object_or_404(User, pk=user_id)
     if request.method == 'GET':
         serializer = UserSerializer(user)

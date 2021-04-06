@@ -18,9 +18,20 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 
+page_param = openapi.Parameter('page', openapi.IN_QUERY, description="페이지 넘버(한 페이지당 25개의 결과)", type=openapi.TYPE_INTEGER)
+
+@swagger_auto_schema(method='get', manual_parameters=[page_param])
 @api_view(('GET', ))
-def booklist(request):  #얘 request 필요해 . . .?
+def book_list(request):
+    '''
+        전체 책 리스트 반환
+
+        ---
+    '''
     book_list = Book.objects.all()  #BooksBook 테이블의 모든 정보 가져오기
+    # 페이징 처리
+    paginator = ListPageNumberPagination()
+    book_list = paginator.paginate_queryset(book_list, request)
     serializer = BookSerializer(book_list, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -29,6 +40,11 @@ def booklist(request):  #얘 request 필요해 . . .?
 @swagger_auto_schema(method='get', query_serializer=BookSearchQuerySerializer)
 @api_view(('GET', ))
 def search(request):
+    '''
+        type과 keyword에 해당하는 책 정보 검색
+
+        --- 
+    '''
     keyword = request.GET.get('keyword', '')
     search_type = request.GET.get('search_type', 'all')
     print(search_type)
@@ -69,6 +85,12 @@ def search(request):
 #도서 상세 정보
 @api_view(('POST', ))
 def detail(request, book_isbn):
+    '''
+        user_id를 request.data['user_id']로 입력받음.
+        도서 상세 정보를 반환
+
+        ---
+    '''
     user_id = request.data['user_id']
     book = Book.objects.get(book_isbn=book_isbn)
     serializer = BookSerializer(book)
@@ -122,6 +144,11 @@ def detail(request, book_isbn):
 #메인 카테고리들 전송
 @api_view(["POST"])
 def maincategory(request):
+    '''
+        메인 카테고리 리스트 전송
+
+        ---
+    '''
     #main_category table에 있는 모든 정보 전송
     categories = BooksMaincategory.objects.all()
     serializer = MainCategorySerializer(categories, many=True)
@@ -131,6 +158,11 @@ def maincategory(request):
 #메인 카테고리에 따른 서브 카테고리 목록 전송
 @api_view(["POST"])
 def subcategory(request, main_id):
+    '''
+        메인 카테고리에 따른 서브 카테고리 리스트 전송
+
+        ---
+    '''
     #sub_category에서 main = 받아온 main_id 인 sub_category의 id와 name 전달
     categories = BooksSubcategory.objects.filter(Q(main=main_id))
     serializer = SubCategorySerializer(categories, many=True)
@@ -146,6 +178,16 @@ def subcategory(request, main_id):
 # @swagger_auto_schema(method='get', manual_parameters=[main_id_param, sub_id_param])
 @api_view(("GET", ))
 def category_search(request):
+    '''
+        메인 카테고리, 서브 카테고리의 id를 입력받아 해당되는 책 리스트 반환
+
+        ---
+        # Response
+            - book          : 책 정보 data
+            - maincategory  : 메인 카테고리 이름
+            - subcategory   : 서브 카테고리 이름
+            - total_count   : 검색 결과 수
+    '''
     main_id = request.GET.get('main_id', '')
     sub_id = request.GET.get('sub_id', '')
     main_category_name = ''
@@ -190,49 +232,46 @@ def category_search(request):
         }, status=status.HTTP_200_OK)
 
 
-#리뷰 작성
-@api_view(["POST"])
-def createReview(request):
-    # print("request")
-    # print(request.data)
-    new_review = ReviewSerializer(data=request.data)
-    if not new_review.is_valid(raise_exception=True):
-        return Response({'message': 'Request Body Error'},
-                        status=status.HTTP_409_CONFLICT)
+# 리뷰 관련 API
+@api_view(("POST", "PUT", "DELETE", ))
+def review(request, review_id):
+    '''
+        리뷰 관련 CUD
 
-    new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
-    new_review.save()
+        ---
+    '''
+    if request.method == 'POST':
+        new_review = ReviewSerializer(data=request.data)
+        if not new_review.is_valid(raise_exception=True):
+            return Response({'message': 'Request Body Error'},
+                            status=status.HTTP_409_CONFLICT)
 
-    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
+        new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
+        new_review.save()
+        return Response(status=status.HTTP_201_CREATED)
 
+    elif request.method == 'PUT':
+        #review_id에 해당하는 내용을 찾아서 instance에 삽입 후
+        instance = Review.objects.get(review_id=review_id)
 
-#리뷰 수정
-@api_view(["POST"])
-def updateReview(request, review_id):
-    #review_id에 해당하는 내용을 찾아서 instance에 삽입 후
-    instance = Review.objects.get(review_id=review_id)
+        #vue.js에서 넘어온 데이터를 new_review에 넣고
+        new_review = ReviewSerializer(data=request.data)
 
-    #vue.js에서 넘어온 데이터를 new_review에 넣고
-    new_review = ReviewSerializer(data=request.data)
+        #유효성 검사를 하고
+        if not new_review.is_valid(raise_exception=True):
+            return Response({'message': 'Request Body Error'},
+                            status=status.HTTP_409_CONFLICT)
 
-    #유효성 검사를 하고
-    if not new_review.is_valid(raise_exception=True):
-        return Response({'message': 'Request Body Error'},
-                        status=status.HTTP_409_CONFLICT)
+        new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
 
-    new_review.is_valid(raise_exception=True)  # 파라미터 : 유효성 검사, 실패시 예외 발생
+        #리뷰 평점, 리뷰 내용, 리뷰 수정날짜를 바꿔줌!! : 이 때 user_id랑 book_id는 바꿀 필요가 없으므로 쓰지 않는걸로...
+        instance.review_rating = new_review.data['review_rating']
+        instance.review_content = new_review.data['review_content']
+        instance.review_date = timezone.now()
+        instance.save()
+        return Response(status = status.HTTP_202_ACCEPTED)
 
-    #리뷰 평점, 리뷰 내용, 리뷰 수정날짜를 바꿔줌!! : 이 때 user_id랑 book_id는 바꿀 필요가 없으므로 쓰지 않는걸로...
-    instance.review_rating = new_review.data['review_rating']
-    instance.review_content = new_review.data['review_content']
-    instance.review_date = timezone.now()
-    instance.save()
-    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
-
-
-#리뷰 삭제
-@api_view(["DELETE"])
-def deleteReview(request, review_id):
-    post_instance = Review.objects.get(review_id=review_id)
-    post_instance.delete()
-    return Response(status=status.HTTP_200_OK)  #그냥 성공했다 이거만 보내면 되겠지?
+    elif request.method == "DELETE":
+        post_instance = Review.objects.get(review_id=review_id)
+        post_instance.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
