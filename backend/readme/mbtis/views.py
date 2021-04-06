@@ -12,6 +12,11 @@ from books.models import Book
 
 @api_view(('GET', ))
 def mbti_book_list(request, mbti_id):
+    '''
+        MBTI별 추천 도서 리스트 반환
+
+        ---
+    '''
     mbti_desc = MBTI.objects.get(mbti_id=mbti_id).mbti_desc
 
     mbti_book_list = MBTIBook.objects.filter(mbti_id=mbti_id)
