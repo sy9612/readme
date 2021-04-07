@@ -35,7 +35,7 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
-  background: url(../assets/recommendation.jpg) no-repeat center center;
+  background: url(../assets/backrec.jpg) no-repeat center center;
   background-size: 100vw 100vh;
   height: 100vh;
   width: 100vw;

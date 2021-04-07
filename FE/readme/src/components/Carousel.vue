@@ -44,12 +44,12 @@ export default {
 }
 #Carousel {
   display: flex;
-  /* justify-content: right; */
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding-left: 60%;
+  /* padding-left: 60%; */
   perspective: 700px;
   font-size: 150%;
 }
