@@ -46,3 +46,13 @@ class ContentsBasedBooks(models.Model):
     class Meta:
         managed = True
         db_table = 'recommends_content'
+
+class AgeGenderRecommendBook(models.Model):
+    agegender_recommend_book_id = models.AutoField(primary_key=True)
+    age = models.IntegerField()
+    gender = models.CharField(max_length=5)
+    book_isbn = models.CharField(max_length=45)
+
+    class Meta:
+        managed = True
+        db_table = 'recommends_age_gender'

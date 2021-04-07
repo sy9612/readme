@@ -4,4 +4,4 @@ from books.models import Report
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = '__all__'
+        fields = ['user_id', 'book_isbn', 'report_content']

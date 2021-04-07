@@ -49,7 +49,7 @@ class BooksSubcategory(models.Model):
 class Report(models.Model):
     report_id = models.AutoField(primary_key=True)
     user_id = models.IntegerField()
-    book_isbn = models.CharField(max_length=45,blank=True, null=True)
+    book_isbn = models.CharField(max_length=45)
     book_name = models.CharField(max_length=100)
     report_content = models.TextField(max_length=1000)
     report_date = models.DateTimeField(auto_now_add=True)
