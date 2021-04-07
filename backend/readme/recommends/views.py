@@ -1,15 +1,17 @@
-import random
+import random, math
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from .models import CollaborativeRecommendBook, ContentsBasedBooks, BestSeller
+from django.db.models import Q
+from .models import CollaborativeRecommendBook, ContentsBasedBooks, BestSeller, AgeGenderRecommendBook
 from books.models import Book, Review
 from .serializers import RecommendBookSerializer
 from books.serializers import BookSerializer
-from .pagination import CarouselPageNumberPagination
+from .pagination import CarouselPageNumberPagination, BestSellerPageNumberPagination
+from accounts.models import User
 
 
 @api_view(('GET', ))
@@ -23,8 +25,6 @@ def recommend_list(request, user_id):
         ## 3. 리뷰 작성을 한 번도 안한 경우 or 로그인하지 않은 경우 베스트셀러
     '''
     count = Review.objects.filter(user_id=user_id).count()
-    # 캐러셀 페이징. 16개의 결과를 뽑아줌
-    paginator = CarouselPageNumberPagination()
 
     # 로그인 확인은 API Test 해볼 때 필요 없으니까 일단 주석처리
     # 로그인 되어있는 유저인지 확인
@@ -32,23 +32,26 @@ def recommend_list(request, user_id):
 
     book_list = Book.objects.order_by('-book_id')
 
-    if count >= 10:
+    flag = True
+    if count >= 1:
         # 리뷰의 개수가 10개 이상이면 협업 필터링
         recommend_list = CollaborativeRecommendBook.objects.filter(
             user_id=user_id)
-
-        recommend_book_list = book_list.filter(book_isbn__in=list(
-            recommend_list.values_list('book_isbn', flat=True)))
-    elif count >= 1:
-        # 1개 이상, 10개 미만이면 컨텐츠 기반 필터링ff
-        contentsRecommend_list = getContentsBasedRecommendBooks(user_id)
-        recommend_book_list = book_list.filter(
-            book_isbn__in=contentsRecommend_list)
+        if len(recommend_list) == 0: # 협업 추천 테이블 최신화 X
+            # 1개 이상, 10개 미만이면 컨텐츠 기반 필터링ff
+            contentsRecommend_list = getContentsBasedRecommendBooks(user_id)
+            recommend_book_list = book_list.filter(book_isbn__in=contentsRecommend_list)
+        else: # 협업 추천 테이블에 결과가 들어있음
+            recommend_book_list = book_list.filter(book_isbn__in=list(
+                recommend_list.values_list('book_isbn', flat=True)))
+        # 캐러셀 페이징. 추천 결과는 10개의 결과를 뽑아줌
+        paginator = CarouselPageNumberPagination()
     else:
         # 리뷰 작성을 한 번도 안한 경우 베스트셀러
         recommend_list = BestSeller.objects.all()
         recommend_book_list = book_list.filter(book_isbn__in=list(
             recommend_list.values_list('book_isbn', flat=True)))
+        paginator = BestSellerPageNumberPagination()
 
     recommend_book_list = paginator.paginate_queryset(
         recommend_book_list, request)
@@ -107,3 +110,22 @@ def getContentsBasedRecommendBooks(user_id):
         real_recomm_list = random.sample(temp_recomm_list, 10)  # 10개 추출
 
     return real_recomm_list
+
+
+@api_view(('GET', ))
+def age_gender_recommend_list(request, user_id):
+    '''
+        성별 / 연령별 추천 책 리스트 반환
+
+        ---
+    '''
+    user = User.objects.get(id = user_id)
+    user_gender = user.gender
+    user_age = math.floor((2021 - user.birth.year + 1) / 10) * 10
+    print(user_age)
+
+    recommend_list = AgeGenderRecommendBook.objects.filter(Q(age = user_age) & Q(gender = user_gender))
+    recommend_book_list = Book.objects.filter(book_isbn__in = list(recommend_list.values_list('book_isbn', flat=True)))
+    serializer = RecommendBookSerializer(recommend_book_list, many=True)
+
+    return Response(serializer.data, status = status.HTTP_200_OK)
