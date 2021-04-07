@@ -13,13 +13,14 @@ def mbti_book_list(request, mbti_id):
 
         ---
     '''
-    mbti_desc = MBTI.objects.get(mbti_id=mbti_id).mbti_desc
+    mbti_type = MBTI.objects.get(mbti_id=mbti_id).mbti_type
+    mbti_type_list = list(mbti_type)
 
-    mbti_book_list = MBTIBook.objects.filter(mbti_id=mbti_id)
+    mbti_book_list = MBTIBook.objects.filter(one_of_mbti_type__in = mbti_type_list)
     mbti_book_list = Book.objects.filter(book_isbn__in = list(mbti_book_list.values_list('book_isbn', flat=True)))
     serializer = MbtiBookSerializer(mbti_book_list, many=True)
 
     return Response({
-        "mbti_desc": mbti_desc,
+        "mbti_type": mbti_type,
         "mbti_book_list": serializer.data,
     }, status=status.HTTP_200_OK)
