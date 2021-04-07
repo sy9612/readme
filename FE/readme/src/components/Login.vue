@@ -11,6 +11,7 @@
 <script>
 const SERVER_URL = "http://127.0.0.1:8000"
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 
 export default {
   name: 'login',
@@ -28,6 +29,9 @@ export default {
         .then(res => {
           localStorage.setItem('jwt', res.data.token)
           console.log(res)
+          const token = res.data['token']
+          const decoded = jwt_decode(token)
+          localStorage.setItem('user_id', decoded.user_id)
           const usern = JSON.parse(res.config.data).username
           localStorage.setItem('username', usern)
           this.$emit('login', usern)

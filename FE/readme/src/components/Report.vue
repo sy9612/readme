@@ -12,8 +12,8 @@
         </div>
       </div>
       <div class="report_right">
-        <textarea name="" id="" cols="10" rows="10"></textarea>
-        <button>작성완료</button>
+        <textarea v-model="params.report_content" cols="10" rows="10"></textarea>
+        <button @click="postReport">작성완료</button>
       </div>
     </div>
   </div>
@@ -30,9 +30,22 @@ export default {
   data: function () {
     return {
       book_info: [],
+      params: {
+        book_isbn: 0,
+        report_content: '',
+      }
+      
+    }
+  },
+  methods: {
+    postReport: function () {
+      
+      const user_id = localStorage.getItem('user_id')
+      axios.post(`${SERVER_URL}/reports/${user_id}/`, this.params)
     }
   },
   created: function () {
+    this.params.book_isbn = this.$route.params.bookIsbn
     // const bookId = this.$route.params.bookId
     // axios.get(`${SERVER_URL}/market/detail/${bookId}/`) 
     //   .then((res) => {
@@ -52,7 +65,8 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  background: #d7b9a1;
+  background: url(../assets/background.jpg) no-repeat center center;
+  background-size: 100vw 100vh;
   box-sizing: border-box;
   top: 0;
   left: 0%;

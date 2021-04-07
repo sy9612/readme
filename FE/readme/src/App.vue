@@ -71,13 +71,13 @@ export default {
       this.$router.push({name: 'Home'})
     },
     toReport: function () {
-      this.$router.push({name: 'Report', params:{bookId:1}})
+      this.$router.push({name: 'Report', params:{bookIsbn:9788950992460}})
     },
     toMyPage: function () {
       this.$router.push({name: 'MyPage'})
     },
     toDetail: function () {
-      this.$router.push({name: 'Detail', params:{bookId:1}})
+      this.$router.push({name: 'Detail', params:{bookIsbn:9788950992460}})
     },
     toRecommendations: function () {
       this.$router.push({name: 'Recommendations'})

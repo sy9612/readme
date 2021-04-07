@@ -48,6 +48,8 @@
 
 <script>
 import StarRating from '@/components/StarRating'
+const SERVER_URL = "http://127.0.0.1:8000"
+import axios from 'axios'
 
 export default {
   name: 'Detail',
@@ -93,7 +95,27 @@ export default {
     selectStar: function (ratedStar) {
       this.rate = ratedStar
     },
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+
+      const config = {
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      }
+      return config
+    },
   },
+  created: function () {
+  //   const config = this.setToken()
+  //   const isbn = this.$route.params.bookIsbn
+  //   const user_id = localStorage.getItem('user_id')
+  //   console.log(user_id)
+  //   axios.post(`${SERVER_URL}/books/${isbn}`, {'user_id': user_id})
+  //     .then(res => {
+  //       console.log(res)
+  //     })  
+  }
 }
 </script>
 

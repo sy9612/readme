@@ -43,12 +43,12 @@ const routes = [
     component: Search
   },
   {
-    path: '/Report/:bookId',
+    path: '/Report/:bookIsbn',
     name: 'Report',
     component: Report
   },
   {
-    path: '/Detail/:bookId',
+    path: '/Detail/:bookIsbn',
     name: 'Detail',
     component: Detail
   },
