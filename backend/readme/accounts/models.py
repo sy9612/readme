@@ -8,7 +8,7 @@ class User(AbstractUser):
     nickname = models.CharField(blank=True, max_length=50)
     gender = models.CharField(max_length=5)
     mbti_id = models.IntegerField()
-    birth = models.DateTimeField()
+    birth = models.DateField()
 
 
 class Dibs(models.Model):
