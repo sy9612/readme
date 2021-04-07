@@ -224,6 +224,7 @@ def review_list(request, book_isbn):
         serializer = ReviewSerializer(review_list, many = True)
         return Response(serializer.data, status = status.HTTP_200_OK)
     elif request.method == 'POST':
+        request.data.update({'book_isbn': book_isbn})
         new_review = ReviewSerializer(data=request.data)
         if not new_review.is_valid(raise_exception=True):
             return Response({'message': 'Request Body Error'},
