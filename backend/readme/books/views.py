@@ -83,36 +83,15 @@ def search(request):
 
 
 #도서 상세 정보
-@api_view(('POST', ))
+@api_view(('GET', ))
 def detail(request, book_isbn):
     '''
-        user_id를 request.data['user_id']로 입력받음.
         도서 상세 정보를 반환
 
         ---
     '''
-    user_id = request.data['user_id']
     book = Book.objects.get(book_isbn=book_isbn)
     serializer = BookSerializer(book)
-    # context = {
-    #     'book': book,
-    # }
-    #리뷰 작성했는지 확인하는 sql 필요
-    #여기서 리뷰를 작성한 사람이면 "리뷰작성함" 메시지를 보내야하고
-    isWritten = Review.objects.filter(Q(book_isbn=book_isbn) & Q(user_id=user_id))
-    myreview = []
-    if isWritten:
-        myreview = list(isWritten.values())[0]  #화면에 띄워주기 편하려고!
-    #리뷰를 작성하지 않은 사람이면 "리뷰작성안함" 메시지를 보내서 리뷰작성 버튼을 만들어야지
-    else:
-        myreview = []
-
-    #찜했는지 여부도 같이 보내야함!
-    dibSelected = list(
-        Dibs.objects.filter(Q(book_isbn=book_isbn) & Q(user_id=user_id)).values())
-    dibSelectYes = False
-    if dibSelected[0]['is_selected']:  #찜했으면 True 보내주기!
-        dibSelectYes = True
 
     #여기에 category도 보내줘야댐!!!!
     #1. book_isbn을 찾기
@@ -135,8 +114,6 @@ def detail(request, book_isbn):
             "book": serializer.data,  #책세부내용
             "maincategory": main_category_name,  #카테고리 - 메인
             "subcategory": sub_category_name,  #카테고리 - 서브
-            "myreview": myreview,  #리뷰달았는지 yes(리뷰내용) no(빈리스트)
-            "mydibs": dibSelectYes,  #찜했는지 yes(True) no(False)
         },
         status=status.HTTP_200_OK)
 
@@ -232,15 +209,21 @@ def category_search(request):
         }, status=status.HTTP_200_OK)
 
 
-# 리뷰 관련 API
-@api_view(("POST", "PUT", "DELETE", ))
-def review(request, review_id):
+# 리뷰 리스트 API
+@api_view(("GET", "POST",))
+def review_list(request, book_isbn):
     '''
-        리뷰 관련 CUD
+        책 리뷰 리스트 CR
 
         ---
+        GET -> 책 리뷰 리스트 가져오기
+        POST -> 책에 리뷰 등록
     '''
-    if request.method == 'POST':
+    if request.method == 'GET':
+        review_list = Review.objects.filter(book_isbn = book_isbn)
+        serializer = ReviewSerializer(review_list, many = True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    elif request.method == 'POST':
         new_review = ReviewSerializer(data=request.data)
         if not new_review.is_valid(raise_exception=True):
             return Response({'message': 'Request Body Error'},
@@ -250,7 +233,15 @@ def review(request, review_id):
         new_review.save()
         return Response(status=status.HTTP_201_CREATED)
 
-    elif request.method == 'PUT':
+# 리뷰 관련 API
+@api_view(("PUT", "DELETE", ))
+def review(request, review_id):
+    '''
+        리뷰 관련 UD
+
+        ---
+    '''
+    if request.method == 'PUT':
         #review_id에 해당하는 내용을 찾아서 instance에 삽입 후
         instance = Review.objects.get(review_id=review_id)
 
