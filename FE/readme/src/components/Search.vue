@@ -2,10 +2,6 @@
   <div id="Search">
     <div class="search-bar">
       <i class="fas fa-search"></i>
-<<<<<<< HEAD
-      <input type="text" class="search-input">
-    </div>
-=======
       <input @keypress.enter="search" v-model="content" type="text" class="search-input">
         <select name="option" v-model="searchCategory">
           <option value="all" selected>전체</option>
@@ -15,17 +11,11 @@
         </select>
     </div>
     <img class="book-img" :src="results[0] + '.jpg'" alt="">
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-export default {
-  name: 'Search',
-
-=======
 const SERVER_URL = "http://127.0.0.1:8000"
 import axios from 'axios'
 
@@ -62,7 +52,6 @@ export default {
       }
     },
   },
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 </script>
 
@@ -104,11 +93,8 @@ export default {
   border-radius: 24px;
   margin-left: 2%;
 }
-<<<<<<< HEAD
-=======
 .book-img {
   width: 30px;
   height: 30px;
 }
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 </style>

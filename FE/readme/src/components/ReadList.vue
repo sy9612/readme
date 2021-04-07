@@ -1,32 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div id = "ReadList">
-    <div id="v-carousel" type="x/template">
-      <div class="card-carousel-wrapper">
-        <div
-          class="card-carousel--nav__left"
-          @click="moveCarousel(-1)"
-          :disabled="atHeadOfList"
-        ></div>
-        <div class="card-carousel">
-          <div class="card-carousel--overflow-container">
-            <div
-              class="card-carousel-cards"
-              :style="{
-                transform: 'translateX' + '(' + currentOffset + 'px' + ')',
-              }"
-            >
-              <div class="card-carousel--card" v-for="item in items" v-bind:key="item.name">
-                <img :src= "item.src" />
-                <div class="card-carousel--card--footer">
-                  <p>{{ item.name }}</p>
-                  <p
-                    class="tag"
-                    v-for="(tag, index) in item.tag" v-bind:key="index"
-                    :class="index &gt; 0 ? 'secondary' : ''"
-                  >
-                    {{ tag }}
-=======
   <div>
     <carousel
       class="card-carousel-wrapper"
@@ -55,47 +27,17 @@
                     ★ {{ fnRateList(item.rating_avg) }} ({{
                       fnRatecntList(item.rating_cnt)
                     }}명)
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
                   </p>
                 </div>
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-        </div>
-        <div
-          class="card-carousel--nav__right"
-          @click="moveCarousel(1)"
-          :disabled="atEndOfList"
-        ></div>
-      </div>
-    </div>
-=======
         </slide>
     </carousel>
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-export default {
-  name: 'ReadList',
-  data() {
-    return {
-      currentOffset: 0,
-      windowSize: 4,
-      paginationFactor: 220,
-      items: [
-        { src: require("../assets/" + "13136.jpg"), name: 'Kin Khao', tag: ['Thai'] },
-        { src: require("../assets/13164.jpg"),name: 'Jū-Ni', tag: ['Sushi', 'Japanese', '$$$$'] },
-        { src: require("../assets/13167.jpg"),name: 'Delfina', tag: ['Pizza', 'Casual'] },
-        { src: require("../assets/13186.jpg"),name: 'San Tung', tag: ['Chinese', '$$'] },
-        { src: require("../assets/5060.jpg"),name: 'Anchor Oyster Bar', tag: ['Seafood', 'Cioppino'] },
-        { src: require("../assets/5248.jpg"),name: 'Locanda', tag: ['Italian'] },
-        { src: require("../assets/7679.jpg"),name: 'Garden Creamery', tag: ['Ice cream'] },
-      ],
-=======
 const SERVER_URL = 'http://127.0.0.1:8000';
 import axios from 'axios';
 import { Carousel, Slide } from 'vue-carousel';
@@ -111,7 +53,6 @@ export default {
       windowSize: 4,
       paginationFactor: 220,
       items: [],
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     };
   },
   computed: {
@@ -125,9 +66,6 @@ export default {
       return this.currentOffset === 0;
     },
   },
-<<<<<<< HEAD
-  methods: {
-=======
   created() {
     this.fnGetList();
   },
@@ -142,7 +80,6 @@ export default {
       else return rating_cnt.review_rating__cnt;
     },
 
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     moveCarousel(direction) {
       // Find a more elegant way to express the :style. consider using props to make it truly generic
       if (direction === 1 && !this.atEndOfList) {
@@ -151,8 +88,6 @@ export default {
         this.currentOffset += this.paginationFactor;
       }
     },
-<<<<<<< HEAD
-=======
 
     fnGetList() {
       axios
@@ -162,7 +97,6 @@ export default {
           console.log(res.data);
         });
     },
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   },
 };
 </script>
@@ -176,21 +110,13 @@ export default {
   left: 0%;
   height: 100%;
   width: 100%;
-<<<<<<< HEAD
-  padding: 0 20%;
-=======
   /* padding: 0 20%; */
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   padding-top: 10%;
 }
 body {
   background: #f8f8f8;
   color: #2c3e50;
-<<<<<<< HEAD
-  font-family: "Source Sans Pro", sans-serif;
-=======
   font-family: 'Source Sans Pro', sans-serif;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 
 .card-carousel-wrapper {
@@ -200,18 +126,6 @@ body {
   margin: 20px 0 40px;
   color: #666a73;
 }
-<<<<<<< HEAD
-
-.card-carousel {
-  display: flex;
-  justify-content: center;
-  width: 640px;
-}
-.card-carousel--overflow-container {
-  overflow: hidden;
-}
-.card-carousel--nav__left, .card-carousel--nav__right {
-=======
 /* 
 .card-carousel {
   display: flex;
@@ -223,7 +137,6 @@ body {
 }
 .card-carousel--nav__left,
 .card-carousel--nav__right {
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   display: inline-block;
   width: 15px;
   height: 15px;
@@ -235,12 +148,8 @@ body {
   margin: 0 20px;
   transition: transform 150ms linear;
 }
-<<<<<<< HEAD
-.card-carousel--nav__left[disabled], .card-carousel--nav__right[disabled] {
-=======
 .card-carousel--nav__left[disabled],
 .card-carousel--nav__right[disabled] {
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   opacity: 0.2;
   border-color: black;
 }
@@ -263,18 +172,12 @@ body {
   transform: translatex(0px);
 }
 .card-carousel-cards .card-carousel--card {
-<<<<<<< HEAD
-  margin: 0 10px;
-  cursor: pointer;
-  box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06), 0 2px 2px 0 rgba(40, 44, 53, 0.08);
-=======
   width: 200px;
   height: 330px;
   margin: 0 10px;
   cursor: pointer;
   box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06),
     0 2px 2px 0 rgba(40, 44, 53, 0.08);
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   background-color: #fff;
   border-radius: 4px;
   z-index: 3;
@@ -294,10 +197,6 @@ body {
   user-select: none;
   width: 200px;
   height: 200px;
-<<<<<<< HEAD
-
-=======
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 .card-carousel-cards .card-carousel--card img:hover {
   opacity: 0.5;
@@ -326,11 +225,7 @@ body {
   color: #666a73;
 }
 .card-carousel-cards .card-carousel--card--footer p.tag:before {
-<<<<<<< HEAD
-  content: "";
-=======
   content: '';
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   float: left;
   position: absolute;
   top: 0;
@@ -349,11 +244,7 @@ body {
   display: none !important;
 }
 .card-carousel-cards .card-carousel--card--footer p.tag:after {
-<<<<<<< HEAD
-  content: "";
-=======
   content: '';
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   position: absolute;
   top: 8px;
   left: -3px;

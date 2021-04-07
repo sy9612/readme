@@ -1,11 +1,7 @@
 <template>
   <div id="App">
     <div class="navbar">
-<<<<<<< HEAD
-      <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">PageName</span> </span>
-=======
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">{{ pagename }}</span> </span>
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
       <div @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
     </div>
 
@@ -17,20 +13,12 @@
 
     <div class="menu-list">
       <div @click="toSearch">Search</div>
-<<<<<<< HEAD
-      <div>Book Report</div>
-      <div @click="toRecommendations">Recommendations</div>
-      <div @click="toMyPage">My Page</div>
-    </div> 
-     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" />
-=======
       <div @click="toReport">Book Report</div>
       <div @click="toRecommendations">Recommendations</div>
       <div @click="toMyPage">My Page</div>
       <div @click="toDetail">Detail</div>
     </div> 
      <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" @page="page" />
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   </div>
 
  
@@ -47,11 +35,8 @@ export default {
       menuIsOpen: true,
       login: false,
       onMenu: false,
-<<<<<<< HEAD
-=======
       pagename: '',
       pageOrigin: '',
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     }
   },
   components: {
@@ -60,15 +45,12 @@ export default {
   methods: {
     clickMenu: function () {
       this.menuIsOpen = !this.menuIsOpen
-<<<<<<< HEAD
-=======
       if (this.menuIsOpen===true) {
         this.pagename = 'Menu'
       } else {
         this.pagename = this.pageOrigin
       }
       
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     },
     toSearch: function () {
       this.$router.push({name: 'Search'})
@@ -88,11 +70,6 @@ export default {
     toHome: function () {
       this.$router.push({name: 'Home'})
     },
-<<<<<<< HEAD
-    toMyPage: function () {
-      this.$router.push({name: 'MyPage'})
-    },
-=======
     toReport: function () {
       this.$router.push({name: 'Report', params:{bookId:1}})
     },
@@ -102,7 +79,6 @@ export default {
     toDetail: function () {
       this.$router.push({name: 'Detail', params:{bookId:1}})
     },
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
     toRecommendations: function () {
       this.$router.push({name: 'Recommendations'})
     },
@@ -112,14 +88,11 @@ export default {
     hoverMenu: function () {
       this.onMenu = !this.onMenu
     },
-<<<<<<< HEAD
-=======
     page: function (page) {
       console.log('됐다')
       this.pagename = page
       this.pageOrigin = page
     }
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   },
   created: function () {
     // const account = document.getElementsByClassName('account')
@@ -160,10 +133,7 @@ export default {
 
 #App {
   position: absolute;
-<<<<<<< HEAD
-=======
   /* display: none; */
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   left: 0;
   top: 0;
   box-sizing: border-box;
@@ -183,10 +153,7 @@ export default {
 .menu-icon:hover {
   font-size: 110%;
   transition: 0.5s;
-<<<<<<< HEAD
-=======
   cursor: pointer;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 } 
 .navbar {
   position: relative;
@@ -203,10 +170,7 @@ export default {
 }
 .project-name {
   cursor: pointer;
-<<<<<<< HEAD
-=======
   animation: 'fadein' 3s;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 .page-name {
   position: absolute;
@@ -215,10 +179,7 @@ export default {
   font-weight: bold;
   height: 100%;
   top: 0;
-<<<<<<< HEAD
-=======
   animation: 'fadein' 3s;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 .account {
   position: relative;
@@ -231,11 +192,7 @@ export default {
   /* flex-direction: column; */
   color: white;
   z-index: 3;
-<<<<<<< HEAD
-  animation: 'fadein' 5s;
-=======
   animation: 'fadein' 3s;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 .account > span {
   position: relative;
@@ -277,10 +234,7 @@ export default {
   font-size: 120%;
   transition: 0.5s;
 }
-<<<<<<< HEAD
-=======
 .menu-icon {
   animation: 'fadein' 3s;
 }
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 </style>

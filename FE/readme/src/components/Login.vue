@@ -50,11 +50,7 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
-<<<<<<< HEAD
-  background: url(../assets/main.jpg) no-repeat center center;
-=======
   background: url(../assets/Book.jpg) no-repeat center center;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   background-size: 100vw 100vh;
   /* opacity: 0.9; */
   height: 100vh;
@@ -72,9 +68,6 @@ export default {
     border-bottom: 1px dashed white;
     font-size: 120%;
     outline: none;
-<<<<<<< HEAD
-=======
     font-family: font1;
->>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   }
 </style>
