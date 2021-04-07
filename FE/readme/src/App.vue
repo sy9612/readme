@@ -172,7 +172,8 @@ export default {
   height: 100vh;
   width: 100vw;
   /* z-index: 1; */
-  background: #d7b9a1;
+  background: url(./assets/background.jpg) no-repeat center center;
+  background-size: 100% 100%;
   font-family: font1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

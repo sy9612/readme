@@ -102,7 +102,8 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  background: #d7b9a1;
+  background: url(../assets/background.jpg) no-repeat center center;
+  background-size: 100% 100%;
   box-sizing: border-box;
   top: 0;
   left: 0%;
