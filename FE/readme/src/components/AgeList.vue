@@ -7,7 +7,7 @@
       :mouse-drag="false"
     >
       <div v-if="this.items == 0">
-        찜한 도서가 없습니다. 관심 있는 책을 찜 해보세요~
+        읽은 도서가 없습니다. README를 통해 추천받은 책을 읽어보세요~
       </div>
         <slide v-else
           class="card-carousel"
@@ -43,7 +43,7 @@ import axios from 'axios';
 import { Carousel, Slide } from 'vue-carousel';
 
 export default {
-  name: 'WishList',
+  name: 'AgeList',
   components: { Carousel, Slide },
   data() {
     return {
@@ -91,9 +91,10 @@ export default {
 
     fnGetList() {
       axios
-        .get(`${SERVER_URL}/accounts/` + this.user_id + `/dibsList`)
+        .get(`${SERVER_URL}/accounts/` + this.user_id + `/readList`)
         .then((res) => {
           this.items = res.data;
+          console.log(res.data);
         });
     },
   },
@@ -101,7 +102,7 @@ export default {
 </script>
 
 <style>
-#WishList {
+#AgeList {
   /* position: absolute; */
   background: #d7b9a1;
   box-sizing: border-box;

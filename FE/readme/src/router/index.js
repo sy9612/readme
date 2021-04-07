@@ -5,8 +5,15 @@ import Signup from "../components/Signup.vue";
 import Login from "../components/Login.vue";
 import MyPage from "../components/MyPage.vue";
 import Search from "../components/Search.vue";
+import Report from "../components/Report.vue";
+import Detail from "../components/Detail.vue";
+import Recommendations from '../components/Recommendations.vue';
+import BootstrapVue from 'bootstrap-vue';
+import VueCarousel from 'vue-carousel';
 
+Vue.use(VueCarousel);
 Vue.use(BootstrapVue);
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -36,19 +43,19 @@ const routes = [
     component: Search
   },
   {
+    path: '/Report/:bookId',
+    name: 'Report',
+    component: Report
+  },
+  {
+    path: '/Detail/:bookId',
+    name: 'Detail',
+    component: Detail
+  },
+  {
     path: '/Recommendations',
     name: 'Recommendations',
     component: Recommendations
-  },
-  {
-    path: '/WishList',
-    name: 'WishList',
-    component: WishList
-  },
-  {
-    path: '/ReadList',
-    name: 'ReadList',
-    component: ReadList
   },
 ];
 
