@@ -1,13 +1,17 @@
 <template>
-  <div id="Data-status">
-
+  <div id="RecMain">
+    <Carousel />
   </div>
 </template>
 
 <script>
-export default {
-  name: 'datastatus',
+import Carousel from '@/components/Carousel'
 
+export default {
+  name: 'RecMain',
+  components: {
+    Carousel
+  },
 }
 </script>
 
@@ -21,7 +25,7 @@ export default {
   }
 }
 
-#Data-status {
+#RecMain {
   /* animation: 'pageshowing' 2s; */
   position: absolute;
   left: 0;
@@ -31,7 +35,7 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
-  background: url(../assets/DataStatus.jpg) no-repeat center center;
+  background: url(../assets/recommendation.jpg) no-repeat center center;
   background-size: 100vw 100vh;
   height: 100vh;
   width: 100vw;

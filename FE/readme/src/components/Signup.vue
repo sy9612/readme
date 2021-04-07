@@ -115,8 +115,9 @@ export default {
     flex-direction: column;
     /* width: 100%;
     height: 100%; */
-    background: url(../assets/main.jpg) no-repeat center center;
+    background: url(../assets/Book.jpg) no-repeat center center;
     background-size: 100vw 100vh;
+    /* opacity: 0.5; */
     height: 100vh;
     width: 100vw;
     color: white;
@@ -152,6 +153,7 @@ export default {
     border-bottom: 1px dashed white;
     font-size: 120%;
     outline: none;
+    font-family: font1;
   }
   .right-input {
     position: relative;

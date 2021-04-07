@@ -1,7 +1,7 @@
 <template>
   <div id="App">
     <div class="navbar">
-      <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">PageName</span> </span>
+      <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">{{ pagename }}</span> </span>
       <div @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
     </div>
 
@@ -13,11 +13,12 @@
 
     <div class="menu-list">
       <div @click="toSearch">Search</div>
-      <div>Book Report</div>
-      <div>Recommendations</div>
+      <div @click="toReport">Book Report</div>
+      <div @click="toRecommendations">Recommendations</div>
       <div @click="toMyPage">My Page</div>
+      <div @click="toDetail">Detail</div>
     </div> 
-     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" />
+     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" @page="page" />
   </div>
 
  
@@ -34,6 +35,8 @@ export default {
       menuIsOpen: true,
       login: false,
       onMenu: false,
+      pagename: '',
+      pageOrigin: '',
     }
   },
   components: {
@@ -42,6 +45,12 @@ export default {
   methods: {
     clickMenu: function () {
       this.menuIsOpen = !this.menuIsOpen
+      if (this.menuIsOpen===true) {
+        this.pagename = 'Menu'
+      } else {
+        this.pagename = this.pageOrigin
+      }
+      
     },
     toSearch: function () {
       this.$router.push({name: 'Search'})
@@ -61,8 +70,17 @@ export default {
     toHome: function () {
       this.$router.push({name: 'Home'})
     },
+    toReport: function () {
+      this.$router.push({name: 'Report', params:{bookId:1}})
+    },
     toMyPage: function () {
       this.$router.push({name: 'MyPage'})
+    },
+    toDetail: function () {
+      this.$router.push({name: 'Detail', params:{bookId:1}})
+    },
+    toRecommendations: function () {
+      this.$router.push({name: 'Recommendations'})
     },
     logined: function () {
       this.login  = true
@@ -70,6 +88,11 @@ export default {
     hoverMenu: function () {
       this.onMenu = !this.onMenu
     },
+    page: function (page) {
+      console.log('됐다')
+      this.pagename = page
+      this.pageOrigin = page
+    }
   },
   created: function () {
     // const account = document.getElementsByClassName('account')
@@ -110,6 +133,7 @@ export default {
 
 #App {
   position: absolute;
+  /* display: none; */
   left: 0;
   top: 0;
   box-sizing: border-box;
@@ -128,6 +152,7 @@ export default {
 .menu-icon:hover {
   font-size: 110%;
   transition: 0.5s;
+  cursor: pointer;
 } 
 .navbar {
   position: relative;
@@ -144,6 +169,7 @@ export default {
 }
 .project-name {
   cursor: pointer;
+  animation: 'fadein' 3s;
 }
 .page-name {
   position: absolute;
@@ -152,6 +178,7 @@ export default {
   font-weight: bold;
   height: 100%;
   top: 0;
+  animation: 'fadein' 3s;
 }
 .account {
   position: relative;
@@ -164,7 +191,7 @@ export default {
   /* flex-direction: column; */
   color: white;
   z-index: 3;
-  animation: 'fadein' 5s;
+  animation: 'fadein' 3s;
 }
 .account > span {
   position: relative;
@@ -205,5 +232,8 @@ export default {
 .menu-list div:hover {
   font-size: 120%;
   transition: 0.5s;
+}
+.menu-icon {
+  animation: 'fadein' 3s;
 }
 </style>

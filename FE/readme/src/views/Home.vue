@@ -12,23 +12,24 @@
       <div @click="toUp" v-if="pageNo!==0"><i class="fas fa-2x fa-chevron-circle-up"></i></div>
       <div @click="toDown" v-if="pageNo!==1"><i class="fas fa-2x fa-chevron-circle-down"></i></div>
     </div>
-    <DataStatus />
+    <RecMain />
   </div>
 
 </template>
 
 <script>
-import DataStatus from '@/components/DataStatus'
+import RecMain from '@/components/RecMain'
 
 export default {
   name: 'Home',
   data: function () {
     return {
       pageNo: 0,
+      pagename: 'Home',
     }
   },
   components: {
-    DataStatus,
+    RecMain,
   },
   props: {
     menuIsOpen: Boolean,
@@ -51,13 +52,16 @@ export default {
     menuIsOpen: function () {
       const page = document.getElementById('Home')
       if (this.menuIsOpen === false) {
-          page.style.display = 'flex'
+          page.style.transform = 'scale(1)'
       } else {
-        page.style.display = 'none'
-        // page.style.transitionDuration = '10s'
+        page.style.transform = 'scale(0)'
+        page.style.transitionDuration = '0.4s'
         page.style.transitionTimingFunction = 'ease-out'
       }
     },
+  },
+  created: function () {
+    this.$emit('page','Home')
   }
 }
 </script>
@@ -80,7 +84,7 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
-  background: url(../assets/main.jpg) no-repeat center center;
+  background: url(../assets/Book.jpg) no-repeat center center;
   background-size: 100% 100%;
   height: 100%;
   width: 100%;
@@ -109,6 +113,8 @@ export default {
   height: 40%;
   width: 30%;
   font-size: 150%;
+  animation: 'fadein' 3s;
+  transform: translate(-80px);
 }
 .home-message div {
   margin-bottom: 3%;
