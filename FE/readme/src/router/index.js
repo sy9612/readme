@@ -5,8 +5,20 @@ import Signup from "../components/Signup.vue";
 import Login from "../components/Login.vue";
 import MyPage from "../components/MyPage.vue";
 import Search from "../components/Search.vue";
+<<<<<<< HEAD
 
 Vue.use(BootstrapVue);
+=======
+import Report from "../components/Report.vue";
+import Detail from "../components/Detail.vue";
+import Recommendations from '../components/Recommendations.vue';
+import BootstrapVue from 'bootstrap-vue';
+import VueCarousel from 'vue-carousel';
+
+Vue.use(VueCarousel);
+Vue.use(BootstrapVue);
+
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 Vue.use(VueRouter);
 
 const routes = [
@@ -36,6 +48,7 @@ const routes = [
     component: Search
   },
   {
+<<<<<<< HEAD
     path: '/Recommendations',
     name: 'Recommendations',
     component: Recommendations
@@ -49,6 +62,21 @@ const routes = [
     path: '/ReadList',
     name: 'ReadList',
     component: ReadList
+=======
+    path: '/Report/:bookId',
+    name: 'Report',
+    component: Report
+  },
+  {
+    path: '/Detail/:bookId',
+    name: 'Detail',
+    component: Detail
+  },
+  {
+    path: '/Recommendations',
+    name: 'Recommendations',
+    component: Recommendations
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   },
 ];
 

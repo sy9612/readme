@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 <template>
 
@@ -51,6 +52,33 @@ export default {
   
 }
 
+=======
+<template>
+  <div id="Recommendations">
+    <div>
+      <h>나만의 추천 도서</h>
+      <recommend-list></recommend-list>
+    </div>
+    <div>
+      <h>성별, 연령대별 추천 도서</h>
+      <age-list></age-list>
+    </div>
+    <div>
+      <h>MBTI별 추천 도서</h>
+      <mbti-list></mbti-list>
+    </div>
+  </div>
+</template>
+
+<
+<script>
+export default {
+  name: 'Recommendations',
+  data: function () {
+    return {};
+  },
+};
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 </script>
 
 <style>
@@ -62,8 +90,14 @@ export default {
   left: 0%;
   height: 100%;
   width: 100%;
+<<<<<<< HEAD
   padding: 0 20%;
   padding-top: 10%;
 }
 
+=======
+  padding: 0 10%;
+  padding-top: 10%;
+}
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 </style>

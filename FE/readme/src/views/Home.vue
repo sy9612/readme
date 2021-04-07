@@ -12,23 +12,39 @@
       <div @click="toUp" v-if="pageNo!==0"><i class="fas fa-2x fa-chevron-circle-up"></i></div>
       <div @click="toDown" v-if="pageNo!==1"><i class="fas fa-2x fa-chevron-circle-down"></i></div>
     </div>
+<<<<<<< HEAD
     <DataStatus />
+=======
+    <RecMain />
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   </div>
 
 </template>
 
 <script>
+<<<<<<< HEAD
 import DataStatus from '@/components/DataStatus'
+=======
+import RecMain from '@/components/RecMain'
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 
 export default {
   name: 'Home',
   data: function () {
     return {
       pageNo: 0,
+<<<<<<< HEAD
     }
   },
   components: {
     DataStatus,
+=======
+      pagename: 'Home',
+    }
+  },
+  components: {
+    RecMain,
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   },
   props: {
     menuIsOpen: Boolean,
@@ -51,6 +67,7 @@ export default {
     menuIsOpen: function () {
       const page = document.getElementById('Home')
       if (this.menuIsOpen === false) {
+<<<<<<< HEAD
           page.style.display = 'flex'
       } else {
         page.style.display = 'none'
@@ -58,6 +75,18 @@ export default {
         page.style.transitionTimingFunction = 'ease-out'
       }
     },
+=======
+          page.style.transform = 'scale(1)'
+      } else {
+        page.style.transform = 'scale(0)'
+        page.style.transitionDuration = '0.4s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+    },
+  },
+  created: function () {
+    this.$emit('page','Home')
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   }
 }
 </script>
@@ -80,7 +109,11 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
+<<<<<<< HEAD
   background: url(../assets/main.jpg) no-repeat center center;
+=======
+  background: url(../assets/Book.jpg) no-repeat center center;
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
   background-size: 100% 100%;
   height: 100%;
   width: 100%;
@@ -109,6 +142,11 @@ export default {
   height: 40%;
   width: 30%;
   font-size: 150%;
+<<<<<<< HEAD
+=======
+  animation: 'fadein' 3s;
+  transform: translate(-80px);
+>>>>>>> a913177d954384e359e7f4c53544b6789d8462c0
 }
 .home-message div {
   margin-bottom: 3%;
