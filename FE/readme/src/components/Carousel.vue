@@ -18,6 +18,9 @@
 </template>
 
 <script>
+const SERVER_URL = "http://127.0.0.1:8000"
+import axios from 'axios'
+
 export default {
   name: 'Carousel',
   methods: {
@@ -30,6 +33,13 @@ export default {
       carousel.style.transform="rotateY(-36deg)"
     }
   },
+  created: function () {
+    const user_id = localStorage.getItem('user_id')
+    axios.get(`${SERVER_URL}/recommends/${user_id}/list`)
+      .then(res => {
+        console.log(res)
+      })  
+  }
 }
 </script>
 
