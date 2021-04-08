@@ -42,7 +42,6 @@ export default {
       axios.get(`${SERVER_URL}/books/search?keyword=${this.content}&search_type=${this.searchCategory}`)
         .then(res => {
             this.results = res.data.books
-            console.log(this.results)
         })
     },
     toResultDetail: function(isbn) {
@@ -99,7 +98,7 @@ export default {
 .search-input {
   position: relative;
   height: 94%;
-  width: 70%;
+  width: 80%;
   background: none;
   border: none;
   outline: none;
@@ -107,6 +106,21 @@ export default {
   margin-left: 2%;
   font-size: 120%;
   font-family: font1;
+}
+.search-bar select {
+  width: 10%;
+  height: 85%;
+  background-color: ;
+  border-radius: 10px;
+  /* outline: none; */
+  /* border: none; */
+  opacity: 0.5;
+}
+.search-bar select option {
+  background-color: rgb(243, 228, 200, 0.5);
+  border-style: none;
+  outline: none;
+  opacity: 0.5;
 }
 .search_result {
   position: relative;

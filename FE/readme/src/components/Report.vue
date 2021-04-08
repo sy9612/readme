@@ -48,7 +48,6 @@ export default {
   methods: {
     postReport: function () {
       const user_id = localStorage.getItem('user_id')
-      console.log(user_id)
       axios.post(`${SERVER_URL}/reports/${user_id}`, this.params)
         .then((res) => {
           alert('작성되었습니다!')
@@ -71,10 +70,8 @@ export default {
     },
   },
   created: function () {
-  //   const config = this.setToken()
     const isbn = this.$route.params.bookIsbn
     this.params.user_id = localStorage.getItem('user_id')
-  //   console.log(user_id)
     axios.get(`${SERVER_URL}/books/${isbn}`)
       .then(res => {
         this.bookinfo = res.data.book

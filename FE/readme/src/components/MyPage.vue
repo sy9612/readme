@@ -53,7 +53,6 @@ export default {
       this.user_name = user_name;
       this.jwt = jwt;
       // console.log(jwt);
-      console.log(this.user_name);
     },
   	wishMethod:function() {
       this.wish = true

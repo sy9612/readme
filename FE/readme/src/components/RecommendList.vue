@@ -105,7 +105,6 @@ export default {
         .get(`${SERVER_URL}/recommends/` + this.user_id + `/list`)
         .then((res) => {
           this.items = res.data;
-          // console.log(res.data);
         });
     },
   },
