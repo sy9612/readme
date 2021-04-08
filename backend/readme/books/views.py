@@ -9,7 +9,7 @@ from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer,\
-                        CategoryQuerySerializer, BookSearchQuerySerializer, BookDetailSerializer
+                        CategoryQuerySerializer, BookSearchQuerySerializer, BookDetailSerializer, UserIdSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -83,7 +83,8 @@ def search(request):
 
 
 #도서 상세 정보
-@api_view(('GET', ))
+@swagger_auto_schema(method='post', request_body=UserIdSerializer)
+@api_view(('POST', ))
 def detail(request, book_isbn):
     '''
         도서 상세 정보를 반환
@@ -93,12 +94,22 @@ def detail(request, book_isbn):
             - book : 책정보, 평균별점, 리뷰개수
             - maincategory : 메인카테고리 이름 (리스트)
             - subcategory : 서브카테고리 이름  (리스트)
+            - is_dibs : 찜 여부
         
         # Response(카테고리 정보가 없는 경우)
             - book : 책정보, 평균별점, 리뷰개수
+            - is_dibs : 찜 여부
     '''
+    user_id = request.data['user_id']
+
     book = Book.objects.get(book_isbn=book_isbn)
     serializer = BookDetailSerializer(book)
+    
+    try:
+        dibs = Dibs.objects.get(Q(book_isbn=book_isbn) & Q(user_id=user_id))
+        is_selected = dibs.is_selected
+    except Dibs.DoesNotExist:
+        is_selected = 0
 
     #2. book.book_isbn = book_category.book_id 인 main_category랑 sub_category 찾기
     categoryData = BooksCategory.objects.filter(book_isbn=book_isbn)
@@ -115,12 +126,14 @@ def detail(request, book_isbn):
                 "book": serializer.data,  #책세부내용
                 "maincategory": main_category_name,  #카테고리 - 메인
                 "subcategory": sub_category_name,  #카테고리 - 서브
+                "is_dibs" : is_selected,
             },
             status=status.HTTP_200_OK)
     else:
          return Response(
             {
                 "book": serializer.data,  #책세부내용
+                "is_dibs" : is_selected,
             }, status = status.HTTP_200_OK)
 
 

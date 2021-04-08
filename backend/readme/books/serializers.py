@@ -75,3 +75,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
     def get_rating_count(self, obj):
         return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Count('review_rating'))
+
+# user_id Request Body
+class UserIdSerializer(serializers.Serializer):
+    user_id =serializers.IntegerField()
