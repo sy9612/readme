@@ -6,7 +6,7 @@
     <label for="">비밀번호</label>
     <input type="password" v-model="credentials.password" placeholder="영문,숫자,특수기호 / 8자 이상" onfocus="this.placeholder=''"
     onblur="this.placeholder='영문,숫자,특수기호 / 8자 이상'">
-    <button @click="login">로그인</button>
+    <b-button @click="login" pill variant="outline-secondary">작성완료</b-button>
   </div>
 </template>
 

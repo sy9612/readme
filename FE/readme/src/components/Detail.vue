@@ -28,27 +28,27 @@
         <div v-if="reviewIsOpen===1" class="reviews">
           <div><span @click="openForm">Reviews</span></div>
           <div class="review_container">
-            <div @click="openReview(idx)" v-for="(review,idx) in right_detail" :key="idx" class="review">
-              <div>{{ review.content }}</div>
-              <div><i class="fas fa-star" style="color:#fd4"></i>X{{ review.rate }}</div>
-              <div>{{ review.writer }}</div>
+            <div @click="openReview(idx)" v-for="(review,idx) in reviews" :key="idx" class="review">
+              <div>{{ review.review_content }}</div>
+              <div><i class="fas fa-star" style="color:#fd4"></i>X{{ review.review_rating }}</div>
+              <div>{{ review.user_id }}</div>
             </div>
           </div>
         </div>
 
         <div v-if="reviewIsOpen===2" class="review_detail">
-          <p @click="closeReview">{{ selectedReview.writer }}님의 리뷰</p>
+          <p @click="closeReview">{{ selectedReview.user_id }}님의 리뷰</p>
           <div>
-            <p style="font-size:130%; margin:8% 0">평점  <i class="review_rate fas fa-star"></i>X{{ selectedReview.rate }}</p>
+            <p style="font-size:130%; margin:8% 0">평점  <i class="review_rate fas fa-star"></i>X{{ selectedReview.review_rating }}</p>
           </div>
-          <p>{{ selectedReview.content }}</p>
+          <p>{{ selectedReview.review_content }}</p>
         </div>
 
         <div v-if="reviewIsOpen===3" class="review_form">
           <p @click="closeReview">리뷰 작성하기</p>
           <StarRating @selectStar="selectStar" />
           <textarea v-model="params.review_content" cols="20" rows="10"></textarea>
-          <button @click="postReview">작성</button>
+          <b-button @click="postReview" pill variant="outline-secondary">작성완료</b-button>
         </div>
 
       </div>
@@ -71,68 +71,7 @@ export default {
   },
   data: function () {
     return {
-      right_detail: [
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-        {
-        content: '별로야아니아니아ㅣㄴ아니아니아니라',
-        rate: 3,
-        writer: '싸피', 
-      },
-      ],
+      reviews: {},
       params: {
         user_id: '',
         review_rating: 0,
@@ -148,7 +87,7 @@ export default {
   },
   methods: {
     openReview: function (idx) {
-      const review = this.right_detail[idx]
+      const review = this.reviews[idx]
       this.selectedReview = review
       this.reviewIsOpen = 2
       console.log(this.selectedReview)
@@ -172,11 +111,11 @@ export default {
     },
     postReview: function () {
       const isbn = this.$route.params.bookIsbn
-      console.log(isbn)
       axios.post(`${SERVER_URL}/books/review/${isbn}`, this.params)
         .then(res => {
           this.reviewIsOpen = 1
           this.params.review_content = ''
+          alert('작성되었습니다!')
         })  
     },
     openForm: function () {
@@ -211,7 +150,6 @@ export default {
   //   console.log(user_id)
     axios.get(`${SERVER_URL}/books/${isbn}`)
       .then(res => {
-        console.log(res)
         this.bookinfo = res.data.book
         this.maincategory = res.data.maincategory
         this.subcategory = res.data.subcategory
@@ -219,7 +157,8 @@ export default {
       }) 
     axios.get(`${SERVER_URL}/books/review/${isbn}`)   
       .then(res => {
-        // console.log(res)
+        this.reviews = res.data
+        console.log(this.reviews)
       }) 
   }
 }
@@ -251,6 +190,7 @@ export default {
   background: rgba(165, 142, 142, 0.5);
   border-radius: 20px;
   padding: 2%;
+  opacity: 0.8;
 }
 .detail_wrapper > div {
   position: relative;
@@ -262,13 +202,14 @@ export default {
 }
 .detail_content {
   position: relative;
-  height: 97%;
+  height: 100%;
 }
 .detail_content > p {
   position: relative;
   box-sizing: border-box;
-  padding: 1% 3%;
-  height: 42.7%;
+  margin-top: 2%;
+  padding: 2% 3%;
+  height: 44%;
   overflow: auto;
 }
 .detail_content > p::-webkit-scrollbar {
@@ -342,6 +283,11 @@ export default {
   margin-top: 1%;
   margin-right: 3%;
 }
+.right_detail {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
 .right_detail > div > div:nth-child(1) {
   text-align: center;
   font-size: 150%;
@@ -362,7 +308,7 @@ export default {
   border: none;
   outline: none;
   margin-top: 8%;
-  margin-bottom: 2%;
+  margin-bottom: 5%;
   border-radius: 10px;
   font-size: 108%;
 }
@@ -387,7 +333,7 @@ export default {
 .review {
   display: flex;
   box-sizing: border-box;
-  height: 9%;
+  height: 10%;
   padding: 2.5% 0;
   /* padding-bottom: 2%; */
   border: ivory solid 2px;
