@@ -16,7 +16,7 @@
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
+              <div class="card-carousel--card" @click="toReportDetail()"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
                 <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
@@ -25,7 +25,7 @@
                   </p>
                   <p style="color: #f5d107">
                     ★ {{ fnRateList(item.rating_avg) }} ({{
-                      fnRatecntList(item.rating_cnt)
+                      fnRatecntList(item.rating_count)
                     }}명)
                   </p>
                 </div>
@@ -73,8 +73,8 @@ export default {
   },
 
   methods: {
-    fnGoDetail: function(isbn){
-      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
+    toReportDetail: function(){
+      
     },
       fnGetUsr: function () {
       const user_id = localStorage.getItem('user_id');
@@ -84,9 +84,9 @@ export default {
       if (rating_avg.review_rating__avg == null) return 0;
       else return rating_avg.review_rating__avg;
     },
-    fnRatecntList: function (rating_cnt) {
-      if (rating_cnt == null) return 0;
-      else return rating_cnt.review_rating__cnt;
+    fnRatecntList: function (rating_count) {
+      if (rating_count == null) return 0;
+      else return rating_count.review_rating__count;
     },
 
     moveCarousel(direction) {

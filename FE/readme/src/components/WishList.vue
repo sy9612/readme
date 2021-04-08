@@ -25,7 +25,7 @@
                   </p>
                   <p style="color: #f5d107">
                     ★ {{ fnRateList(item.rating_avg) }} ({{
-                      fnRatecntList(item.rating_cnt)
+                      fnRatecntList(item.rating_count)
                     }}명)
                   </p>
                 </div>
@@ -84,9 +84,9 @@ export default {
       if (rating_avg.review_rating__avg == null) return 0;
       else return rating_avg.review_rating__avg;
     },
-    fnRatecntList: function (rating_cnt) {
-      if (rating_cnt == null) return 0;
-      else return rating_cnt.review_rating__cnt;
+     fnRatecntList: function (rating_count) {
+      if (rating_count == null) return 0;
+      else return rating_count.review_rating__count;
     },
 
     moveCarousel(direction) {
