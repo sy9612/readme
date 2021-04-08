@@ -102,8 +102,8 @@ export default {
       axios
         .get(`${SERVER_URL}/mbtis/` + this.user_id)
         .then((res) => {
-          this.items = res.data;
-          console.log(res.data);
+          this.items = res.data.mbti_book_list;
+          console.log(this.items);
         });
     },
   },
