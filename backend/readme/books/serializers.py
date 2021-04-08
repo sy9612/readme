@@ -30,7 +30,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['user_id', 'book_isbn', 'review_rating', 'review_content']
+        fields = ['review_id', 'user_id', 'book_isbn', 'review_rating', 'review_content', 'review_date']
 
 # 카테고리 검색할 때 쿼리 스트링을 위한 Query Serializer
 class CategoryQuerySerializer(serializers.Serializer):
