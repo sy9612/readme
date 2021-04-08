@@ -42,7 +42,7 @@
         </div>
 
         <div v-if="reviewIsOpen===2" class="review_detail">
-          <p @click="closeReview">{{ selectedReview.user_nickname }}님의 리뷰</p>
+          <p>{{ selectedReview.user_nickname }}님의 리뷰<i @click="closeReview" class="back_to_reviews fas fa-undo"></i></p>
           <div>
             <p style="font-size:130%; margin:8% 0">평점  <i class="review_rate fas fa-star"></i>X{{ selectedReview.review_rating }}</p>
           </div>
@@ -390,17 +390,15 @@ export default {
   text-align: center;
 }
 .review_detail > p:nth-child(1) {
-  cursor: pointer;
+  /* cursor: pointer; */
     font-size: 150%;
   font-weight: bold;
   margin-top: 5%;
+  transform: translate(3%);
 }
 .review_detail p:nth-child(2) {
     font-size: 150%;
   /* font-weight: bold; */
-}
-.review_detail > p:nth-child(1):hover {
-  opacity: 0.5;
 }
 .review_detail div:nth-child(1) {
   display: flex;

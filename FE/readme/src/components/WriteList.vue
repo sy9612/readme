@@ -1,6 +1,11 @@
 <template>
   <div>
-    <carousel
+    <div id="Report_detail">
+      <img :src="reportSrc" alt="">
+      <p class="report_title">{{ reportTitle }}</p>
+      <p>{{ reportContent }}</p>
+    </div>
+    <carousel id="carousel"
       class="card-carousel-wrapper"
       :navigation-click="true"
       :per-page="4"
@@ -16,7 +21,7 @@
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card" @click="toReportDetail()"> 
+              <div class="card-carousel--card" @click="toReportDetail(item.book_isbn, item.book_contents, item.book_title)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
                 <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
@@ -26,7 +31,7 @@
                   <p style="color: #f5d107">
                     ★ {{ fnRateList(item.rating_avg) }} ({{
                       fnRatecntList(item.rating_count)
-                    }}명)
+                    }}명) 
                   </p>
                 </div>
               </div>
@@ -53,6 +58,9 @@ export default {
       windowSize: 4,
       paginationFactor: 220,
       items: [],
+      reportSrc: '',
+      reportContent: '',
+      reportTitle: '',
     };
   },
   computed: {
@@ -73,8 +81,14 @@ export default {
   },
 
   methods: {
-    toReportDetail: function(){
-      
+    toReportDetail: function(isbn,content,title){
+      const carousel = document.getElementById('carousel')
+      carousel.style.display = 'none'
+      this.reportSrc = `http://j4a205.p.ssafy.io:8050/images/${isbn}.jpg`
+      const reportDetail = document.getElementById('Report_detail')
+      reportDetail.style.display = 'flex'
+      this.reportContent = content
+      this.reportTitle = title
     },
       fnGetUsr: function () {
       const user_id = localStorage.getItem('user_id');
@@ -120,6 +134,27 @@ export default {
   width: 100%;
   /* padding: 0 20%; */
   padding-top: 10%;
+}
+#Report_detail {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  left: 37%;
+  width: 26%;
+  height: 65%;
+  margin-top: 1%;
+}
+#Report_detail > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+.report_title {
+  font-size: 150%;
+  margin-top: 9%;
+  font-weight: bold;
 }
 body {
   background: #f8f8f8;
