@@ -6,7 +6,7 @@
         <div class="book_info">          
           <img :src="imgsrc"/>
           <div class="book_contents">
-            <p @click="toReport"> {{ bookinfo.book_title }}</p>
+            <p> {{ bookinfo.book_title }}</p>
             <p>{{ bookinfo.book_author }}</p>
             <p>{{ maincategory }}</p>
             <p>{{ subcategory }}</p>
@@ -31,7 +31,7 @@
 
       <div class="right_detail">
         <div v-if="reviewIsOpen===1" class="reviews">
-          <div><span @click="openForm">Reviews</span></div>
+          <div><span>Reviews</span><i @click="openForm" class="pencil fas fa-pencil-alt"></i></div>
           <div class="review_container">
             <div @click="openReview(idx)" v-for="(review,idx) in reviews" :key="idx" class="review">
               <div>{{ review.review_content }}</div>
@@ -50,7 +50,7 @@
         </div>
 
         <div v-if="reviewIsOpen===3" class="review_form">
-          <p @click="closeReview">리뷰 작성하기</p>
+          <p>리뷰 작성하기 <i @click="closeReview" class="back_to_reviews fas fa-undo"></i></p> 
           <StarRating @selectStar="selectStar" />
           <textarea v-model="params.review_content" cols="20" rows="10"></textarea>
           <b-button @click="postReview" pill variant="outline-secondary">작성완료</b-button>
@@ -121,6 +121,7 @@ export default {
           this.reviewIsOpen = 1
           this.params.review_content = ''
           alert('작성되었습니다!')
+          window.location.reload()
         })  
     },
     openForm: function () {
@@ -198,15 +199,18 @@ export default {
   padding-top: 7%;
 }
 .empty_heart {
-  margin-right: 7%;
   cursor: pointer;
 }
 .full_heart {
   color: crimson;
-  margin-right: 7%;
   cursor: pointer;
 }
 .pencil {
+  cursor: pointer;
+  transform: translate(70%);
+}
+.back_to_reviews {
+  transform: translate(70%);
   cursor: pointer;
 }
 .detail_wrapper {
@@ -272,10 +276,6 @@ export default {
   font-weight: bold;
   font-size: 115%;
   margin-top: 5%;
-  cursor: pointer;
-}
-.book_contents p:nth-child(1):hover {
-  opacity: 0.7;
 }
 .book_contents p:nth-child(2) {
   /* font-weight */
@@ -299,10 +299,7 @@ export default {
   margin-bottom: 7%;
   font-size: 150%;
   font-weight: bold;
-  cursor: pointer;
-}
-.review_form p:hover {
-  opacity: 0.5;
+  transform: translate(10%);
 }
 .rating {
   display: flex;
@@ -347,11 +344,7 @@ export default {
   height: 80%;
 }
 .reviews span {
-  cursor: pointer;
   font-weight: bold;
-}
-.reviews span:hover {
-  opacity: 0.5;
 }
 .review_container {
   height: 85%;

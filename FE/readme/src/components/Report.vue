@@ -52,6 +52,7 @@ export default {
       axios.post(`${SERVER_URL}/reports/${this.params.user_id}`, this.params)
         .then((res) => {
           alert('작성되었습니다!')
+          this.$router.push({name: 'MyPage'})
         })
     },
     toDetail: function () {
