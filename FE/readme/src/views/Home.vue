@@ -40,12 +40,15 @@ export default {
       const page = document.getElementById('homepage')
       page.style.transform = 'translateY(0)'
       page.style.transition = '1s'
+      this.$emit('page','Home')
     },
     toDown: function () {
       this.pageNo += 1
       const page = document.getElementById('homepage')
       page.style.transform = 'translateY(-100%)'
       page.style.transition = '1s'
+      this.$emit('page','Recommendation for you')
+  
     },
   },
   watch: {
@@ -103,9 +106,16 @@ export default {
 .scroll {
   position: absolute;
   display: flex;
+  /* justify-content: center; */
   top: 90%;
-  left: 32%;
+  left: 50%;
   z-index: 3;
+}
+.scroll:hover {
+  font-size: 120%;
+  transition: 0.3s;
+  opacity: 0.8;
+  color: rgb(163, 128, 150);
 }
 .home-message {
   position: absolute;
