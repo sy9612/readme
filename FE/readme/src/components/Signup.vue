@@ -27,12 +27,24 @@
         </div>
         <label for="#">생년월일</label>
         <input type="date" v-model="params.birth">
-        <label for="#">MBTI</label>
+        <label class="mbti_label" for="#">MBTI</label>
         <select name="mbti" v-model="params.mbti_id">
-          <option value="1">ENTF</option>
-          <option value="2">ENTJ</option>
-          <option value="3">INTF</option>
+          <option value="1">ISTJ</option>
+          <option value="2">ISFJ</option>
+          <option value="3">INFJ</option>
           <option value="4">INTJ</option>
+          <option value="5">ISTP</option>
+          <option value="6">ISFP</option>
+          <option value="7">INFP</option>
+          <option value="8">INTP</option>
+          <option value="9">ESTP</option>
+          <option value="10">ESFP</option>
+          <option value="11">ENFP</option>
+          <option value="12">ENTP</option>
+          <option value="13">ESTJ</option>
+          <option value="14">ESFJ</option>
+          <option value="15">ENFJ</option>
+          <option value="16">ENTJ</option>
         </select>
       </div>
     </div>
@@ -171,9 +183,19 @@ export default {
     /* margin-right: 3%; */
   }
   .radio-btn {
-    margin-bottom: 3.2%;
+    margin-bottom: 7.3%;
   }
   .signup-btn {
     cursor: pointer;
   }
+  /* .mbti_label {
+    margin-bottom: 30px;
+  } */
+  .right-input select {
+    width: 35%;
+    background-color: rgb(235, 219, 191);
+    border-radius: 10px;
+    outline: none;
+  } 
+
 </style>
