@@ -19,7 +19,7 @@ def report(request, user_id):
         # .filter() 는 QuerySet = iterable
         report_list = Report.objects.filter(user_id = user_id)
         # many = True : queryset이 여러 개의 아이템을 포함하고 있다.(리스트) 를 장고(DRF)에 알려줌
-        serializer = ReportSerializer(report_list, many = True)
+        serializer = ReportDetailSerializer(report_list, many = True)
 
     elif request.method == 'POST':
         '''
