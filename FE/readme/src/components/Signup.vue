@@ -36,7 +36,7 @@
         </select>
       </div>
     </div>
-    <button @click="signup">회원가입</button>
+    <b-button @click="signup" pill variant="outline-secondary">작성완료</b-button>
   </div>
   
 </template>

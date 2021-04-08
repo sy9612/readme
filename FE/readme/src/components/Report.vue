@@ -15,7 +15,7 @@
       </div>
       <div class="report_right">
         <textarea v-model="params.report_content" cols="10" rows="10"></textarea>
-        <button @click="postReport">작성완료</button>
+        <b-button @click="postReport" pill variant="outline-secondary">작성완료</b-button>
       </div>
     </div>
   </div>
@@ -51,7 +51,7 @@ export default {
       console.log(user_id)
       axios.post(`${SERVER_URL}/reports/${user_id}`, this.params)
         .then((res) => {
-          console.log(res)
+          alert('작성되었습니다!')
         })
     },
     toDetail: function () {
@@ -82,7 +82,7 @@ export default {
         this.subcategory = res.data.subcategory
         this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.bookinfo.book_isbn}.jpg`
       })  
-    this.$emit('page','Report')
+    this.$emit('page','BookReport')
   
   }
 }
@@ -101,7 +101,7 @@ export default {
   height: 100%;
   width: 100%;
   padding: 0 22%;
-  padding-top: 4%;
+  padding-top: 4.2%;
 }
 .report_left {
   /* height */
@@ -111,16 +111,17 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 10%;
-  height: 81.5%;
+  height: 86.9%;
   width: 100%;
-  background: rgb(166, 180, 177);
+  background: rgba(165, 142, 142, 0.5);
   border-radius: 20px;
   padding: 2%;
+  opacity: 0.8;
 }
 .report_wrapper > div {
   position: relative;
   width: 49.8%;
-  background: rgb(191, 201, 200);
+  background: rgb(250, 248, 247);
   border-radius: 20px;
   padding: 1%;
   box-shadow: 5px 5px;
@@ -154,6 +155,11 @@ export default {
 .report_left > p::-webkit-scrollbar {
   display: none;
 }
+.report_right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .report_right textarea {
   position: relative;
   font-family: font1;
@@ -165,10 +171,13 @@ export default {
   outline: none;
   background-attachment: local;
   background-image:
-    linear-gradient(to right, rgb(191, 201, 200) 10px, transparent 10px),
-    linear-gradient(to left, rgb(191, 201, 200) 10px, transparent 10px),
-    repeating-linear-gradient(rgb(191, 201, 200), rgb(191, 201, 200) 30px, #ccc 30px, #ccc 31px, rgb(191, 201, 200) 31px);
+    linear-gradient(to right, rgb(250, 248, 247) 10px, transparent 10px),
+    linear-gradient(to left, rgb(250, 248, 247) 10px, transparent 10px),
+    repeating-linear-gradient(rgb(250, 248, 247), rgb(250, 248, 247) 30px, #ccc 30px, #ccc 31px, rgb(250, 248, 247) 31px);
   line-height: 31px;
   margin-bottom: 2%;
+}
+.report_right button {
+  /* width: 17%; */
 }
 </style>
