@@ -191,7 +191,7 @@ export default {
   /* .mbti_label {
     margin-bottom: 30px;
   } */
-  .mbti_label select {
+  .right-input select {
     width: 35%;
     background-color: rgb(235, 219, 191);
     border-radius: 10px;
