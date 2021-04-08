@@ -76,6 +76,29 @@ class BookDetailSerializer(serializers.ModelSerializer):
     def get_rating_count(self, obj):
         return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Count('review_rating'))
 
+class UserReviewSerializer(serializers.ModelSerializer):
+    book_title = serializers.SerializerMethodField()
+    book_author = serializers.SerializerMethodField()
+    rating_avg = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Review
+        fields = ['review_id', 'user_id', 'book_isbn', 'book_title', 'book_author',
+                'review_content', 'review_date', 'rating_avg', 'rating_count']
+
+    def get_book_title(self, obj):
+        return Book.objects.get(book_isbn=obj.book_isbn).book_title
+
+    def get_book_author(self, obj):
+        return Book.objects.get(book_isbn=obj.book_isbn).book_author
+
+    def get_rating_avg(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Avg('review_rating'))
+
+    def get_rating_count(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Count('review_rating'))
+
 # user_id Request Body
 class UserIdSerializer(serializers.Serializer):
     user_id =serializers.IntegerField()
