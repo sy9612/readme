@@ -4,13 +4,13 @@
       <div class="left-input">
         <label for="#">아이디</label>
         <input type="text" v-model="params.username" @keypress.space="checkSpace" 
-        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자 / 10자 이내'" placeholder="영문,숫자 / 10자 이내">  
+        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자 / 12자 이내'" placeholder="영문,숫자 / 12자 이내">  
         <label for="#">비밀번호</label>
         <input type="password" v-model="params.password1" @keypress.space="checkSpace"
-        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자,특수기호 / 12자 이내'" placeholder="영문,숫자,특수기호 / 12자 이내">  
+        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자,특수기호 / 8자 이상'" placeholder="영문,숫자,특수기호 / 8자 이상">  
         <label for="#">비밀번호 확인</label>
         <input type="password" v-model="params.password2" @keypress.space="checkSpace"
-        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자,특수기호 / 12자 이내'" placeholder="영문,숫자,특수기호 / 12자 이내">  
+        onfocus="this.placeholder=''" onblur="this.placeholder='영문,숫자,특수기호 / 8자 이상'" placeholder="영문,숫자,특수기호 / 8자 이상">  
         <label for="#">이메일</label>
         <input type="text" v-model="params.email" @keypress.space="checkSpace" 
         onfocus="this.placeholder=''" onblur="this.placeholder='이메일을 입력해주세요'" placeholder="이메일을 입력해주세요">  
@@ -82,8 +82,11 @@ export default {
       if (nullCheck && pwCheck) {
         axios.post(`${SERVER_URL}/accounts/signup`, this.params)
           .then(res => {
-            console.log(res)
+            alert('회원가입이 완료되었습니다!')
             this.$router.push({name: 'Login'})
+          })
+          .catch(err => {
+            alert('회원정보를 확인해주세요!!')
           })
       }
     }

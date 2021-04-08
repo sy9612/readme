@@ -12,7 +12,7 @@
     </div>
 
     <div class="search_result">
-      <div v-for="(result, idx) in results" :key="idx" class="result_card">
+      <div v-for="(result, idx) in results" :key="idx" @click="toResultDetail(result.book_isbn)" class="result_card">
         <img :src="`http://j4a205.p.ssafy.io:8050/images/${result.book_isbn}.jpg`" alt="">
         <p></p>
       </div>
@@ -44,7 +44,10 @@ export default {
             this.results = res.data.books
             console.log(this.results)
         })
-    }
+    },
+    toResultDetail: function(isbn) {
+      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}})
+    },
   },
   watch: {
     menuIsOpen: function () {
@@ -120,7 +123,7 @@ export default {
 .search_result img {
   position: relative;
   width: 100%;
-  height: 70%;
+  height: 100%;
 }
 .result_card {
   position: relative;
