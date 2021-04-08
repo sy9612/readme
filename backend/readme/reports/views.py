@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import ReportSerializer
+from .serializers import ReportSerializer, ReportDetailSerializer
 from rest_framework.response import Response
 from django.db.models import Q
 from books.models import Report
@@ -49,11 +49,11 @@ def report_detail(request, user_id, book_isbn):
             'message' : "Report not found!"
         }, status = status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        serializer = ReportSerializer(report)
+        serializer = ReportDetailSerializer(report)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
     elif request.method == 'PUT':
-        serializer = ReportSerializer(report, data = request.data)
+        serializer = ReportDetailSerializer(report, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
