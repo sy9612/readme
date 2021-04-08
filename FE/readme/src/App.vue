@@ -2,7 +2,7 @@
   <div id="App">
     <div class="navbar">
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">{{ pagename }}</span> </span>
-      <div @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
+      <div v-if="login" @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
     </div>
 
     <div class="account">
@@ -13,10 +13,8 @@
 
     <div class="menu-list">
       <div @click="toSearch">Search</div>
-      <div @click="toReport">Book Report</div>
       <div @click="toRecommendations">Recommendations</div>
       <div @click="toMyPage">My Page</div>
-      <div @click="toDetail">Detail</div>
     </div> 
      <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" @page="page" />
   </div>
@@ -67,6 +65,7 @@ export default {
       localStorage.removeItem('username')
       localStorage.removeItem('user_id')
       this.login = false
+      alert('로그아웃되었습니다!')
       this.$router.push({name: 'Home'})
     },
     toHome: function () {
@@ -96,6 +95,9 @@ export default {
     }
   },
   created: function () {
+    if (localStorage.getItem('jwt')) {
+      this.login = true
+    }
     // const account = document.getElementsByClassName('account')
     // account.style.animation = 'fadein'
   },

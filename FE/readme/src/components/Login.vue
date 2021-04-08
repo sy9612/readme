@@ -4,8 +4,8 @@
     <input type="text" v-model="credentials.username" placeholder="아이디를 입력해주세요" onfocus="this.placeholder=''"
     onblur="this.placeholder='아이디를 입력해주세요'">
     <label for="">비밀번호</label>
-    <input type="password" v-model="credentials.password" placeholder="비밀번호를 입력해주세요" onfocus="this.placeholder=''"
-    onblur="this.placeholder='비밀번호를 입력해주세요'">
+    <input type="password" v-model="credentials.password" placeholder="영문,숫자,특수기호 / 8자 이상" onfocus="this.placeholder=''"
+    onblur="this.placeholder='영문,숫자,특수기호 / 8자 이상'">
     <button @click="login">로그인</button>
   </div>
 </template>
@@ -37,7 +37,12 @@ export default {
           const usern = JSON.parse(res.config.data).username
           localStorage.setItem('username', usern)
           this.$emit('login', usern)
+          alert('로그인되었습니다!')
           this.$router.push({ name: 'Home' })
+        })
+        .catch(err=>{
+            console.log(err)
+            alert('로그인 정보를 확인해주세요!')
         })
     }
   },
