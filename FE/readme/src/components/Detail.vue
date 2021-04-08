@@ -90,7 +90,6 @@ export default {
       const review = this.reviews[idx]
       this.selectedReview = review
       this.reviewIsOpen = 2
-      console.log(this.selectedReview)
 
     },
     closeReview: function () {
@@ -159,7 +158,6 @@ export default {
     axios.get(`${SERVER_URL}/books/review/${isbn}`)   
       .then(res => {
         this.reviews = res.data
-        console.log(this.reviews)
       }) 
   }
 }

@@ -98,7 +98,6 @@ export default {
       const account = document.getElementById('account')
       const top = document.getElementById('navbar')
       if (name==='Home') {
-        console.log(top, account)
         account.style.color = '#fff'
         top.style.color = '#fff'
       } else {

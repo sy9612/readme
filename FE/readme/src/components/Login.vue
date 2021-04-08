@@ -30,7 +30,6 @@ export default {
       axios.post(`${SERVER_URL}/accounts/login`, this.credentials)
         .then(res => {
           localStorage.setItem('jwt', res.data.token)
-          console.log(res)
           const token = res.data['token']
           const decoded = jwt_decode(token)
           localStorage.setItem('user_id', decoded.user_id)
@@ -41,7 +40,6 @@ export default {
           this.$router.push({ name: 'Home' })
         })
         .catch(err=>{
-            console.log(err)
             alert('로그인 정보를 확인해주세요!')
         })
     }
