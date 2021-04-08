@@ -65,6 +65,7 @@ export default {
   },
   created: function () {
     this.$emit('page','Home')
+    this.$emit('isHome', this.$route.name)
   }
 }
 </script>
@@ -87,7 +88,7 @@ export default {
   flex-direction: column;
   /* width: 100%;
   height: 100%; */
-  background: url(../assets/Book.jpg) no-repeat center center;
+  background: url(../assets/Home.jpg) no-repeat center center;
   background-size: 100% 100%;
   height: 100%;
   width: 100%;
@@ -115,7 +116,7 @@ export default {
   font-size: 120%;
   transition: 0.3s;
   opacity: 0.8;
-  color: rgb(163, 128, 150);
+  color: #fff;
 }
 .home-message {
   position: absolute;

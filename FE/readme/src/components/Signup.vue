@@ -105,6 +105,7 @@ export default {
   },
   created: function () {
     this.$emit('page','SignUp')
+    this.$emit('isHome', this.$route.name)
   }
 }
 </script>

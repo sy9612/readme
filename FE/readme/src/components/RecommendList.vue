@@ -18,7 +18,7 @@
             <div class="card-carousel-cards">
               <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
-                <div class="card-carousel--card--footer">
+                <div class="card card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
                     {{ item.book_author }}
@@ -123,6 +123,13 @@ export default {
   width: 100%;
   /* padding: 0 20%; */
   padding-top: 10%;
+}
+.card {
+  overflow: auto;
+  height: 40%;
+}
+.card::-webkit-scrollbar {
+  display: none;
 }
 body {
   background: #f8f8f8;

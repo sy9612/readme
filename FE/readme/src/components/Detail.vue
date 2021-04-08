@@ -143,6 +143,7 @@ export default {
     },
   },
   created: function () {
+    this.$emit('isHome', this.$route.name)
     this.$emit('page','BookDetail')
   //   const config = this.setToken()
     const isbn = this.$route.params.bookIsbn

@@ -1,11 +1,11 @@
 <template>
   <div id="App">
-    <div class="navbar">
+    <div id="navbar">
       <span> <span @click="toHome" class="project-name">README</span> <span class="page-name">{{ pagename }}</span> </span>
       <div v-if="login" @click="clickMenu"><i class="menu-icon fas fa-bars"></i></div> 
     </div>
 
-    <div class="account">
+    <div id="account">
       <span v-if="login" class="logout-btn" @click="logout">logout</span>
       <span v-if="!login" class="signup-btn" @click="clickSignup">signup</span>
       <span v-if="!login" @click="clickLogin">login</span>
@@ -16,7 +16,7 @@
       <div @click="toRecommendations">Recommendations</div>
       <div @click="toMyPage">My Page</div>
     </div> 
-     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" @page="page" />
+     <router-view :menuIsOpen="menuIsOpen" :onMenu="onMenu" @login="logined" @page="page" @isHome="isHome"/>
   </div>
 
  
@@ -92,18 +92,32 @@ export default {
     page: function (page) {
       this.pagename = page
       this.pageOrigin = page
+    },
+    isHome: function (name) {
+      setTimeout(function() {
+      const account = document.getElementById('account')
+      const top = document.getElementById('navbar')
+      if (name==='Home') {
+        console.log(top, account)
+        account.style.color = '#fff'
+        top.style.color = '#fff'
+      } else {
+        account.style.color = 'rgb(160, 133, 133)'
+        top.style.color = 'rgb(160, 133, 133)'
+      }
+      }, 100);
+
     }
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
       this.login = true
     }
+    
     // const account = document.getElementsByClassName('account')
     // account.style.animation = 'fadein'
   },
-  // watch: function () {
 
-  // }
 }
 </script>
 
@@ -145,7 +159,7 @@ export default {
   height: 100vh;
   width: 100vw;
   /* z-index: 1; */
-  background: url(./assets/background.jpg) no-repeat center center;
+  background: url(./assets/Book.jpg) no-repeat center center;
   background-size: 100% 100%;
   font-family: font1;
   -webkit-font-smoothing: antialiased;
@@ -158,7 +172,7 @@ export default {
   transition: 0.3s;
   cursor: pointer;
 } 
-.navbar {
+#navbar {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -168,28 +182,29 @@ export default {
   z-index: 3;
   color: rgb(160, 133, 133);
 }
-.navbar > span {
+#navbar > span {
   width: 60%;
 }
 .project-name {
   cursor: pointer;
   animation: 'fadein' 3s;
   font-weight: bold;
+  font-size: 120%;
 }
 .project-name:hover {
   opacity: 0.7;
 }
 .page-name {
   position: absolute;
-  margin-left: 14.5%;
-  font-size: 33%;
+  margin-left: 12.6%;
+  font-size: 50%;
   font-weight: bold;
   height: 100%;
   top: 0;
-  padding-top: 1.3%;
+  padding-top: 0.8%;
   animation: 'fadein' 3s;
 }
-.account {
+#account {
   position: relative;
   /* display: flex; */
   height: 150px;
@@ -201,11 +216,12 @@ export default {
   color: rgb(160, 133, 133);
   z-index: 3;
   animation: 'fadein' 3s;
-  margin-top: 2.5%;
-  margin-left: 0.6%;
+  margin-top: 2%;
+  margin-left: -0.4%;
   font-size: 115%;
+  /* font-weight: bold; */
 }
-.account > span {
+#account > span {
   position: relative;
   right: 0;
   transform: rotate(90deg);
@@ -214,7 +230,7 @@ export default {
   font-size: 130%;
   cursor: pointer;
 }
-.account span:hover {
+#account span:hover {
   /* font-size: 120%; */
   font-weight: bold;
   transition: 0.5s;

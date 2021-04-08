@@ -18,7 +18,7 @@
             <div class="card-carousel-cards">
               <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
-                <div class="card-carousel--card--footer">
+                <div class="card card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
                     {{ item.book_author }}
@@ -103,7 +103,6 @@ export default {
         .get(`${SERVER_URL}/accounts/` + this.user_id + `/readList`)
         .then((res) => {
           this.items = res.data;
-          console.log(res.data);
         });
     },
   },

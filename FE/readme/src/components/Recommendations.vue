@@ -48,9 +48,9 @@ export default {
       this.user_name = user_name;
       this.jwt = jwt;
       // console.log(jwt);
-      console.log(this.user_name);
     },
-     watch: {
+  },
+  watch: {
     menuIsOpen: function () {
       const page = document.getElementById('Recommendations')
       if (this.menuIsOpen === false) {
@@ -62,7 +62,6 @@ export default {
       }
     },
   },
-  },
   data: function () {
     return {
       user_id: '',
@@ -70,6 +69,11 @@ export default {
       jwt: '',
     };
   },
+  created: function () {
+    this.$emit('page','Recommendations')
+    this.$emit('isHome', this.$route.name)
+    this.fnGetUsr()
+  }
 };
 </script>
 
@@ -83,8 +87,11 @@ export default {
   left: 0%;
   height: 100%;
   width: 100%;
-  padding: 0 10%;
+  padding: 0 19%;
   padding-top: 10%;
   overflow: scroll;
+}
+#Recommendations::-webkit-scrollbar {
+  display: none;
 }
 </style>
