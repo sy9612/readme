@@ -1,10 +1,12 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import ReportSerializer, ReportDetailSerializer
+from .serializers import ReportSerializer, ReportDetailSerializer, ReportCreateSerializer
 from rest_framework.response import Response
 from django.db.models import Q
 from books.models import Report
+from drf_yasg.utils import swagger_auto_schema
 
+@swagger_auto_schema(method='post', request_body=ReportDetailSerializer)
 @api_view(('GET', 'POST'))
 def report(request, user_id):
     if request.method == 'GET':
@@ -25,7 +27,7 @@ def report(request, user_id):
 
             ---
         '''
-        serializer = ReportSerializer(data = request.data)
+        serializer = ReportCreateSerializer(data = request.data)
         # DRF(Django Rest Framework) 에서는 request에서 데이터를 받을 때
         # 반드시 is_valid() 여부를 체크해야 한다.
         if serializer.is_valid():
@@ -53,7 +55,7 @@ def report_detail(request, user_id, book_isbn):
         return Response(serializer.data, status = status.HTTP_200_OK)
 
     elif request.method == 'PUT':
-        serializer = ReportDetailSerializer(report, data = request.data)
+        serializer = ReportCreateSerializer(report, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
