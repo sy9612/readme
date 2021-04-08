@@ -1,15 +1,24 @@
 <template>
   <div id="Recommendations">
     <div>
-      <h>나만의 추천 도서</h>
+      <div v-if="this.jwt == null">
+        <h2>금주의 베스트셀러</h2>
+        <h>회원가입을 통해 나만을 위한 도서 추천을 받아보세요!</h>
+      </div>
+      <div v-else>
+        <h2>{{ this.user_name }} 님을 위한 추천 도서</h2>
+      </div>
+
       <recommend-list></recommend-list>
     </div>
-    <div>
-      <h>성별, 연령대별 추천 도서</h>
+    <div v-if="this.jwt == null"></div>
+    <div v-else>
+      <h2>{{ this.user_name }} 님과 동일 성별, 연령대의 인기 도서</h2>
       <age-list></age-list>
     </div>
-    <div>
-      <h>MBTI별 추천 도서</h>
+    <div v-if="this.jwt == null"></div>
+    <div v-else>
+      <h2>{{ this.user_name }} 님의 MBTI 기반 추천 도서</h2>
       <mbti-list></mbti-list>
     </div>
   </div>
@@ -17,18 +26,44 @@
 
 <
 <script>
+import RecommendList from './RecommendList.vue';
+import MbtiList from './MbtiList.vue';
+import AgeList from './AgeList.vue';
+
 export default {
   name: 'Recommendations',
+  components: { RecommendList, MbtiList, AgeList },
+  created() {
+    this.fnGetUsr();
+  },
+
+  methods: {
+    fnGetUsr: function () {
+      const jwt = localStorage.getItem('jwt');
+      const user_id = localStorage.getItem('user_id');
+      const user_name = localStorage.getItem('username');
+      this.user_id = user_id;
+      this.user_name = user_name;
+      this.jwt = jwt;
+      // console.log(jwt);
+      console.log(this.user_name);
+    },
+  },
   data: function () {
-    return {};
+    return {
+      user_id: '',
+      user_name: '',
+      jwt: '',
+    };
   },
 };
 </script>
 
 <style>
 #Recommendations {
+  background: url(../assets/background.jpg) no-repeat center center;
+  background-size: 100% 100%;
   position: absolute;
-  background: #d7b9a1;
   box-sizing: border-box;
   top: 0;
   left: 0%;
@@ -36,5 +71,6 @@ export default {
   width: 100%;
   padding: 0 10%;
   padding-top: 10%;
+  overflow: scroll;
 }
 </style>

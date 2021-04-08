@@ -6,18 +6,16 @@
       :per-page="4"
       :mouse-drag="false"
     >
-      <div v-if="this.items == 0">
-        읽은 도서가 없습니다. README를 통해 추천받은 책을 읽어보세요~
-      </div>
-        <slide v-else
+   
+        <slide
           class="card-carousel"
           v-for="item in this.items"
           v-bind:key="item.book_title"
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card">
-                <img :src="require(`../assets/${item.book_isbn}.jpg`)" />
+              <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
+                <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
                 <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
@@ -48,7 +46,7 @@ export default {
   data() {
     return {
       // path: "http://j4a205.p.ssafy.io:8050/",
-      user_id: 2,
+      user_id: '',
       currentOffset: 0,
       windowSize: 4,
       paginationFactor: 220,
@@ -67,10 +65,18 @@ export default {
     },
   },
   created() {
+    this.fnGetUsr();
     this.fnGetList();
   },
 
   methods: {
+    fnGoDetail: function(isbn){
+      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
+    },
+    fnGetUsr: function () {
+      const user_id = localStorage.getItem('user_id');
+      this.user_id = user_id;
+    },
     fnRateList: function (rating_avg) {
       if (rating_avg.review_rating__avg == null) return 0;
       else return rating_avg.review_rating__avg;
@@ -91,7 +97,7 @@ export default {
 
     fnGetList() {
       axios
-        .get(`${SERVER_URL}/accounts/` + this.user_id + `/readList`)
+        .get(`${SERVER_URL}/recommends/agegender/` + this.user_id + `/list`)
         .then((res) => {
           this.items = res.data;
           console.log(res.data);
@@ -113,6 +119,7 @@ export default {
   /* padding: 0 20%; */
   padding-top: 10%;
 }
+
 body {
   background: #f8f8f8;
   color: #2c3e50;
@@ -263,4 +270,5 @@ h1 {
   margin-bottom: 0;
   color: black;
 }
+
 </style>
