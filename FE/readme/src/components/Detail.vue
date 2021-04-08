@@ -3,13 +3,18 @@
     <div class="detail_wrapper">
 
       <div class="detail_content">
-        <div class="book_info">
+        <div class="book_info">          
           <img :src="imgsrc"/>
           <div class="book_contents">
             <p @click="toReport"> {{ bookinfo.book_title }}</p>
             <p>{{ bookinfo.book_author }}</p>
             <p>{{ maincategory }}</p>
             <p>{{ subcategory }}</p>
+            <div>
+              <i @click="clickDib" v-if="dib===false" class="empty_heart fa-2x far fa-heart"></i>
+              <i @click="clickDib" v-if="dib===true" class="full_heart fa-2x fas fa-heart"></i>
+              <i @click="toReport" class="pencil fa-2x fas fa-pencil-alt"></i>
+            </div>
           </div>
         </div>
         <p>{{ bookinfo.book_description }}</p>
@@ -83,6 +88,7 @@ export default {
       maincategory: '',
       subcategory: '',
       imgsrc: '',
+      dib: false,
     }
   },
   methods: {
@@ -125,9 +131,14 @@ export default {
         const isbn = this.$route.params.bookIsbn
         this.$router.push({name: 'Report', params:{bookIsbn:isbn}})    
       }
-
     },
-
+    clickDib: function () {
+      const isbn = this.$route.params.bookIsbn
+      axios.post(`${SERVER_URL}/accounts/clickDibs/${isbn}`, {'user_id': this.params.user_id})
+        .then(res => {
+          this.dib = !this.dib
+        })  
+    },
   },
   watch: {
     menuIsOpen: function () {
@@ -150,6 +161,7 @@ export default {
   //   console.log(user_id)
     axios.get(`${SERVER_URL}/books/${isbn}`)
       .then(res => {
+        console.log(res)
         this.bookinfo = res.data.book
         this.maincategory = res.data.maincategory
         this.subcategory = res.data.subcategory
@@ -177,6 +189,18 @@ export default {
   width: 100%;
   padding: 0 22%;
   padding-top: 7%;
+}
+.empty_heart {
+  margin-right: 7%;
+  cursor: pointer;
+}
+.full_heart {
+  color: crimson;
+  margin-right: 7%;
+  cursor: pointer;
+}
+.pencil {
+  cursor: pointer;
 }
 .detail_wrapper {
   position: relative;
@@ -332,7 +356,7 @@ export default {
 .review {
   display: flex;
   box-sizing: border-box;
-  height: 10%;
+  height: 9.3%;
   padding: 2.5% 0;
   /* padding-bottom: 2%; */
   border: ivory solid 2px;
