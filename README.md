@@ -13,7 +13,11 @@ README는 콘텐츠 기반 필터링, 협업 필터링, MBTI 기반 추천 리�
 - **BackEnd**
 ```
 cd backend/readme
+python -m venv venv
+venv\Scripts\activate
+pip install django
 pip install -r requirements.txt
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
@@ -33,6 +37,9 @@ npm run serve
 >🔧**BackEnd** -  Django
 
 >🔧**Database**-  MySQL
+
+>🔧**Deploy**-  AWS, Docker
+
 
 
 ## 추천 알고리즘 분석
