@@ -286,3 +286,17 @@ def review(request, review_id):
         post_instance = Review.objects.get(review_id=review_id)
         post_instance.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
+
+
+# 유저가 쓴 리뷰 리스트
+@api_view(("GET", ))
+def user_review_list(request, user_id):
+    '''
+        유저 리뷰 리스트
+
+        ---
+        유저가 쓴 리뷰 리스트 반환
+    '''
+    user_review_list = Review.objects.filter(user_id=user_id)
+    serializer = ReviewSerializer(user_review_list, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
