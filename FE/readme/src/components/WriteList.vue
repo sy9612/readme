@@ -2,8 +2,8 @@
   <div>
     <div id="Report_detail">
       <img :src="reportSrc" alt="">
-      <p class="report_title">{{ reportTitle }}</p>
-      <p>{{ reportContent }}</p>
+      <p @click="toDetail" class="report_title">{{ reportTitle }}</p>
+      <p @click="closeDetail" class="report_content">{{ reportContent }}</p>
     </div>
     <carousel id="carousel"
       class="card-carousel-wrapper"
@@ -21,7 +21,7 @@
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card" @click="toReportDetail(item.book_isbn, item.book_contents, item.book_title)"> 
+              <div class="card-carousel--card" @click="toReportDetail(item.book_isbn, item.report_content, item.book_title)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
                 <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
@@ -61,6 +61,7 @@ export default {
       reportSrc: '',
       reportContent: '',
       reportTitle: '',
+      reportIsbn: 0,
     };
   },
   computed: {
@@ -84,11 +85,21 @@ export default {
     toReportDetail: function(isbn,content,title){
       const carousel = document.getElementById('carousel')
       carousel.style.display = 'none'
+      this.reportIsbn = isbn
       this.reportSrc = `http://j4a205.p.ssafy.io:8050/images/${isbn}.jpg`
       const reportDetail = document.getElementById('Report_detail')
       reportDetail.style.display = 'flex'
       this.reportContent = content
       this.reportTitle = title
+    },
+    closeDetail: function () {
+      const carousel = document.getElementById('carousel')
+      const reportDetail = document.getElementById('Report_detail')
+      carousel.style.display = 'block'
+      reportDetail.style.display = 'none'
+    },
+    toDetail: function () {
+      this.$router.push({name: 'Detail', params:{bookIsbn:this.reportIsbn}})
     },
       fnGetUsr: function () {
       const user_id = localStorage.getItem('user_id');
@@ -149,12 +160,34 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 .report_title {
-  font-size: 150%;
+  font-size: 160%;
   margin-top: 9%;
   font-weight: bold;
+  cursor: pointer;
+  z-index: 2;
+  width: 80%;
+  text-align: center;
+  /* height: 15%; */
+}
+.report_title:hover {
+  font-size: 170%;
+  transition: 0.3s;
+}
+.report_content {
+  margin-top: 5%;
+  width: 80%;
+  height: 80%;
+  font-size: 130%;
+  text-align: center;
+  overflow: auto;
+  z-index: 2;
+  cursor: pointer;
+}
+.report_content::-webkit-scrollbar {
+  display: none;
 }
 body {
   background: #f8f8f8;
