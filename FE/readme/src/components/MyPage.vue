@@ -7,10 +7,14 @@
     </div>
     <div v-else>
     <a @click="wishMethod" :style="wishstyle" style="cursor:pointer; margin-right: 15px; font-size: 30px">찜한 도서</a>
-    <a @click="readMethod" :style="readstyle" style="cursor:pointer; font-size: 30px">읽은 도서</a>
+    <a @click="readMethod" :style="readstyle" style="cursor:pointer; margin-right: 15px; font-size: 30px">읽은 도서</a>
+    <a @click="writeMethod" :style="writestyle" style="cursor:pointer; font-size: 30px">독후감</a>
+
 
     <div v-if="wish"><wish-list></wish-list></div>
     <div v-if="read"><read-list></read-list></div>
+    <div v-if="write"><write-list></write-list></div>
+
     </div>
   </div>
 
@@ -20,10 +24,11 @@
 <script>
 import WishList from './WishList.vue'
 import ReadList from './ReadList.vue'
+import WriteList from './WriteList.vue'
 
 export default {
   name: 'MyPage',
-  components: { WishList, ReadList },
+  components: { WishList, ReadList, WriteList },
   props: {
     menuIsOpen: Boolean,
   },
@@ -33,6 +38,9 @@ export default {
         textDecoration: 'underline',
       },
       readstyle:{
+        textDecoration: '',
+      },
+      writestyle:{
         textDecoration: '',
       },
       wish: true,
@@ -57,16 +65,32 @@ export default {
   	wishMethod:function() {
       this.wish = true
       this.read = false
+      this.write = false
       this.readstyle.textDecoration = ''
       this.wishstyle.textDecoration = 'underline'
+      this.writestyle.textDecoration = ''
+
 
 
     },
     readMethod: function(){
       this.wish = false
+      this.write = false
       this.read = true
       this.readstyle.textDecoration = 'underline'
       this.wishstyle.textDecoration = ''
+      this.writestyle.textDecoration = ''
+
+    },
+    writeMethod: function(){
+      this.wish = false
+      this.read = false
+      this.write = true
+
+      this.readstyle.textDecoration = ''
+      this.wishstyle.textDecoration = ''
+      this.writestyle.textDecoration = 'underline'
+
     },
   },
   watch: {

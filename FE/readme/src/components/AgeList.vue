@@ -174,6 +174,8 @@ body {
 
 .card-carousel-cards {
   display: flex;
+      padding-left: 7%;
+    padding-right: 7%;
   transition: transform 150ms ease-out;
   transform: translatex(0px);
 }

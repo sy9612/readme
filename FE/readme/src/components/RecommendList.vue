@@ -185,13 +185,17 @@ body {
 
 .card-carousel-cards {
   display: flex;
+  
+    padding-left: 7%;
+    padding-right: 7%;
+
   transition: transform 150ms ease-out;
   transform: translatex(0px);
 }
 .card-carousel-cards .card-carousel--card {
   width: 200px;
   height: 330px;
-  margin: 0 10px;
+  margin: 0 5px;
   cursor: pointer;
   box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06),
     0 2px 2px 0 rgba(40, 44, 53, 0.08);
@@ -200,12 +204,12 @@ body {
   z-index: 3;
   margin-bottom: 2px;
 }
-.card-carousel-cards .card-carousel--card:first-child {
+/* .card-carousel-cards .card-carousel--card:first-child {
   margin-left: 0;
 }
 .card-carousel-cards .card-carousel--card:last-child {
   margin-right: 0;
-}
+} */
 .card-carousel-cards .card-carousel--card img {
   vertical-align: bottom;
   border-top-left-radius: 4px;
