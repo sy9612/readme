@@ -11,8 +11,8 @@
             <p>{{ maincategory }}</p>
             <p>{{ subcategory }}</p>
             <div>
-              <i @click="clickDib" v-if="dib===false" class="empty_heart fa-2x far fa-heart"></i>
-              <i @click="clickDib" v-if="dib===true" class="full_heart fa-2x fas fa-heart"></i>
+              <i @click="clickDib" v-if="dib===0" class="empty_heart fa-2x far fa-heart"></i>
+              <i @click="cancelDib" v-if="dib===1" class="full_heart fa-2x fas fa-heart"></i>
               <i @click="toReport" class="pencil fa-2x fas fa-pencil-alt"></i>
             </div>
           </div>
@@ -36,13 +36,13 @@
             <div @click="openReview(idx)" v-for="(review,idx) in reviews" :key="idx" class="review">
               <div>{{ review.review_content }}</div>
               <div><i class="fas fa-star" style="color:#fd4"></i>X{{ review.review_rating }}</div>
-              <div>{{ review.user_id }}</div>
+              <div>{{ review.user_nickname }}</div>
             </div>
           </div>
         </div>
 
         <div v-if="reviewIsOpen===2" class="review_detail">
-          <p @click="closeReview">{{ selectedReview.user_id }}님의 리뷰</p>
+          <p @click="closeReview">{{ selectedReview.user_nickname }}님의 리뷰</p>
           <div>
             <p style="font-size:130%; margin:8% 0">평점  <i class="review_rate fas fa-star"></i>X{{ selectedReview.review_rating }}</p>
           </div>
@@ -88,7 +88,7 @@ export default {
       maincategory: '',
       subcategory: '',
       imgsrc: '',
-      dib: false,
+      dib: 0,
     }
   },
   methods: {
@@ -136,9 +136,16 @@ export default {
       const isbn = this.$route.params.bookIsbn
       axios.post(`${SERVER_URL}/accounts/clickDibs/${isbn}`, {'user_id': this.params.user_id})
         .then(res => {
-          this.dib = !this.dib
+          this.dib = 1
         })  
     },
+    cancelDib: function () {
+      const isbn = this.$route.params.bookIsbn
+      axios.post(`${SERVER_URL}/accounts/clickDibs/${isbn}`, {'user_id': this.params.user_id})
+        .then(res => {
+          this.dib = 0
+        })  
+    }
   },
   watch: {
     menuIsOpen: function () {
@@ -159,9 +166,9 @@ export default {
     const isbn = this.$route.params.bookIsbn
     this.params.user_id = localStorage.getItem('user_id')
   //   console.log(user_id)
-    axios.get(`${SERVER_URL}/books/${isbn}`)
+    axios.post(`${SERVER_URL}/books/${isbn}`, {'user_id': this.params.user_id})
       .then(res => {
-        console.log(res)
+        this.dib = res.data.is_dibs
         this.bookinfo = res.data.book
         this.maincategory = res.data.maincategory
         this.subcategory = res.data.subcategory
@@ -279,7 +286,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2%;
+  margin-top: 5%;
   height: 48%;
   width: 95%;
   /* background: white; */
@@ -378,6 +385,13 @@ export default {
 }
 .review div {
   margin: 0 2%;
+  overflow: hidden;
+}
+.review div:nth-child(2) {
+  width: 8%;
+}
+.review div:nth-child(3) {
+  width: 20%;
 }
 .review_detail p {
   text-align: center;
@@ -386,6 +400,7 @@ export default {
   cursor: pointer;
     font-size: 150%;
   font-weight: bold;
+  margin-top: 5%;
 }
 .review_detail p:nth-child(2) {
     font-size: 150%;

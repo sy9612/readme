@@ -111,6 +111,7 @@ export default {
   top: 90%;
   left: 50%;
   z-index: 3;
+  cursor: pointer;
 }
 .scroll:hover {
   font-size: 120%;
