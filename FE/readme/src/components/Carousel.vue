@@ -2,16 +2,8 @@
   <div id="Carousel">
     <!-- <i @click="rotateL" class="btn-left fas fa-chevron-circle-left"></i> -->
     <div class="carousel">
-      <div class="panel">1</div>
-      <div class="panel">2</div>
-      <div class="panel">3</div>
-      <div class="panel">4</div>
-      <div class="panel">5</div>
-      <div class="panel">6</div>
-      <div class="panel">7</div>
-      <div class="panel">8</div>
-      <div class="panel">9</div>
-      <div class="panel">10</div>
+      <img v-for="(recData,idx) in recDatas" :key="idx" @click="toRecDetail(recData.book_isbn)"
+      :src="`http://j4a205.p.ssafy.io:8050/images/${recData.book_isbn}.jpg`" alt="" class="panel">
     </div>
     <!-- <i @click="rotateR" class="btn-right fas fa-chevron-circle-right"></i> -->
   </div>
@@ -23,6 +15,12 @@ import axios from 'axios'
 
 export default {
   name: 'Carousel',
+  data: function () {
+    return {
+      recDatas: {},
+      user_id: 0,
+    }
+  },
   methods: {
     rotateR: function () {
       const carousel = document.querySelector('.carousel')
@@ -31,13 +29,24 @@ export default {
     rotateL: function () {
       const carousel = document.querySelector('.carousel')
       carousel.style.transform="rotateY(-36deg)"
+    },
+    toRecDetail: function (isbn) {
+      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}})
     }
   },
   created: function () {
-    const user_id = localStorage.getItem('user_id')
-    axios.get(`${SERVER_URL}/recommends/${user_id}/list`)
+
+    if (localStorage.getItem('user_id')===null) {
+      this.user_id = 0
+    } else {
+      this.user_id = localStorage.getItem('user_id')
+    }
+    axios.get(`${SERVER_URL}/recommends/${this.user_id}/list`)
       .then(res => {
-        console.log(res)
+        this.recDatas = res.data
+        if (this.user_id===0) {
+          this.recDatas = this.recDatas.splice(0,9)
+        }
       })  
   }
 }
@@ -79,9 +88,15 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  width: 170px;
+  width: 130px;
   height: 170px;
   background: rgba(255,255,255,0.5);
+  opacity: 0.8;
+}
+.panel:hover {
+  width: 140px;
+  height: 180px;
+  transition: 0.5s;
 }
 .btn-left {
   position: absolute;

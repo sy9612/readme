@@ -6,7 +6,7 @@
         <div class="book_info">
           <img :src="imgsrc"/>
           <div class="book_contents">
-            <p> {{ bookinfo.book_title }}</p>
+            <p @click="toReport"> {{ bookinfo.book_title }}</p>
             <p>{{ bookinfo.book_author }}</p>
             <p>{{ maincategory }}</p>
             <p>{{ subcategory }}</p>
@@ -182,6 +182,13 @@ export default {
     openForm: function () {
       this.reviewIsOpen = 3
     },
+    toReport: function () {
+      if (localStorage.getItem('jwt')) {
+        const isbn = this.$route.params.bookIsbn
+        this.$router.push({name: 'Report', params:{bookIsbn:isbn}})    
+      }
+
+    },
 
   },
   watch: {
@@ -204,12 +211,16 @@ export default {
   //   console.log(user_id)
     axios.get(`${SERVER_URL}/books/${isbn}`)
       .then(res => {
+        console.log(res)
         this.bookinfo = res.data.book
         this.maincategory = res.data.maincategory
         this.subcategory = res.data.subcategory
         this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.bookinfo.book_isbn}.jpg`
-      })  
-    
+      }) 
+    axios.get(`${SERVER_URL}/books/review/${isbn}`)   
+      .then(res => {
+        // console.log(res)
+      }) 
   }
 }
 </script>
@@ -290,6 +301,10 @@ export default {
   font-weight: bold;
   font-size: 115%;
   margin-top: 5%;
+  cursor: pointer;
+}
+.book_contents p:nth-child(1):hover {
+  opacity: 0.7;
 }
 .book_contents p:nth-child(2) {
   /* font-weight */
