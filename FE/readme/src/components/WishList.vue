@@ -131,7 +131,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0 40px;
+  margin: 30px 0 80px;
   color: #666a73;
 }
 /* 
@@ -270,5 +270,13 @@ h1 {
   text-align: center;
   margin-bottom: 0;
   color: black;
+}
+ .VueCarousel-pagination .VueCarousel-dot {
+      background-color: #8d8d8d !important;
+ }
+
+
+.VueCarousel-pagination .VueCarousel-dot--active {
+      background-color: black !important;
 }
 </style>
