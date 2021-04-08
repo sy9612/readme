@@ -3,6 +3,8 @@ from .models import Book
 from .models import Review, BooksSubcategory, BooksMaincategory
 from django.db.models import Avg, Count
 
+from accounts.models import User
+
 #책 전체 정보를 가져올 때
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,9 +30,14 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 #리뷰 데이터 가져올 때
 class ReviewSerializer(serializers.ModelSerializer):
+    user_nickname = serializers.SerializerMethodField()
+
     class Meta:
         model = Review
-        fields = ['review_id', 'user_id', 'book_isbn', 'review_rating', 'review_content', 'review_date']
+        fields = ['review_id', 'user_id', 'book_isbn', 'review_rating', 'review_content', 'review_date', 'user_nickname']
+
+    def get_user_nickname(self, obj):
+        return User.objects.get(id=obj.user_id).nickname
 
 # 카테고리 검색할 때 쿼리 스트링을 위한 Query Serializer
 class CategoryQuerySerializer(serializers.Serializer):
