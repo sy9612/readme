@@ -7,7 +7,7 @@
       :mouse-drag="false"
     >
       <div v-if="this.items == 0">
-        MBTI가 등록되어 있지 않습니다.
+        작성한 독후감이 없습니다.
       </div>
         <slide v-else
           class="card-carousel"
@@ -18,7 +18,7 @@
             <div class="card-carousel-cards">
               <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
-                <div class="card card-carousel--card--footer">
+                <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
                     {{ item.book_author }}
@@ -43,7 +43,7 @@ import axios from 'axios';
 import { Carousel, Slide } from 'vue-carousel';
 
 export default {
-  name: 'MbtiList',
+  name: 'WriteList',
   components: { Carousel, Slide },
   data() {
     return {
@@ -76,7 +76,7 @@ export default {
     fnGoDetail: function(isbn){
       this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
     },
-     fnGetUsr: function () {
+      fnGetUsr: function () {
       const user_id = localStorage.getItem('user_id');
       this.user_id = user_id;
     },
@@ -100,10 +100,9 @@ export default {
 
     fnGetList() {
       axios
-        .get(`${SERVER_URL}/mbtis/` + this.user_id)
+        .get(`${SERVER_URL}/reports/` + this.user_id)
         .then((res) => {
-          this.items = res.data.mbti_book_list;
-          
+          this.items = res.data;
         });
     },
   },
@@ -111,7 +110,7 @@ export default {
 </script>
 
 <style>
-#MbtiList {
+#WriteList {
   /* position: absolute; */
   background: #d7b9a1;
   box-sizing: border-box;
@@ -184,7 +183,6 @@ body {
   transition: transform 150ms ease-out;
   transform: translatex(0px);
 }
-
 .card-carousel-cards .card-carousel--card {
   width: 200px;
   height: 330px;
