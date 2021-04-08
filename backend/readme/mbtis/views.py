@@ -4,15 +4,18 @@ from rest_framework.response import Response
 from .models import MBTI, MBTIBook
 from .serializers import MbtiBookSerializer
 from books.models import Book
+from accounts.models import User
 
 
 @api_view(('GET', ))
-def mbti_book_list(request, mbti_id):
+def mbti_book_list(request, user_id):
     '''
         MBTI별 추천 도서 리스트 반환
 
         ---
     '''
+    mbti_id = User.objects.get(id=user_id).mbti_id
+
     mbti_type = MBTI.objects.get(mbti_id=mbti_id).mbti_type
     mbti_type_list = list(mbti_type)
 
