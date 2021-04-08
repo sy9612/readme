@@ -47,7 +47,6 @@ export default {
   components: { Carousel, Slide },
   data() {
     return {
-      // path: "http://j4a205.p.ssafy.io:8050/",
       user_id: '',
       currentOffset: 0,
       windowSize: 4,
@@ -68,7 +67,6 @@ export default {
   },
   created: function() {
      this.fnGetUsr();
-      console.log(this.user_id);
     this.fnGetList();
 
   },
@@ -78,14 +76,10 @@ export default {
       this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
     },
     fnGetUsr: function () {
-      const jwt = localStorage.getItem('jwt');
       const user_id = localStorage.getItem('user_id');
       this.user_id = user_id;
       if(this.user_id == null)
         this.user_id = 0;
-      // console.log("hello: " + this.user_id);
-      // console.log(jwt);
-      // console.log(this.user_id);
 
     },
     fnRateList: function (rating_avg) {
@@ -140,7 +134,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0 40px;
+  margin: 30px 0 80px;
   color: #666a73;
 }
 /* 
@@ -280,4 +274,13 @@ h1 {
   margin-bottom: 0;
   color: black;
 }
+ .VueCarousel-pagination .VueCarousel-dot {
+      background-color: #8d8d8d !important;
+ }
+
+
+.VueCarousel-pagination .VueCarousel-dot--active {
+      background-color: black !important;
+}
+
 </style>
