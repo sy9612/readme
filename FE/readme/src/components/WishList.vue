@@ -16,8 +16,8 @@
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card">
-                <img :src="require(`../assets/${item.book_isbn}.jpg`)" />
+              <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
+                <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
                 <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       // path: "http://j4a205.p.ssafy.io:8050/",
-      user_id: 2,
+      user_id: '',
       currentOffset: 0,
       windowSize: 4,
       paginationFactor: 220,
@@ -67,10 +67,19 @@ export default {
     },
   },
   created() {
+    this.fnGetUsr();
     this.fnGetList();
+
   },
 
   methods: {
+    fnGoDetail: function(isbn){
+      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
+    },
+      fnGetUsr: function () {
+      const user_id = localStorage.getItem('user_id');
+      this.user_id = user_id;
+    },
     fnRateList: function (rating_avg) {
       if (rating_avg.review_rating__avg == null) return 0;
       else return rating_avg.review_rating__avg;
