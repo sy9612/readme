@@ -15,6 +15,11 @@ class Book(models.Model):
     class Meta:
         managed = True
         db_table = 'books_book'
+        # SELECT WHERE 절에 많이 사용되는 book_isbn 컬럼을 인덱스로 지정해
+        # SELECT 쿼리의 성능을 높임
+        indexes = [
+            models.Index(fields=['book_isbn',]),
+        ]
 
 
 class BooksCategory(models.Model):
