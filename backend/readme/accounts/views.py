@@ -76,6 +76,8 @@ class Registration(generics.GenericAPIView):
 #             user['token']
 #         })
 
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((JSONWebTokenAuthentication,))
 @swagger_auto_schema(method='put', request_body=UserChangeSerializer)
 @api_view(('GET', 'PUT', 'DELETE'))
 def account_update_delete(request, user_id):
@@ -104,6 +106,8 @@ def account_update_delete(request, user_id):
 
 
 #user별 찜 리스트
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((JSONWebTokenAuthentication,))
 @api_view(('GET', ))
 def dibs_list(request, user_id):
     """
@@ -126,7 +130,8 @@ def dibs_list(request, user_id):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+@permission_classes((IsAuthenticated, ))
+@authentication_classes((JSONWebTokenAuthentication,))
 @api_view(('GET', ))
 def review_report_list(request, user_id):
     '''
