@@ -7,7 +7,7 @@
     </div>
     <div v-else>
     <a @click="wishMethod" :style="wishstyle" style="cursor:pointer; margin-right: 15px; font-size: 30px">찜한 도서</a>
-    <a @click="readMethod" :style="readstyle" style="cursor:pointer; margin-right: 15px; font-size: 30px">읽은 도서</a>
+    <a @click="readMethod" :style="readstyle" style="cursor:pointer; margin-right: 15px; font-size: 30px">작성 리뷰</a>
     <a @click="writeMethod" :style="writestyle" style="cursor:pointer; font-size: 30px">독후감</a>
 
 
@@ -45,6 +45,7 @@ export default {
       },
       wish: true,
       read: false,
+      write:false,
     };
   },
   created() {
