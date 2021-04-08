@@ -9,9 +9,12 @@ from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from django.db.models import Avg, Count
 from rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
+
+from books.models import Book, Review
 
 #JWT 사용을 위한 설정
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
@@ -71,3 +74,24 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'nickname', 'birth', 'gender', 'mbti_id')
+
+# 사용자 정보 수정 Request Body Serializer
+class UserChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('nickname', 'gender', 'mbti_id')
+
+# 사용자가 찜하거나 읽은 책 Serializer
+class UserBookSerializer(serializers.ModelSerializer):
+    rating_avg = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Book
+        fields = ['book_id', 'book_isbn', 'book_title', 'book_author', 'rating_avg', 'rating_count']
+
+    def get_rating_avg(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Avg('review_rating'))
+
+    def get_rating_count(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Count('review_rating'))
