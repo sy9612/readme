@@ -1,9 +1,11 @@
 <template>
   <div id="Login">
     <label for="">아이디</label>
-    <input type="text" v-model="credentials.username">
+    <input type="text" v-model="credentials.username" placeholder="아이디를 입력해주세요" onfocus="this.placeholder=''"
+    onblur="this.placeholder='아이디를 입력해주세요'">
     <label for="">비밀번호</label>
-    <input type="password" v-model="credentials.password">
+    <input type="password" v-model="credentials.password" placeholder="비밀번호를 입력해주세요" onfocus="this.placeholder=''"
+    onblur="this.placeholder='비밀번호를 입력해주세요'">
     <button @click="login">로그인</button>
   </div>
 </template>
@@ -38,6 +40,9 @@ export default {
           this.$router.push({ name: 'Home' })
         })
     }
+  },
+  created: function () {
+    this.$emit('page','Login')
   }
 }
 </script>
@@ -59,7 +64,7 @@ export default {
   /* opacity: 0.9; */
   height: 100vh;
   width: 100vw;
-  color: white;
+  color: rgb(160, 133, 133);
   font-weight: bold;
 }
   #Login label {
@@ -73,5 +78,9 @@ export default {
     font-size: 120%;
     outline: none;
     font-family: font1;
+    text-align: center;
+  }
+  #Login ::-webkit-input-placeholder {
+    text-align: center;
   }
 </style>

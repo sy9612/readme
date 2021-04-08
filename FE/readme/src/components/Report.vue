@@ -3,13 +3,15 @@
     <div class="report_wrapper">
       <div class="report_left">
         <div class="book_info">
-          <img src="../assets/harry.jpg" alt="">
+          <img :src="imgsrc" alt="">
           <div class="book_contents">
-            <p>해리포터와 마법사의 돌</p>
-            <p>장르: 공포</p>
-            <p>상세내용: Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui, doloribus.</p>
+            <p class="report_book_title" @click="toDetail">{{ bookinfo.book_title }}</p>
+            <p>{{ bookinfo.book_author }}</p>
+            <p>{{ maincategory }}</p>
+            <p>{{ subcategory }}</p>
           </div>
         </div>
+        <p>{{ bookinfo.book_description }}</p>
       </div>
       <div class="report_right">
         <textarea v-model="params.report_content" cols="10" rows="10"></textarea>
@@ -33,29 +35,55 @@ export default {
       params: {
         book_isbn: 0,
         report_content: '',
-      }
-      
+      },
+      imgsrc: '',
+      bookinfo: {},
+      maincategory: '',
+      subcategory: '',
     }
+  },
+  props: {
+    menuIsOpen: Boolean,
   },
   methods: {
     postReport: function () {
-      
       const user_id = localStorage.getItem('user_id')
-      axios.post(`${SERVER_URL}/reports/${user_id}/`, this.params)
-    }
+      console.log(user_id)
+      axios.post(`${SERVER_URL}/reports/${user_id}`, this.params)
+        .then((res) => {
+          console.log(res)
+        })
+    },
+    toDetail: function () {
+      this.$router.push({name: 'Detail', params:{bookIsbn: this.bookinfo.book_isbn}})
+    },
+  },
+  watch: {
+    menuIsOpen: function () {
+      const page = document.getElementById('Report')
+      if (this.menuIsOpen === false) {
+          page.style.transform = 'scale(1)'
+      } else {
+        page.style.transform = 'scale(0)'
+        page.style.transitionDuration = '0.4s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+    },
   },
   created: function () {
-    this.params.book_isbn = this.$route.params.bookIsbn
-    // const bookId = this.$route.params.bookId
-    // axios.get(`${SERVER_URL}/market/detail/${bookId}/`) 
-    //   .then((res) => {
-    //     this.book_info = res.data
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-
-   
+  //   const config = this.setToken()
+    const isbn = this.$route.params.bookIsbn
+    this.params.user_id = localStorage.getItem('user_id')
+  //   console.log(user_id)
+    axios.get(`${SERVER_URL}/books/${isbn}`)
+      .then(res => {
+        this.bookinfo = res.data.book
+        this.maincategory = res.data.maincategory
+        this.subcategory = res.data.subcategory
+        this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.bookinfo.book_isbn}.jpg`
+      })  
+    this.$emit('page','Report')
+  
   }
 }
 </script>
@@ -73,14 +101,17 @@ export default {
   height: 100%;
   width: 100%;
   padding: 0 22%;
-  padding-top: 7%;
+  padding-top: 4%;
+}
+.report_left {
+  /* height */
 }
 .report_wrapper {
   position: relative;
   display: flex;
   justify-content: space-between;
   margin-top: 10%;
-  height: 100%;
+  height: 81.5%;
   width: 100%;
   background: rgb(166, 180, 177);
   border-radius: 20px;
@@ -108,6 +139,20 @@ export default {
 }
 .book_contents {
   width: 48%;
+}
+.report_book_title:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+.report_left > p {
+  position: relative;
+  box-sizing: border-box;
+  padding: 1% 3%;
+  height: 43%;
+  overflow: auto;
+}
+.report_left > p::-webkit-scrollbar {
+  display: none;
 }
 .report_right textarea {
   position: relative;
