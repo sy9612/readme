@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Book
 from .models import Review, BooksSubcategory, BooksMaincategory
-
+from django.db.models import Avg, Count
 
 #책 전체 정보를 가져올 때
 class BookSerializer(serializers.ModelSerializer):
@@ -49,3 +49,22 @@ class BookSearchQuerySerializer(serializers.Serializer):
     keyword = serializers.CharField(help_text="검색 키워드", required=False)
     search_type = serializers.ChoiceField(help_text="검색 타입", choices=TYPE_CHOICES,allow_blank=True, required=False) 
     page = serializers.IntegerField(help_text="페이지 넘버(한 페이지당 25개의 결과)", required=False)
+
+
+class BookDetailSerializer(serializers.ModelSerializer):
+    rating_avg = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Book
+        fields = [
+            'book_id', 'book_isbn', 'book_title', 'book_author',
+            'book_publisher', 'book_description', 'book_pages', 'book_price',
+            'rating_avg', 'rating_count'
+        ]
+
+    def get_rating_avg(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Avg('review_rating'))
+
+    def get_rating_count(self, obj):
+        return Review.objects.filter(book_isbn=obj.book_isbn).aggregate(Count('review_rating'))
