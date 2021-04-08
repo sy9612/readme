@@ -63,6 +63,7 @@ export default {
   },
   created: function () {
     this.$emit('page','Search')
+    this.$emit('isHome', this.$route.name)
   }
 }
 </script>

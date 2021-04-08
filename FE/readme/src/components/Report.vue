@@ -83,6 +83,7 @@ export default {
         this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.bookinfo.book_isbn}.jpg`
       })  
     this.$emit('page','BookReport')
+    this.$emit('isHome', this.$route.name)
   
   }
 }

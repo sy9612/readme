@@ -100,7 +100,6 @@ export default {
         .get(`${SERVER_URL}/recommends/agegender/` + this.user_id + `/list`)
         .then((res) => {
           this.items = res.data;
-          console.log(res.data);
         });
     },
   },

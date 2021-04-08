@@ -24,6 +24,9 @@ import ReadList from './ReadList.vue'
 export default {
   name: 'MyPage',
   components: { WishList, ReadList },
+  props: {
+    menuIsOpen: Boolean,
+  },
   data: function(){
     return{
       wishstyle:{
@@ -37,6 +40,8 @@ export default {
     };
   },
   created() {
+    this.$emit('isHome', this.$route.name)
+    this.$emit('page','MyPage')
     this.fnGetUsr();
   },
   methods: {
@@ -64,7 +69,19 @@ export default {
       this.readstyle.textDecoration = 'underline'
       this.wishstyle.textDecoration = ''
     },
-  }
+  },
+  watch: {
+    menuIsOpen: function () {
+      const page = document.getElementById('MyPage')
+      if (this.menuIsOpen === false) {
+        page.style.display = 'block'
+      } else {
+        page.style.display = 'none'
+        // page.style.transitionDuration = '10s'
+        page.style.transitionTimingFunction = 'ease-out'
+      }
+    },
+  },
   
 }
 
@@ -73,14 +90,14 @@ export default {
 <style>
 #MyPage {
   position: absolute;
-background: url(../assets/background.jpg) no-repeat center center;
+  background: url(../assets/background.jpg) no-repeat center center;
   background-size: 100% 100%;
-    box-sizing: border-box;
+  box-sizing: border-box;
   top: 0;
   left: 0%;
   height: 100%;
   width: 100%;
-  padding: 0 10%;
+  padding: 0 20%;
   padding-top: 10%;
 }
 

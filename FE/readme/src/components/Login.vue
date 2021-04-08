@@ -48,6 +48,7 @@ export default {
   },
   created: function () {
     this.$emit('page','Login')
+    this.$emit('isHome', this.$route.name)
   }
 }
 </script>
