@@ -9,7 +9,7 @@ from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer,\
-                        CategoryQuerySerializer, BookSearchQuerySerializer, BookDetailSerializer, UserIdSerializer
+                        CategoryQuerySerializer, BookSearchQuerySerializer, BookDetailSerializer, UserIdSerializer, UserReviewSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -298,5 +298,5 @@ def user_review_list(request, user_id):
         유저가 쓴 리뷰 리스트 반환
     '''
     user_review_list = Review.objects.filter(user_id=user_id)
-    serializer = ReviewSerializer(user_review_list, many=True)
+    serializer = UserReviewSerializer(user_review_list, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
