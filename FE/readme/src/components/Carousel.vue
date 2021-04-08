@@ -92,6 +92,7 @@ export default {
   height: 170px;
   background: rgba(255,255,255,0.5);
   opacity: 0.8;
+  cursor: pointer;
 }
 .panel:hover {
   width: 140px;

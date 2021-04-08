@@ -181,11 +181,12 @@ export default {
 }
 .page-name {
   position: absolute;
-  margin-left: 16%;
+  margin-left: 14.5%;
   font-size: 33%;
   font-weight: bold;
   height: 100%;
   top: 0;
+  padding-top: 1.3%;
   animation: 'fadein' 3s;
 }
 .account {
@@ -200,6 +201,9 @@ export default {
   color: rgb(160, 133, 133);
   z-index: 3;
   animation: 'fadein' 3s;
+  margin-top: 2.5%;
+  margin-left: 0.6%;
+  font-size: 115%;
 }
 .account > span {
   position: relative;
