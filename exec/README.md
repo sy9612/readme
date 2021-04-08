@@ -24,7 +24,7 @@ python manage.py runserver
 
 - **FrontEnd**
 ```
-cd FE/readme
+cd frontend/readme
 npm install
 npm run serve
 ```
