@@ -99,6 +99,9 @@ export default {
         page.style.transitionTimingFunction = 'ease-out'
       }
     },
+  },
+  created: function () {
+    this.$emit('page','SignUp')
   }
 }
 </script>
@@ -120,7 +123,7 @@ export default {
     /* opacity: 0.5; */
     height: 100vh;
     width: 100vw;
-    color: white;
+    color: rgb(160, 133, 133);
     font-weight: bold;
   }
   #Signup label {

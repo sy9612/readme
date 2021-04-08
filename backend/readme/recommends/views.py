@@ -1,4 +1,5 @@
-import random, math
+import random
+import math
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -37,11 +38,19 @@ def recommend_list(request, user_id):
         # 리뷰의 개수가 10개 이상이면 협업 필터링
         recommend_list = CollaborativeRecommendBook.objects.filter(
             user_id=user_id)
-        if len(recommend_list) == 0: # 협업 추천 테이블 최신화 X
+        if len(recommend_list) == 0:
             # 1개 이상, 10개 미만이면 컨텐츠 기반 필터링ff
             contentsRecommend_list = getContentsBasedRecommendBooks(user_id)
-            recommend_book_list = book_list.filter(book_isbn__in=contentsRecommend_list)
-        else: # 협업 추천 테이블에 결과가 들어있음
+            i = 0
+            for bs in BestSeller.objects.all():
+                if i >= 10:
+                    break
+                contentsRecommend_list.append(bs.book_isbn)
+                i += 1
+
+            recommend_book_list = book_list.filter(
+                book_isbn__in=contentsRecommend_list)
+        else:  # 협업 추천 테이블에 결과가 들어있음
             recommend_book_list = book_list.filter(book_isbn__in=list(
                 recommend_list.values_list('book_isbn', flat=True)))
         # 캐러셀 페이징. 추천 결과는 10개의 결과를 뽑아줌
@@ -119,13 +128,15 @@ def age_gender_recommend_list(request, user_id):
 
         ---
     '''
-    user = User.objects.get(id = user_id)
+    user = User.objects.get(id=user_id)
     user_gender = user.gender
     user_age = math.floor((2021 - user.birth.year + 1) / 10) * 10
     print(user_age)
 
-    recommend_list = AgeGenderRecommendBook.objects.filter(Q(age = user_age) & Q(gender = user_gender))
-    recommend_book_list = Book.objects.filter(book_isbn__in = list(recommend_list.values_list('book_isbn', flat=True)))
+    recommend_list = AgeGenderRecommendBook.objects.filter(
+        Q(age=user_age) & Q(gender=user_gender))
+    recommend_book_list = Book.objects.filter(book_isbn__in=list(
+        recommend_list.values_list('book_isbn', flat=True)))
     serializer = RecommendBookSerializer(recommend_book_list, many=True)
 
-    return Response(serializer.data, status = status.HTTP_200_OK)
+    return Response(serializer.data, status=status.HTTP_200_OK)

@@ -10,7 +10,13 @@
           <option value="description">내용</option>
         </select>
     </div>
-    <img class="book-img" :src="results[0] + '.jpg'" alt="">
+
+    <div class="search_result">
+      <div v-for="(result, idx) in results" :key="idx" class="result_card">
+        <img :src="`http://j4a205.p.ssafy.io:8050/images/${result.book_isbn}.jpg`" alt="">
+        <p></p>
+      </div>
+    </div>
     
   </div>
 </template>
@@ -25,7 +31,7 @@ export default {
     return {
       searchCategory: '',
       content: '',
-      results: [[9788999718298]],
+      results: {},
     }
   },
   props: {
@@ -52,6 +58,9 @@ export default {
       }
     },
   },
+  created: function () {
+    this.$emit('page','Search')
+  }
 }
 </script>
 
@@ -59,6 +68,7 @@ export default {
 #Search {
   position: absolute;
   display: flex;
+  align-items: center;
   flex-direction: column;
   background: url(../assets/background.jpg) no-repeat center center;
   background-size: 100% 100%;
@@ -67,22 +77,21 @@ export default {
   left: 0%;
   height: 100%;
   width: 100%;
-  padding: 0 32%;
-  padding-top: 10%;
+  padding: 0 24%;
+  padding-top: 12%;
 }
 .search-bar {
   position: relative;
   padding-left: 3%;
-  top: 20%;
+  width: 75%;
+  /* top: 20%; */
   height: 43px;
   border: 1px solid gray;
   border-radius: 24px;
   box-shadow: 2px 2px 2px 2px;
   outline: none;
+  margin-bottom: 6%;
 }
-/* .search-bar:hover {
-  
-} */
 .search-input {
   position: relative;
   height: 94%;
@@ -92,9 +101,37 @@ export default {
   outline: none;
   border-radius: 24px;
   margin-left: 2%;
+  font-size: 120%;
+  font-family: font1;
 }
-.book-img {
-  width: 30px;
-  height: 30px;
+.search_result {
+  position: relative;
+  display: flex;
+  /* justify-content: space-between; */
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  margin: 0 10%;
+  flex-wrap: wrap;
+}
+.search_result::-webkit-scrollbar {
+  display: none;
+}
+.search_result img {
+  position: relative;
+  width: 100%;
+  height: 70%;
+}
+.result_card {
+  position: relative;
+  height: 50%;
+  width: 18%;
+  background-color: #fff;
+  margin: 0 1%;
+  margin-bottom: 5%;
+  cursor: pointer;
+}
+.result_card:hover {
+  opacity: 0.7;
 }
 </style>

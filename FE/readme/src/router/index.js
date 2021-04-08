@@ -11,6 +11,14 @@ import Recommendations from '../components/Recommendations.vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueCarousel from 'vue-carousel';
 
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(() => {
+        return window.location.reload()
+    })
+};
+
 Vue.use(VueCarousel);
 Vue.use(BootstrapVue);
 

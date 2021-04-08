@@ -65,6 +65,7 @@ export default {
       localStorage.removeItem('jwt')
       localStorage.removeItem('user_id')
       localStorage.removeItem('username')
+      localStorage.removeItem('user_id')
       this.login = false
       this.$router.push({name: 'Home'})
     },
@@ -90,7 +91,6 @@ export default {
       this.onMenu = !this.onMenu
     },
     page: function (page) {
-      console.log('됐다')
       this.pagename = page
       this.pageOrigin = page
     }
@@ -152,8 +152,8 @@ export default {
   color: #2c3e50;
 }
 .menu-icon:hover {
-  font-size: 110%;
-  transition: 0.5s;
+  font-size: 115%;
+  transition: 0.3s;
   cursor: pointer;
 } 
 .navbar {
@@ -164,7 +164,7 @@ export default {
   height: 8%;
   font-size: 2.5rem;
   z-index: 3;
-  color: white;
+  color: rgb(160, 133, 133);
 }
 .navbar > span {
   width: 60%;
@@ -172,6 +172,10 @@ export default {
 .project-name {
   cursor: pointer;
   animation: 'fadein' 3s;
+  font-weight: bold;
+}
+.project-name:hover {
+  opacity: 0.7;
 }
 .page-name {
   position: absolute;
@@ -191,7 +195,7 @@ export default {
   transform: rotate(-90deg);
   transform-origin: center;
   /* flex-direction: column; */
-  color: white;
+  color: rgb(160, 133, 133);
   z-index: 3;
   animation: 'fadein' 3s;
 }

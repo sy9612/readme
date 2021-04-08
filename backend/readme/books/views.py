@@ -9,7 +9,7 @@ from django.utils import timezone
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from .serializers import BookSerializer, ReviewSerializer, SubCategorySerializer, MainCategorySerializer,\
-                        CategoryQuerySerializer, BookSearchQuerySerializer
+                        CategoryQuerySerializer, BookSearchQuerySerializer, BookDetailSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from accounts.models import Dibs
@@ -89,33 +89,39 @@ def detail(request, book_isbn):
         도서 상세 정보를 반환
 
         ---
+        # Response(카테고리 정보가 있는 경우)
+            - book : 책정보, 평균별점, 리뷰개수
+            - maincategory : 메인카테고리 이름 (리스트)
+            - subcategory : 서브카테고리 이름  (리스트)
+        
+        # Response(카테고리 정보가 없는 경우)
+            - book : 책정보, 평균별점, 리뷰개수
     '''
     book = Book.objects.get(book_isbn=book_isbn)
-    serializer = BookSerializer(book)
-
-    #여기에 category도 보내줘야댐!!!!
-    #1. book_isbn을 찾기
-    book_isbn = serializer.data['book_isbn']
+    serializer = BookDetailSerializer(book)
 
     #2. book.book_isbn = book_category.book_id 인 main_category랑 sub_category 찾기
-    categoryData = BooksCategory.objects.get(book_isbn=book_isbn)
+    categoryData = BooksCategory.objects.filter(book_isbn=book_isbn)
+    if len(categoryData) != 0:
+        #3. main_category 테이블에서 main_category이름과, sub_category 테이블에서 sub_category이름을 찾아서 넘기기
+        main_category_name = BooksMaincategory.objects.filter(
+            id__in=categoryData.values_list('main_category', flat=True)).values_list('name', flat=True)
 
-    main_category_id = categoryData.main_category
-    sub_category_id = categoryData.sub_category
+        sub_category_name = BooksSubcategory.objects.filter(
+            id__in=categoryData.values_list('sub_category', flat=True)).values_list('name', flat=True)
 
-    #3. main_category 테이블에서 main_category이름과, sub_category 테이블에서 sub_category이름을 찾아서 넘기기
-    main_category_name = BooksMaincategory.objects.get(
-        id=main_category_id).name
-
-    sub_category_name = BooksSubcategory.objects.get(id=sub_category_id).name
-
-    return Response(
-        {
-            "book": serializer.data,  #책세부내용
-            "maincategory": main_category_name,  #카테고리 - 메인
-            "subcategory": sub_category_name,  #카테고리 - 서브
-        },
-        status=status.HTTP_200_OK)
+        return Response(
+            {
+                "book": serializer.data,  #책세부내용
+                "maincategory": main_category_name,  #카테고리 - 메인
+                "subcategory": sub_category_name,  #카테고리 - 서브
+            },
+            status=status.HTTP_200_OK)
+    else:
+         return Response(
+            {
+                "book": serializer.data,  #책세부내용
+            }, status = status.HTTP_200_OK)
 
 
 #메인 카테고리들 전송
