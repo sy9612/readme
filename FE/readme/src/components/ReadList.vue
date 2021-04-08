@@ -100,7 +100,7 @@ export default {
 
     fnGetList() {
       axios
-        .get(`${SERVER_URL}/accounts/` + this.user_id + `/readList`)
+        .get(`${SERVER_URL}/books/review/user/` + this.user_id )
         .then((res) => {
           this.items = res.data;
         });
