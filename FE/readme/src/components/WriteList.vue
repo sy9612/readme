@@ -1,13 +1,18 @@
 <template>
   <div>
-    <carousel
+    <div id="Report_detail">
+      <img :src="reportSrc" alt="">
+      <p @click="toDetail" class="report_title">{{ reportTitle }}</p>
+      <p @click="closeDetail" class="report_content">{{ reportContent }}</p>
+    </div>
+    <carousel id="carousel"
       class="card-carousel-wrapper"
       :navigation-click="true"
       :per-page="4"
       :mouse-drag="false"
     >
       <div v-if="this.items == 0">
-        MBTI가 등록되어 있지 않습니다.
+        작성한 독후감이 없습니다.
       </div>
         <slide v-else
           class="card-carousel"
@@ -16,9 +21,9 @@
         >
           <div class="card-carousel--overflow-container">
             <div class="card-carousel-cards">
-              <div class="card-carousel--card" @click="fnGoDetail(item.book_isbn)"> 
+              <div class="card-carousel--card" @click="toReportDetail(item.book_isbn, item.report_content, item.book_title)"> 
                 <img :src= "`http://j4a205.p.ssafy.io:8050/images/${item.book_isbn}.jpg`"/>
-                <div class="card card-carousel--card--footer">
+                <div class="card-carousel--card--footer">
                   <p>{{ item.book_title }}</p>
                   <p class="tag">
                     {{ item.book_author }}
@@ -26,7 +31,7 @@
                   <p style="color: #f5d107">
                     ★ {{ fnRateList(item.rating_avg) }} ({{
                       fnRatecntList(item.rating_count)
-                    }}명)
+                    }}명) 
                   </p>
                 </div>
               </div>
@@ -43,7 +48,7 @@ import axios from 'axios';
 import { Carousel, Slide } from 'vue-carousel';
 
 export default {
-  name: 'MbtiList',
+  name: 'WriteList',
   components: { Carousel, Slide },
   data() {
     return {
@@ -53,6 +58,10 @@ export default {
       windowSize: 4,
       paginationFactor: 220,
       items: [],
+      reportSrc: '',
+      reportContent: '',
+      reportTitle: '',
+      reportIsbn: 0,
     };
   },
   computed: {
@@ -73,10 +82,26 @@ export default {
   },
 
   methods: {
-    fnGoDetail: function(isbn){
-      this.$router.push({name: 'Detail', params:{bookIsbn:isbn}});
+    toReportDetail: function(isbn,content,title){
+      const carousel = document.getElementById('carousel')
+      carousel.style.display = 'none'
+      this.reportIsbn = isbn
+      this.reportSrc = `http://j4a205.p.ssafy.io:8050/images/${isbn}.jpg`
+      const reportDetail = document.getElementById('Report_detail')
+      reportDetail.style.display = 'flex'
+      this.reportContent = content
+      this.reportTitle = title
     },
-     fnGetUsr: function () {
+    closeDetail: function () {
+      const carousel = document.getElementById('carousel')
+      const reportDetail = document.getElementById('Report_detail')
+      carousel.style.display = 'block'
+      reportDetail.style.display = 'none'
+    },
+    toDetail: function () {
+      this.$router.push({name: 'Detail', params:{bookIsbn:this.reportIsbn}})
+    },
+      fnGetUsr: function () {
       const user_id = localStorage.getItem('user_id');
       this.user_id = user_id;
     },
@@ -84,7 +109,7 @@ export default {
       if (rating_avg.review_rating__avg == null) return 0;
       else return rating_avg.review_rating__avg;
     },
- fnRatecntList: function (rating_count) {
+    fnRatecntList: function (rating_count) {
       if (rating_count == null) return 0;
       else return rating_count.review_rating__count;
     },
@@ -100,10 +125,9 @@ export default {
 
     fnGetList() {
       axios
-        .get(`${SERVER_URL}/mbtis/` + this.user_id)
+        .get(`${SERVER_URL}/reports/` + this.user_id)
         .then((res) => {
-          this.items = res.data.mbti_book_list;
-          
+          this.items = res.data;
         });
     },
   },
@@ -111,7 +135,7 @@ export default {
 </script>
 
 <style>
-#MbtiList {
+#WriteList {
   /* position: absolute; */
   background: #d7b9a1;
   box-sizing: border-box;
@@ -121,6 +145,49 @@ export default {
   width: 100%;
   /* padding: 0 20%; */
   padding-top: 10%;
+}
+#Report_detail {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  left: 37%;
+  width: 26%;
+  height: 65%;
+  margin-top: 1%;
+}
+#Report_detail > img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+}
+.report_title {
+  font-size: 160%;
+  margin-top: 9%;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2;
+  width: 80%;
+  text-align: center;
+  /* height: 15%; */
+}
+.report_title:hover {
+  font-size: 170%;
+  transition: 0.3s;
+}
+.report_content {
+  margin-top: 5%;
+  width: 80%;
+  height: 80%;
+  font-size: 130%;
+  text-align: center;
+  overflow: auto;
+  z-index: 2;
+  cursor: pointer;
+}
+.report_content::-webkit-scrollbar {
+  display: none;
 }
 body {
   background: #f8f8f8;
@@ -184,7 +251,6 @@ body {
   transition: transform 150ms ease-out;
   transform: translatex(0px);
 }
-
 .card-carousel-cards .card-carousel--card {
   width: 200px;
   height: 330px;

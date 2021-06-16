@@ -1,10 +1,12 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .serializers import ReportSerializer
+from .serializers import ReportSerializer, ReportDetailSerializer, ReportCreateSerializer
 from rest_framework.response import Response
 from django.db.models import Q
 from books.models import Report
+from drf_yasg.utils import swagger_auto_schema
 
+@swagger_auto_schema(method='post', request_body=ReportDetailSerializer)
 @api_view(('GET', 'POST'))
 def report(request, user_id):
     if request.method == 'GET':
@@ -17,7 +19,7 @@ def report(request, user_id):
         # .filter() 는 QuerySet = iterable
         report_list = Report.objects.filter(user_id = user_id)
         # many = True : queryset이 여러 개의 아이템을 포함하고 있다.(리스트) 를 장고(DRF)에 알려줌
-        serializer = ReportSerializer(report_list, many = True)
+        serializer = ReportDetailSerializer(report_list, many = True)
 
     elif request.method == 'POST':
         '''
@@ -25,7 +27,7 @@ def report(request, user_id):
 
             ---
         '''
-        serializer = ReportSerializer(data = request.data)
+        serializer = ReportCreateSerializer(data = request.data)
         # DRF(Django Rest Framework) 에서는 request에서 데이터를 받을 때
         # 반드시 is_valid() 여부를 체크해야 한다.
         if serializer.is_valid():
@@ -49,11 +51,11 @@ def report_detail(request, user_id, book_isbn):
             'message' : "Report not found!"
         }, status = status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':
-        serializer = ReportSerializer(report)
+        serializer = ReportDetailSerializer(report)
         return Response(serializer.data, status = status.HTTP_200_OK)
 
     elif request.method == 'PUT':
-        serializer = ReportSerializer(report, data = request.data)
+        serializer = ReportCreateSerializer(report, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

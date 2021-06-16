@@ -33,6 +33,7 @@ export default {
     return {
       book_info: [],
       params: {
+        user_id: 0,
         book_isbn: 0,
         report_content: '',
       },
@@ -47,14 +48,15 @@ export default {
   },
   methods: {
     postReport: function () {
-      const user_id = localStorage.getItem('user_id')
-      axios.post(`${SERVER_URL}/reports/${user_id}`, this.params)
+      this.params.user_id = localStorage.getItem('user_id')
+      axios.post(`${SERVER_URL}/reports/${this.params.user_id}`, this.params)
         .then((res) => {
           alert('작성되었습니다!')
+          this.$router.push({name: 'MyPage'})
         })
     },
     toDetail: function () {
-      this.$router.push({name: 'Detail', params:{bookIsbn: this.bookinfo.book_isbn}})
+      this.$router.push({name: 'Detail', params:{bookIsbn: this.params.book_isbn}})
     },
   },
   watch: {
@@ -70,14 +72,14 @@ export default {
     },
   },
   created: function () {
-    const isbn = this.$route.params.bookIsbn
+    this.params.book_isbn = this.$route.params.bookIsbn
     this.params.user_id = localStorage.getItem('user_id')
-    axios.get(`${SERVER_URL}/books/${isbn}`)
+    axios.post(`${SERVER_URL}/books/${this.params.book_isbn}`, {'user_id': this.params.user_id})
       .then(res => {
         this.bookinfo = res.data.book
         this.maincategory = res.data.maincategory
         this.subcategory = res.data.subcategory
-        this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.bookinfo.book_isbn}.jpg`
+        this.imgsrc = `http://j4a205.p.ssafy.io:8050/images/${this.params.book_isbn}.jpg`
       })  
     this.$emit('page','BookReport')
     this.$emit('isHome', this.$route.name)
